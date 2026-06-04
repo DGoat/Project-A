@@ -1,0 +1,10 @@
+{
+  "demoId": "demo-001-npc-dialogue",
+  "aiProvider": "mock",
+  "npc": {
+    "id": "npc_harlan_blacksmith",
+    "name": "Harlan",
+    "role": "blacksmith"
+  },
+  "debug": true
+}

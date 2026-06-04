@@ -1,0 +1,45 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Build outputs
+dist/
+build/
+out/
+.cache/
+coverage/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs and generated runtime data
+logs/
+replays/private/
+*.log
+
+# Game engine generated files
+.import/
+.export/
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/

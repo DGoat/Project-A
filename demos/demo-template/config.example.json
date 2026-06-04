@@ -1,0 +1,5 @@
+{
+  "demoId": "demo-template",
+  "aiProvider": "mock",
+  "debug": true
+}

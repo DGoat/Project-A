@@ -1,0 +1,7 @@
+{
+  "gameId": "project-a-demo",
+  "aiProvider": "mock",
+  "logAiInteractions": true,
+  "replayMode": false,
+  "debug": true
+}

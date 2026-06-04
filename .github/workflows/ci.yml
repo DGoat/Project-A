@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repository sanity check
+        run: |
+          test -f README.md
+          test -f .env.example
+          test -f docs/roadmap.md
+          test -f docs/demo-index.md
+          test -d demos/demo-template
+          test -d demos/demo-001-npc-dialogue

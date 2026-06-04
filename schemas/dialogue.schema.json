@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DialogueResponse",
+  "type": "object",
+  "required": ["dialogue", "emotion"],
+  "properties": {
+    "dialogue": { "type": "string" },
+    "emotion": {
+      "type": "string",
+      "enum": ["neutral", "annoyed", "friendly", "worried"]
+    },
+    "memoryWrite": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "questHooks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "actions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

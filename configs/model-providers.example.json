@@ -1,0 +1,17 @@
+{
+  "defaultProvider": "mock",
+  "providers": {
+    "mock": {
+      "model": "mock-npc-v1"
+    },
+    "openaiCompatible": {
+      "baseUrl": "https://api.openai.com/v1",
+      "apiKeyEnv": "OPENAI_API_KEY",
+      "model": "gpt-4o-mini"
+    },
+    "localLlm": {
+      "baseUrl": "http://localhost:11434",
+      "model": "llama3.1"
+    }
+  }
+}

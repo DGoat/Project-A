@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-06-04T00:00:00.000Z",
+  "demo": "demo-001-npc-dialogue",
+  "provider": "mock",
+  "model": "mock-npc-v1",
+  "input": {
+    "playerMessage": "I need a sword."
+  },
+  "output": {
+    "dialogue": "A sword, eh? I sell steel that does not snap in the first goblin skull it meets. Keep your coin ready and your hands steady.",
+    "emotion": "neutral",
+    "memoryWrite": ["Player asked about buying a sword."],
+    "questHooks": [],
+    "actions": ["show_shop_hint"]
+  },
+  "latencyMs": 0
+}
