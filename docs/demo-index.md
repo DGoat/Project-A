@@ -8,13 +8,13 @@
 
 ## Planned
 
-| Demo | Idea | AI Feature | Status |
+| Demo | Idea | AI Assistance | Status |
 |---|---|---|---|
-| `demo-001-npc-dialogue` | Talk with an NPC that has personality and memory | LLM dialogue, memory, structured output | Planned |
-| `demo-002-ai-director` | Adjust game pressure based on player state | Rules / utility AI / optional LLM | Planned |
-| `demo-003-agent-planner` | NPC plans actions from goals | GOAP / behavior tree / LLM planner | Planned |
-| `demo-004-quest-generator` | Generate quests from world state | Structured quest generation | Planned |
-| `demo-005-ai-companion` | Convert player commands into companion actions | Intent parsing, action planning | Planned |
+| `demo-001-npc-dialogue` | Small text dialogue prototype | AI-assisted writing, structure, and implementation | Planned |
+| `demo-002-simple-platformer` | Basic 2D movement and level prototype | AI-assisted code and level drafting | Planned |
+| `demo-003-card-battle` | Simple card combat loop | AI-assisted rules, data, and balancing notes | Planned |
+| `demo-004-puzzle-room` | Room puzzle prototype | AI-assisted puzzle design and hints | Planned |
+| `demo-005-survival-loop` | Simple survival/resource loop | AI-assisted system design and tuning notes | Planned |
 
 ## Demo Rules
 
@@ -23,6 +23,7 @@ Each demo should include:
 - `README.md`
 - `design.md`
 - `config.example.json`
-- `prompt.md` when AI prompt is used
+- `generation-notes.md` when AI is used to generate or modify content
+- `prompt.md` when prompt text is important to reproduce work
 - `screenshots/` for preview images or GIFs
 - runnable entry point or clear run instructions

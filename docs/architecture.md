@@ -2,55 +2,62 @@
 
 ## Overview
 
-Project-A separates playable demos from reusable AI/game infrastructure.
+Project-A separates game demos from reusable AI-assisted production infrastructure.
 
 ```text
 demos/      independent game prototypes
-packages/   reusable modules
+packages/   reusable helper modules
 configs/    shared example configs
-schemas/    shared data contracts
-prompts/    shared prompt templates
-replays/    deterministic replay examples
+schemas/    shared data contracts for generated content
+prompts/    prompt templates for production tasks
+replays/    examples and deterministic records when needed
 ```
+
+## Current Positioning
+
+Current stage: AI-assisted generated games.
+
+AI is mainly used as production assistant for:
+
+- brainstorming game ideas
+- drafting design docs
+- generating prototype code
+- creating dialogue, quests, levels, and config data
+- reviewing and refactoring code
+- generating tests and bug reproduction notes
+- preparing asset prompts and license notes
+
+Not current focus:
+
+- AI-native game mechanics
+- live LLM NPCs inside runtime
+- autonomous in-game agents
+- dynamic AI directors
+
+These can be future experiments after basic demo production workflow is stable.
 
 ## Principles
 
-- Demo first, reusable second
-- Mock provider first, real API later
+- Playable demo first, reusable workflow second
+- Record prompts and generation process
+- Human review before committing generated code/content
 - No secrets in code or config
-- Structured AI output where possible
-- Replay important AI interactions
+- Keep generated content traceable
 - Every demo must explain how to run
 
-## AI Provider Boundary
-
-Target interface:
-
-```ts
-interface AIProvider {
-  chat(input: ChatInput): Promise<ChatOutput>
-  embed?(input: EmbedInput): Promise<EmbedOutput>
-}
-```
-
-Provider types:
-
-| Provider | Purpose |
-|---|---|
-| `mock` | Run without API keys or network |
-| `openai-compatible` | Support OpenAI-compatible APIs |
-| `local-llm` | Support local runtimes like Ollama or LM Studio |
-| `replay` | Make tests and recordings deterministic |
-
-## Demo Runtime Flow
+## Production Flow
 
 ```text
-Player Input
-  -> Game State
-  -> Prompt / AI Request
-  -> AI Provider
-  -> Structured Output
-  -> Validation
-  -> Game Action
-  -> Log / Replay
+Game Idea
+  -> Prompt / AI-Assisted Draft
+  -> Human Review
+  -> Prototype Implementation
+  -> Run / Test
+  -> Fix / Refactor
+  -> Record Generation Notes
+  -> Screenshot / Demo Index
 ```
+
+## Future Runtime AI Boundary
+
+If a future demo needs runtime AI, use a provider boundary instead of calling external APIs directly from gameplay code. For now this is optional, not default foundation.

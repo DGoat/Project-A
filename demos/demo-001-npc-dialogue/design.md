@@ -1,26 +1,30 @@
 # demo-001-npc-dialogue Design
 
-## Core Loop
+## Current Scope
 
-1. Player enters text
-2. Game builds NPC context
-3. AI provider generates structured response
-4. Response is validated
-5. NPC line is shown
-6. Memory and quest hooks update state
+This demo is a small dialogue scene built with AI assistance. The first version does not need live AI in runtime.
+
+## Production Loop
+
+1. Define scene goal
+2. Use AI to draft NPC profile and dialogue options
+3. Human reviews tone and gameplay fit
+4. Convert approved lines into structured data
+5. Implement simple local runtime
+6. Test interaction and record changes
 
 ## MVP Scope
 
 - One NPC
 - One player
-- Text-only interface
-- Mock provider response
-- JSON response validation by shape
+- Text-only or simple UI
+- Static reviewed dialogue data
+- Local run without API keys
 
 ## Later Scope
 
+- Branching dialogue
+- Quest hooks
 - Multiple NPCs
-- Long-term memory
-- Emotion transitions
-- Quest trigger system
-- Local LLM and OpenAI-compatible provider
+- Optional runtime AI experiment
+- Optional local LLM or OpenAI-compatible provider

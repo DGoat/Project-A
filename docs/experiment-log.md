@@ -1,6 +1,6 @@
 # Experiment Log
 
-Use this file to record design decisions and experiment results.
+Use this file to record design decisions and AI-assisted production results.
 
 ## Template
 
@@ -9,7 +9,9 @@ Use this file to record design decisions and experiment results.
 
 ### Goal
 
-### Setup
+### AI Assistance Used
+
+### Human Changes
 
 ### Result
 
@@ -22,7 +24,7 @@ Use this file to record design decisions and experiment results.
 
 ### Goal
 
-Create baseline repository structure for AI game demos.
+Create baseline repository structure for AI-assisted generated game demos.
 
 ### Result
 

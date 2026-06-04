@@ -1,10 +1,10 @@
 # demo-001-npc-dialogue
 
-NPC dialogue demo with personality, memory, and mock-first AI provider.
+Text dialogue prototype generated with AI assistance.
 
 ## Idea
 
-Player talks to an NPC. NPC replies according to role, personality, current emotion, memory, and quest state.
+Create a small dialogue scene around one blacksmith NPC. Current goal is to use AI to help produce the writing, structure, config, and implementation, not to require live AI inside the game runtime.
 
 ## Initial NPC
 
@@ -15,34 +15,35 @@ Player talks to an NPC. NPC replies according to role, personality, current emot
 
 ## Features
 
-- Mock dialogue response first
-- Structured NPC response schema
-- Prompt stored outside code
-- Future support for real LLM provider
+- AI-assisted dialogue writing
+- Structured dialogue data
+- Prompt stored for reproducible generation
+- Future optional support for live LLM runtime
 
 ## How to Run
 
-Not implemented yet. First implementation should run without API keys using mock provider.
+Not implemented yet. First implementation should run locally without API keys.
 
-## AI Design
+## Production Design
 
-Input:
+AI may assist with:
 
-- player message
-- NPC profile
-- recent dialogue history
-- memory snippets
-- world state
+- NPC profile drafting
+- dialogue line generation
+- quest hook ideas
+- code scaffolding
+- test case drafting
 
-Output:
+Generated content should be reviewed before it becomes final game data.
+
+## Example Dialogue Data
 
 ```json
 {
-  "dialogue": "NPC line",
+  "speaker": "Harlan",
+  "line": "A sword, eh? I sell steel that does not snap in the first goblin skull it meets.",
   "emotion": "neutral",
-  "memoryWrite": [],
-  "questHooks": [],
-  "actions": []
+  "tags": ["shop", "weapon"]
 }
 ```
 
