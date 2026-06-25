@@ -13,6 +13,17 @@ prompts/    prompt templates for production tasks
 replays/    examples and deterministic records when needed
 ```
 
+## Current Demo Tracks
+
+Project-A currently uses two AI-assisted production tracks:
+
+| Track | Engine | Focus |
+|---|---|---|
+| Action 3D | Unreal Engine | action controls, combat feel, camera, animation, enemy behavior |
+| 2D Gameplay | Godot | fast gameplay iteration, rules, UI, levels, narrative/content systems |
+
+The two tracks share prompts, schemas, configs, replay records, production notes, and review rules where possible. Engine-specific demos should keep runnable instructions inside their own demo folders.
+
 ## Current Positioning
 
 Current stage: AI-assisted generated games.

@@ -1,0 +1,8 @@
+{
+  "demoId": "demo-godot-001-action-roguelite",
+  "engine": "godot",
+  "engineVersion": "4.x",
+  "track": "2D Gameplay",
+  "runtimeAi": false,
+  "debug": true
+}

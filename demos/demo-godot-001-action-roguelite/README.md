@@ -1,0 +1,86 @@
+# demo-godot-001-action-roguelite
+
+Godot 2D action roguelite prototype generated with AI assistance.
+
+## Idea
+
+A top-down 2D room-based action roguelite. The player clears small combat rooms, then chooses one blessing from three options. Each blessing changes combat stats or behavior, creating a lightweight build loop inspired by action roguelites and card-style draft decisions.
+
+## Core Loop
+
+```text
+Enter room
+-> Fight enemies
+-> Clear room
+-> Choose 1 of 3 blessings
+-> Build becomes stronger
+-> Enter next room
+-> Clear final room
+-> Result screen
+```
+
+## First Playable Scope
+
+- Top-down player movement
+- Dash
+- Basic attack
+- Health and death state
+- Two enemy types:
+  - melee chaser
+  - ranged shooter
+- Three fixed rooms
+- Blessing choice after room clear
+- Six initial blessings
+- Local-only, no API key required
+
+## Controls
+
+| Input | Action |
+|---|---|
+| WASD / Arrow Keys | Move |
+| Left Mouse / J | Attack |
+| Space / K | Dash |
+| 1 / 2 / 3 | Pick blessing |
+| R | Restart |
+
+## How to Run
+
+Requires Godot 4.x.
+
+```bash
+# Open this folder in Godot
+# Run Main.tscn
+```
+
+## AI Design
+
+AI is used as production assistant for:
+
+- blessing design
+- enemy design
+- room planning
+- GDScript scaffolding
+- tuning notes
+- test case drafting
+
+Runtime does not call AI.
+
+## Files
+
+```text
+project.godot         Godot project config
+scenes/Main.tscn      Main playable scene
+scripts/              GDScript files
+data/blessings.json   blessing data
+config.example.json   demo config example
+design.md             gameplay design notes
+generation-notes.md   AI production notes
+prompt.md             generation prompt
+```
+
+## Known Issues
+
+- Placeholder visuals only
+- No audio yet
+- No polished hit feedback yet
+- Rooms are fixed, not procedural
