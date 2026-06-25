@@ -19,16 +19,16 @@
 | GODOT-001 | Fixed | High | 本机未安装 Godot | M1 |
 | GODOT-002 | Fixed | Medium | Winget 安装后当前终端无法识别 `godot` 命令 | M1 |
 | GODOT-003 | Fixed | Low | 项目打开时提示从 Godot 4.2 升级到 4.7 | M1 |
-| DEMO-001 | Open | High | 尚未完成 3 房间完整流程手测 | M1 |
-| DEMO-002 | Open | High | 尚未确认攻击是否能稳定命中并击杀敌人 | M1 |
-| DEMO-003 | Open | High | 尚未确认清房后祝福三选一是否正常出现 | M1 |
-| DEMO-004 | Open | High | 尚未确认选择祝福后能否进入下一房间 | M1 |
+| DEMO-001 | Fixed | High | 已完成 3 房间完整流程手测并通关 | M1 |
+| DEMO-002 | Fixed | High | 攻击可命中并击杀敌人 | M1 |
+| DEMO-003 | Fixed | High | 清房后祝福三选一正常出现 | M1 |
+| DEMO-004 | Fixed | High | 选择祝福后可进入下一房间 | M1 |
 | DEMO-005 | Open | Medium | 尚未确认死亡后 `R` 是否能重开 | M1 |
 | VIS-001 | Open | Medium | Godot 编辑器/运行画面中出现异常图片或背景，需要确认来源 | M1 |
-| UI-001 | In Progress | High | 血量 UI 离角色太远，战斗中难以感知自身状态 | M1 |
-| FEEL-005 | In Progress | High | 看不到攻击范围，只能通过敌人是否掉血判断命中 | M1 |
-| FEEL-006 | In Progress | High | 近战敌人命中后持续黏住玩家，玩家难以脱身 | M1 |
-| BAL-001 | In Progress | Medium | 远程敌人攻击欲望偏强，房间 2 压力过高 | M1 |
+| UI-001 | Fixed | High | 已增加角色头顶血条 | M1 |
+| FEEL-005 | Fixed | High | 已增加攻击范围提示 | M1 |
+| FEEL-006 | Fixed | High | 已增加受伤无敌与近战命中后弹开 | M1 |
+| BAL-001 | Fixed | Medium | 已降低远程敌人攻击欲望 | M1 |
 | FEEL-001 | Deferred | Medium | 缺少攻击范围提示 | M2 |
 | FEEL-002 | Deferred | Medium | 缺少 Hit Stop | M2 |
 | FEEL-003 | Deferred | Medium | 缺少击退 | M2 |
