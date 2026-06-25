@@ -25,6 +25,7 @@ var attack_cooldown_time := 0.0
 var dash_strike_ready := false
 var invulnerable_time := 0.0
 var hurt_invulnerable_duration := 0.65
+var hit_stop_active := false
 var dead := false
 
 @onready var body := $Body
@@ -121,6 +122,7 @@ func _on_attack_body_entered(body_node: Node2D) -> void:
 		damage *= dash_strike_multiplier
 		dash_strike_ready = false
 	body_node.take_damage(int(round(damage)), self)
+	_apply_hit_stop()
 	if burn_damage > 0 and body_node.has_method("apply_burn"):
 		body_node.apply_burn(burn_damage, burn_ticks, self)
 
@@ -128,6 +130,15 @@ func notify_enemy_killed() -> void:
 	if heal_on_kill > 0:
 		heal(heal_on_kill)
 	enemy_killed.emit()
+
+func _apply_hit_stop() -> void:
+	if hit_stop_active:
+		return
+	hit_stop_active = true
+	Engine.time_scale = 0.08
+	await get_tree().create_timer(0.035, true, false, true).timeout
+	Engine.time_scale = 1.0
+	hit_stop_active = false
 
 func _update_health_bar() -> void:
 	var ratio := float(hp) / float(max_hp)

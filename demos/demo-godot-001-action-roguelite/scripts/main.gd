@@ -49,11 +49,11 @@ func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
 	if choosing_blessing:
-		if Input.is_key_pressed(KEY_1):
+		if Input.is_action_just_pressed("pick_blessing_1"):
 			_pick_blessing(0)
-		elif Input.is_key_pressed(KEY_2):
+		elif Input.is_action_just_pressed("pick_blessing_2"):
 			_pick_blessing(1)
-		elif Input.is_key_pressed(KEY_3):
+		elif Input.is_action_just_pressed("pick_blessing_3"):
 			_pick_blessing(2)
 
 func _load_blessings() -> void:

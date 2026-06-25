@@ -7,6 +7,8 @@ signal died(enemy: Node)
 @export var contact_damage := 10
 @export var recoil_speed := 260.0
 @export var recoil_duration := 0.18
+@export var knockback_speed := 220.0
+@export var knockback_duration := 0.12
 @export var elite := false
 
 var hp := 40
@@ -17,6 +19,8 @@ var burn_owner: Node
 var burn_timer := 0.0
 var recoil_time := 0.0
 var recoil_direction := Vector2.ZERO
+var knockback_time := 0.0
+var knockback_direction := Vector2.ZERO
 var dead := false
 
 @onready var body := $Body
@@ -36,7 +40,10 @@ func _physics_process(delta: float) -> void:
 	if dead or player == null:
 		return
 	var direction := global_position.direction_to(player.global_position)
-	if recoil_time > 0.0:
+	if knockback_time > 0.0:
+		knockback_time -= delta
+		velocity = knockback_direction * knockback_speed
+	elif recoil_time > 0.0:
 		recoil_time -= delta
 		velocity = recoil_direction * recoil_speed
 	else:
@@ -48,6 +55,9 @@ func _physics_process(delta: float) -> void:
 func take_damage(amount: int, source: Node = null) -> void:
 	if dead:
 		return
+	if source != null:
+		knockback_direction = source.global_position.direction_to(global_position).normalized()
+		knockback_time = knockback_duration
 	hp -= amount
 	body.modulate = Color(1.0, 0.45, 0.45)
 	await get_tree().create_timer(0.06).timeout

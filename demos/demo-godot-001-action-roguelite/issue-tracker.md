@@ -29,13 +29,13 @@
 | FEEL-005 | Fixed | High | 已增加攻击范围提示 | M1 |
 | FEEL-006 | Fixed | High | 已增加受伤无敌与近战命中后弹开 | M1 |
 | BAL-001 | Fixed | Medium | 已降低远程敌人攻击欲望 | M1 |
-| FEEL-001 | Deferred | Medium | 缺少攻击范围提示 | M2 |
-| FEEL-002 | Deferred | Medium | 缺少 Hit Stop | M2 |
-| FEEL-003 | Deferred | Medium | 缺少击退 | M2 |
-| FEEL-004 | Deferred | Medium | 玩家受伤后缺少无敌帧 | M2 |
+| FEEL-001 | In Progress | Medium | 已补充攻击范围提示，继续补充 Hit Stop / knockback 手感 | M2 |
+| FEEL-002 | In Progress | Medium | 增加 Hit Stop | M2 |
+| FEEL-003 | In Progress | Medium | 增加敌人受击击退 | M2 |
+| FEEL-004 | Fixed | Medium | 玩家受伤后已有短暂无敌帧 | M2 |
 | BUILD-001 | Deferred | Medium | 祝福效果多数偏数值，缺少可见差异 | M3 |
-| CTRL-001 | Open | Medium | 祝福选择使用硬编码 `KEY_1/2/3` | M2 |
-| CTRL-002 | Deferred | Medium | 暂无设置界面展示/修改键位 | M2/M4 |
+| CTRL-001 | Fixed | Medium | 祝福选择已改为 InputMap 动作 | M2 |
+| CTRL-002 | In Progress | Medium | 已增加只读 Controls 提示，暂无修改键位界面 | M2/M4 |
 | CTRL-003 | Deferred | Low | 暂无本地键位保存 | M4 |
 | CTRL-004 | Deferred | Low | 暂无手柄支持 | M5 |
 

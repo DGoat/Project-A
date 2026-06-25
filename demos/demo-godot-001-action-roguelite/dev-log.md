@@ -1,4 +1,59 @@
-## 2026-06-25：M1 最小可运行闭环验证通过
+## 2026-06-25：实现 M2 基础手感强化第一版
+
+### 本次目标
+
+按 `spec-003-basic-game-feel.md` 推进 M2：基础手感可接受。
+
+### 做了什么
+
+- 新增 Spec：`specs/spec-003-basic-game-feel.md`。
+- 修改 `project.godot`：
+  - 增加 `pick_blessing_1`。
+  - 增加 `pick_blessing_2`。
+  - 增加 `pick_blessing_3`。
+- 修改 `main.gd`：
+  - 祝福选择从 `KEY_1/2/3` 改为 InputMap 动作。
+- 修改 `player.gd`：
+  - 命中敌人时触发轻量 Hit Stop。
+- 修改 `melee_enemy.gd`：
+  - 增加受击 knockback。
+- 修改 `ranged_enemy.gd`：
+  - 增加受击 knockback。
+- 修改 `Main.tscn`：
+  - 增加只读 Controls 提示。
+- 更新 `issue-tracker.md`：
+  - 更新 FEEL 系列问题状态。
+  - 更新 CTRL 系列问题状态。
+
+### 遇到的问题
+
+- M1 已能通关，但命中反馈仍偏弱。
+- 祝福选择输入硬编码，不利于后续可配置键位。
+- 游戏内缺少操作提示。
+
+### 如何解决
+
+- 用短 Hit Stop 提升命中瞬间反馈。
+- 敌人受击后轻微后退，增强空间反馈。
+- 将祝福选择输入纳入 Godot InputMap。
+- 在 UI 底部增加 Controls 提示。
+
+### 仍未解决
+
+- 需要用户复测 Hit Stop 是否过强或过弱。
+- 需要确认 knockback 是否影响敌人移动节奏。
+- Controls 只是只读提示，不支持配置。
+- 尚未完成完整 M2 验收。
+
+### 下一步
+
+- 用户复测 M2 手感：
+  - 命中是否更有反馈。
+  - 敌人被打后是否会合理后退。
+  - 1/2/3 祝福选择是否仍可用。
+  - Controls 提示是否遮挡画面。
+
+
 
 ### 本次目标
 

@@ -6,6 +6,8 @@ signal died(enemy: Node)
 @export var move_speed := 70.0
 @export var preferred_distance := 300.0
 @export var shoot_cooldown := 1.8
+@export var knockback_speed := 220.0
+@export var knockback_duration := 0.12
 
 var hp := 30
 var player: Node2D
@@ -14,6 +16,8 @@ var burn_damage := 0
 var burn_ticks_left := 0
 var burn_owner: Node
 var burn_timer := 0.0
+var knockback_time := 0.0
+var knockback_direction := Vector2.ZERO
 var dead := false
 var projectile_scene := preload("res://scenes/Projectile.tscn")
 
@@ -28,7 +32,10 @@ func _physics_process(delta: float) -> void:
 		return
 	var to_player := global_position.direction_to(player.global_position)
 	var distance := global_position.distance_to(player.global_position)
-	if distance < preferred_distance * 0.75:
+	if knockback_time > 0.0:
+		knockback_time -= delta
+		velocity = knockback_direction * knockback_speed
+	elif distance < preferred_distance * 0.75:
 		velocity = -to_player * move_speed
 	elif distance > preferred_distance:
 		velocity = to_player * move_speed
@@ -46,6 +53,9 @@ func _physics_process(delta: float) -> void:
 func take_damage(amount: int, source: Node = null) -> void:
 	if dead:
 		return
+	if source != null:
+		knockback_direction = source.global_position.direction_to(global_position).normalized()
+		knockback_time = knockback_duration
 	hp -= amount
 	body.modulate = Color(1.0, 0.55, 0.55)
 	await get_tree().create_timer(0.06).timeout
