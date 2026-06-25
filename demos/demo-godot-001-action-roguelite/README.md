@@ -88,6 +88,7 @@ prompt.md             generation prompt
 | `dev-log.md` | 实时开发日志，记录推进过程 |
 | `issue-tracker.md` | 问题、解决方案、未解决项和后续计划 |
 | `generation-notes.md` | AI 辅助生产记录 |
+| `pitfalls.md` | 实现过程踩坑记录、原因、解决方式、预防措施 |
 | `prompt.md` | 可复现 Prompt |
 
 ## Known Issues
