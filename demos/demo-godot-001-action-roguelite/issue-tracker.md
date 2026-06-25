@@ -1,0 +1,322 @@
+# 问题追踪（Issue Tracker）
+
+## 状态说明
+
+| 状态 | 含义 |
+|---|---|
+| Open | 已发现，未处理 |
+| In Progress | 正在处理 |
+| Fixed | 已修复，待验证或已验证 |
+| Deferred | 暂缓，不影响当前节点 |
+| Won't Fix | 明确不处理 |
+
+---
+
+## 当前问题列表
+
+| ID | 状态 | 优先级 | 问题 | 影响节点 |
+|---|---|---|---|---|
+| GODOT-001 | Fixed | High | 本机未安装 Godot | M1 |
+| GODOT-002 | Fixed | Medium | Winget 安装后当前终端无法识别 `godot` 命令 | M1 |
+| GODOT-003 | Fixed | Low | 项目打开时提示从 Godot 4.2 升级到 4.7 | M1 |
+| DEMO-001 | Open | High | 尚未完成 3 房间完整流程手测 | M1 |
+| DEMO-002 | Open | High | 尚未确认攻击是否能稳定命中并击杀敌人 | M1 |
+| DEMO-003 | Open | High | 尚未确认清房后祝福三选一是否正常出现 | M1 |
+| DEMO-004 | Open | High | 尚未确认选择祝福后能否进入下一房间 | M1 |
+| DEMO-005 | Open | Medium | 尚未确认死亡后 `R` 是否能重开 | M1 |
+| VIS-001 | Open | Medium | Godot 编辑器/运行画面中出现异常图片或背景，需要确认来源 | M1 |
+| FEEL-001 | Deferred | Medium | 缺少攻击范围提示 | M2 |
+| FEEL-002 | Deferred | Medium | 缺少 Hit Stop | M2 |
+| FEEL-003 | Deferred | Medium | 缺少击退 | M2 |
+| FEEL-004 | Deferred | Medium | 玩家受伤后缺少无敌帧 | M2 |
+| BUILD-001 | Deferred | Medium | 祝福效果多数偏数值，缺少可见差异 | M3 |
+
+---
+
+## 详细记录
+
+### GODOT-001：本机未安装 Godot
+
+状态：Fixed  
+优先级：High  
+影响节点：M1
+
+现象：
+
+- 初始执行 `where godot` 找不到 Godot。
+
+解决方式：
+
+- 使用 Winget 安装 Godot：
+
+```bash
+winget install --id GodotEngine.GodotEngine -e --source winget --accept-source-agreements --accept-package-agreements
+```
+
+结果：
+
+- 安装成功，版本为 `4.7.stable.official.5b4e0cb0f`。
+
+---
+
+### GODOT-002：当前终端无法识别 `godot` 命令
+
+状态：Fixed  
+优先级：Medium  
+影响节点：M1
+
+现象：
+
+- Winget 安装后执行 `godot --version`，提示不是内部或外部命令。
+
+原因：
+
+- Winget 修改 PATH 后当前终端未刷新。
+
+解决方式：
+
+- 找到实际安装路径并使用完整路径运行。
+- 复制 Godot 到 `F:\Godot`。
+- 创建：
+
+```text
+F:\Godot\godot.bat
+F:\Godot\godot_console.bat
+```
+
+结果：
+
+- `godot.bat --version` 和 `godot_console.bat --version` 均返回 `4.7.stable`。
+
+---
+
+### GODOT-003：项目从 Godot 4.2 升级到 4.7 提示
+
+状态：Fixed  
+优先级：Low  
+影响节点：M1
+
+现象：
+
+- 打开项目时 Godot 提示：该项目最近一次编辑使用的是 Godot 4.2，打开后会修改为 Godot 4.7。
+
+处理方式：
+
+- 允许升级。
+
+原因：
+
+- `project.godot` 初始写了 `config/features=PackedStringArray("4.2")`。
+- 当前安装 Godot 版本为 4.7。
+
+结果：
+
+- 项目已进入 Godot 编辑器。
+
+---
+
+### DEMO-001：尚未完成 3 房间完整流程手测
+
+状态：Open  
+优先级：High  
+影响节点：M1
+
+现象：
+
+- 当前只确认项目能打开，主场景能看到。
+- 未确认完整 Run 是否可通关。
+
+后续计划：
+
+- 用户运行 `Main.tscn`。
+- 按 M1 手测清单完成验证。
+- 记录阻塞问题并修复。
+
+---
+
+### DEMO-002：尚未确认攻击是否能稳定命中并击杀敌人
+
+状态：Open  
+优先级：High  
+影响节点：M1
+
+待验证：
+
+- `Left Mouse / J` 是否能攻击。
+- 攻击范围是否覆盖敌人。
+- 敌人是否正常扣血和死亡。
+
+后续计划：
+
+- 若无法命中，优先检查：
+  - `AttackArea` 位置
+  - 碰撞层/掩码
+  - `body_entered` 信号
+  - 敌人 `collision_layer`
+
+---
+
+### DEMO-003：尚未确认清房后祝福三选一是否正常出现
+
+状态：Open  
+优先级：High  
+影响节点：M1
+
+待验证：
+
+- 所有敌人死亡后 `BlessingPanel` 是否出现。
+- 3 个按钮是否显示祝福名称和描述。
+
+后续计划：
+
+- 若不出现，检查：
+  - `enemies_alive` 是否正确递减
+  - `died` 信号是否连接
+  - `_on_room_cleared()` 是否执行
+  - UI 节点路径是否正确
+
+---
+
+### DEMO-004：尚未确认选择祝福后能否进入下一房间
+
+状态：Open  
+优先级：High  
+影响节点：M1
+
+待验证：
+
+- 点击按钮或按 `1/2/3` 是否能选择祝福。
+- 玩家属性是否变化。
+- 是否生成下一房间敌人。
+
+后续计划：
+
+- 若选择无效，检查：
+  - Button 信号连接
+  - 闭包索引 `button_index`
+  - `_pick_blessing()` 是否被调用
+  - `offered_blessings` 是否为空
+
+---
+
+### DEMO-005：尚未确认死亡后 `R` 是否能重开
+
+状态：Open  
+优先级：Medium  
+影响节点：M1
+
+待验证：
+
+- 玩家死亡后是否显示 Defeat。
+- 按 `R` 是否重新加载场景。
+
+后续计划：
+
+- 若失败，检查 `restart` InputMap 和 `_process()`。
+
+---
+
+### VIS-001：Godot 编辑器/运行画面中出现异常图片或背景
+
+状态：Open  
+优先级：Medium  
+影响节点：M1
+
+现象：
+
+- 用户截图中出现非 Demo 内容的图片/大背景，疑似外部窗口遮挡、编辑器显示异常、系统截图混叠或误导入资源。
+
+待确认：
+
+- 异常图片是否在 Godot 运行窗口内。
+- 是否影响实际游戏画面。
+- `FileSystem` 中是否存在异常图片资源。
+
+后续计划：
+
+- 若影响游戏窗口，检查 `Main.tscn` 是否引用异常资源。
+- 若只是截图/窗口遮挡，不作为 Demo 问题处理。
+
+---
+
+### FEEL-001：缺少攻击范围提示
+
+状态：Deferred  
+优先级：Medium  
+影响节点：M2
+
+原因：
+
+- 不阻塞 M1 闭环。
+
+后续计划：
+
+- M2 增加攻击范围可视化，例如半透明扇形或圆形提示。
+
+---
+
+### FEEL-002：缺少 Hit Stop
+
+状态：Deferred  
+优先级：Medium  
+影响节点：M2
+
+原因：
+
+- 不阻塞 M1 闭环。
+
+后续计划：
+
+- M2 增加短暂停顿强化命中反馈。
+
+---
+
+### FEEL-003：缺少击退
+
+状态：Deferred  
+优先级：Medium  
+影响节点：M2
+
+原因：
+
+- 不阻塞 M1 闭环。
+
+后续计划：
+
+- M2 为敌人受击添加 knockback。
+
+---
+
+### FEEL-004：玩家受伤后缺少无敌帧
+
+状态：Deferred  
+优先级：Medium  
+影响节点：M2
+
+原因：
+
+- 不阻塞 M1，但可能影响手测体验。
+
+后续计划：
+
+- M2 增加短暂无敌，避免接触伤害连续触发。
+
+---
+
+### BUILD-001：祝福效果多数偏数值，缺少可见差异
+
+状态：Deferred  
+优先级：Medium  
+影响节点：M3
+
+原因：
+
+- 当前优先验证闭环。
+
+后续计划：
+
+- M3 优先强化可见效果：
+  - 燃烧颜色和跳伤
+  - Dash Strike 特效
+  - 攻击范围变化
+  - 击杀回血提示

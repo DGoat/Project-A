@@ -35,6 +35,8 @@ replays/private/
 
 # Game engine generated files
 .import/
+.godot/
+*.gd.uid
 .export/
 Library/
 Temp/

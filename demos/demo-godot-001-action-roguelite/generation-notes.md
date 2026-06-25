@@ -56,9 +56,8 @@ The demo uses these as mechanical references, not theme/content copies.
 
 ## Next Steps
 
-1. Implement Godot project files
-2. Add playable main scene
-3. Add player movement, dash, attack
-4. Add enemies and room progression
-5. Add blessing selection UI
-6. Verify local run
+1. Run M1 manual test in Godot
+2. Record test findings in `dev-log.md`
+3. Track bugs and unresolved work in `issue-tracker.md`
+4. Update milestone status in `milestones.md`
+5. Fix blocking issues before entering M2 game-feel work

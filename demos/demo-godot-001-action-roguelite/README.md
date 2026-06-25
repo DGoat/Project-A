@@ -78,6 +78,17 @@ generation-notes.md   AI production notes
 prompt.md             generation prompt
 ```
 
+## Production Docs
+
+| File | Purpose |
+|---|---|
+| `design.md` | 玩法设计、标杆拆解、构筑方向 |
+| `milestones.md` | 开发节点、完成标准、当前下一步 |
+| `dev-log.md` | 实时开发日志，记录推进过程 |
+| `issue-tracker.md` | 问题、解决方案、未解决项和后续计划 |
+| `generation-notes.md` | AI 辅助生产记录 |
+| `prompt.md` | 可复现 Prompt |
+
 ## Known Issues
 
 - Placeholder visuals only
