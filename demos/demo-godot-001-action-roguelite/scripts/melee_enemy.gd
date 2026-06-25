@@ -5,6 +5,8 @@ signal died(enemy: Node)
 @export var max_hp := 40
 @export var move_speed := 120.0
 @export var contact_damage := 10
+@export var recoil_speed := 260.0
+@export var recoil_duration := 0.18
 @export var elite := false
 
 var hp := 40
@@ -13,6 +15,8 @@ var burn_damage := 0
 var burn_ticks_left := 0
 var burn_owner: Node
 var burn_timer := 0.0
+var recoil_time := 0.0
+var recoil_direction := Vector2.ZERO
 var dead := false
 
 @onready var body := $Body
@@ -32,7 +36,11 @@ func _physics_process(delta: float) -> void:
 	if dead or player == null:
 		return
 	var direction := global_position.direction_to(player.global_position)
-	velocity = direction * move_speed
+	if recoil_time > 0.0:
+		recoil_time -= delta
+		velocity = recoil_direction * recoil_speed
+	else:
+		velocity = direction * move_speed
 	move_and_slide()
 	body.rotation = direction.angle()
 	_process_burn(delta)
@@ -66,6 +74,8 @@ func _process_burn(delta: float) -> void:
 func _on_contact_body_entered(body_node: Node2D) -> void:
 	if body_node.has_method("take_damage"):
 		body_node.take_damage(contact_damage)
+		recoil_direction = body_node.global_position.direction_to(global_position).normalized()
+		recoil_time = recoil_duration
 
 func _die(source: Node = null) -> void:
 	dead = true

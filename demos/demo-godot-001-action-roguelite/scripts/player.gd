@@ -23,6 +23,8 @@ var dash_time := 0.0
 var dash_cooldown_time := 0.0
 var attack_cooldown_time := 0.0
 var dash_strike_ready := false
+var invulnerable_time := 0.0
+var hurt_invulnerable_duration := 0.65
 var dead := false
 
 @onready var body := $Body
@@ -46,6 +48,7 @@ func _physics_process(delta: float) -> void:
 
 	dash_cooldown_time = maxf(0.0, dash_cooldown_time - delta)
 	attack_cooldown_time = maxf(0.0, attack_cooldown_time - delta)
+	invulnerable_time = maxf(0.0, invulnerable_time - delta)
 
 	if dash_time > 0.0:
 		dash_time -= delta
@@ -75,11 +78,16 @@ func attack() -> void:
 		attack_preview.visible = false
 
 func take_damage(amount: int) -> void:
-	if dead:
+	if dead or invulnerable_time > 0.0:
 		return
+	invulnerable_time = hurt_invulnerable_duration
 	hp = max(0, hp - amount)
 	_update_health_bar()
 	health_changed.emit(hp, max_hp)
+	body.modulate = Color(1.0, 0.55, 0.55)
+	await get_tree().create_timer(0.08).timeout
+	if is_instance_valid(body):
+		body.modulate = Color(0.2, 0.9, 0.45)
 	if hp == 0:
 		dead = true
 		died.emit()

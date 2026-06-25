@@ -4,8 +4,8 @@ signal died(enemy: Node)
 
 @export var max_hp := 30
 @export var move_speed := 70.0
-@export var preferred_distance := 260.0
-@export var shoot_cooldown := 1.2
+@export var preferred_distance := 300.0
+@export var shoot_cooldown := 1.8
 
 var hp := 30
 var player: Node2D
@@ -21,6 +21,7 @@ var projectile_scene := preload("res://scenes/Projectile.tscn")
 
 func _ready() -> void:
 	hp = max_hp
+	shoot_time = shoot_cooldown * 0.7
 
 func _physics_process(delta: float) -> void:
 	if dead or player == null:
