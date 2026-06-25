@@ -25,6 +25,8 @@
 | DEMO-004 | Open | High | 尚未确认选择祝福后能否进入下一房间 | M1 |
 | DEMO-005 | Open | Medium | 尚未确认死亡后 `R` 是否能重开 | M1 |
 | VIS-001 | Open | Medium | Godot 编辑器/运行画面中出现异常图片或背景，需要确认来源 | M1 |
+| UI-001 | In Progress | High | 血量 UI 离角色太远，战斗中难以感知自身状态 | M1 |
+| FEEL-005 | In Progress | High | 看不到攻击范围，只能通过敌人是否掉血判断命中 | M1 |
 | FEEL-001 | Deferred | Medium | 缺少攻击范围提示 | M2 |
 | FEEL-002 | Deferred | Medium | 缺少 Hit Stop | M2 |
 | FEEL-003 | Deferred | Medium | 缺少击退 | M2 |
@@ -37,8 +39,53 @@
 
 ---
 
-## 详细记录
+### UI-001：血量 UI 离角色太远
 
+状态：In Progress
+优先级：High
+影响节点：M1
+
+现象：
+
+- 血量只在左上角 HUD 显示。
+- 玩家角色和血量信息距离太远，战斗中不易感知自身状态。
+
+处理方式：
+
+- 在 `Player.tscn` 中增加角色头顶血条。
+- 在 `player.gd` 中增加 `_update_health_bar()`，受伤和回血后同步更新。
+
+后续验证：
+
+- 运行后确认角色上方可见血条。
+- 受伤后血条缩短。
+- 击杀回血祝福触发后血条增加。
+
+---
+
+### FEEL-005：看不到攻击范围
+
+状态：In Progress
+优先级：High
+影响节点：M1
+
+现象：
+
+- 攻击时没有范围提示。
+- 玩家只能通过敌人是否掉血判断攻击是否命中。
+
+处理方式：
+
+- 在 `Player.tscn` 中增加 `AttackPreview`。
+- 攻击时将 `AttackPreview.position` 与 `AttackArea.position` 对齐并短暂显示。
+
+后续验证：
+
+- 攻击时可看到半透明黄色攻击范围提示。
+- 提示位置跟随玩家朝向。
+- 不影响真实攻击判定。
+
+---
 ### GODOT-001：本机未安装 Godot
 
 状态：Fixed  

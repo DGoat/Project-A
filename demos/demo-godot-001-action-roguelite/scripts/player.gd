@@ -26,11 +26,14 @@ var dash_strike_ready := false
 var dead := false
 
 @onready var body := $Body
+@onready var health_bar_fill := $HealthBarFill
+@onready var attack_preview := $AttackPreview
 @onready var attack_area := $AttackArea
 @onready var attack_shape := $AttackArea/CollisionShape2D
 
 func _ready() -> void:
 	attack_area.body_entered.connect(_on_attack_body_entered)
+	_update_health_bar()
 	health_changed.emit(hp, max_hp)
 
 func _physics_process(delta: float) -> void:
@@ -63,14 +66,19 @@ func _physics_process(delta: float) -> void:
 func attack() -> void:
 	attack_cooldown_time = attack_cooldown
 	attack_area.position = facing * attack_range
+	attack_preview.position = attack_area.position
+	attack_preview.visible = true
 	attack_shape.disabled = false
 	await get_tree().create_timer(0.08).timeout
 	attack_shape.disabled = true
+	if is_instance_valid(attack_preview):
+		attack_preview.visible = false
 
 func take_damage(amount: int) -> void:
 	if dead:
 		return
 	hp = max(0, hp - amount)
+	_update_health_bar()
 	health_changed.emit(hp, max_hp)
 	if hp == 0:
 		dead = true
@@ -94,6 +102,7 @@ func apply_blessing(blessing: Dictionary) -> void:
 
 func heal(amount: int) -> void:
 	hp = min(max_hp, hp + amount)
+	_update_health_bar()
 	health_changed.emit(hp, max_hp)
 
 func _on_attack_body_entered(body_node: Node2D) -> void:
@@ -111,6 +120,10 @@ func notify_enemy_killed() -> void:
 	if heal_on_kill > 0:
 		heal(heal_on_kill)
 	enemy_killed.emit()
+
+func _update_health_bar() -> void:
+	var ratio := float(hp) / float(max_hp)
+	health_bar_fill.offset_right = -19.0 + 38.0 * ratio
 
 func _update_visuals() -> void:
 	body.rotation = facing.angle()
