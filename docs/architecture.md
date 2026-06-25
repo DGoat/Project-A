@@ -47,6 +47,26 @@ Not current focus:
 
 These can be future experiments after basic demo production workflow is stable.
 
+## Spec First Rule
+
+Medium and large changes must produce a Spec before implementation.
+
+Spec should define:
+
+- background
+- goals
+- non-goals
+- scope
+- design plan
+- data/config changes
+- affected files
+- acceptance criteria
+- risks
+- implementation steps
+- rollback plan
+
+See [`docs/spec-first.md`](spec-first.md).
+
 ## Principles
 
 - Playable demo first, reusable workflow second

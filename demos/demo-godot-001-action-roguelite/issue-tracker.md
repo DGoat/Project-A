@@ -30,6 +30,10 @@
 | FEEL-003 | Deferred | Medium | 缺少击退 | M2 |
 | FEEL-004 | Deferred | Medium | 玩家受伤后缺少无敌帧 | M2 |
 | BUILD-001 | Deferred | Medium | 祝福效果多数偏数值，缺少可见差异 | M3 |
+| CTRL-001 | Open | Medium | 祝福选择使用硬编码 `KEY_1/2/3` | M2 |
+| CTRL-002 | Deferred | Medium | 暂无设置界面展示/修改键位 | M2/M4 |
+| CTRL-003 | Deferred | Low | 暂无本地键位保存 | M4 |
+| CTRL-004 | Deferred | Low | 暂无手柄支持 | M5 |
 
 ---
 
@@ -320,3 +324,77 @@ F:\Godot\godot_console.bat
   - Dash Strike 特效
   - 攻击范围变化
   - 击杀回血提示
+
+---
+
+### CTRL-001：祝福选择使用硬编码 `KEY_1/2/3`
+
+状态：Open
+优先级：Medium
+影响节点：M2
+
+现象：
+
+- 当前 `main.gd` 中祝福快捷选择直接读取 `KEY_1/2/3`。
+- 这不利于后续改键和手柄支持。
+
+后续计划：
+
+- 在 `project.godot` 中新增：
+
+```text
+pick_blessing_1
+pick_blessing_2
+pick_blessing_3
+```
+
+- 将代码改为：
+
+```gdscript
+Input.is_action_just_pressed("pick_blessing_1")
+Input.is_action_just_pressed("pick_blessing_2")
+Input.is_action_just_pressed("pick_blessing_3")
+```
+
+---
+
+### CTRL-002：暂无设置界面展示/修改键位
+
+状态：Deferred
+优先级：Medium
+影响节点：M2/M4
+
+现象：
+
+- 玩家目前只能查看 README/controls.md 了解键位。
+- 游戏内没有 Controls/Settings 界面。
+
+后续计划：
+
+- M2 增加只读 Controls 界面。
+- M4 支持实际改键。
+
+---
+
+### CTRL-003：暂无本地键位保存
+
+状态：Deferred
+优先级：Low
+影响节点：M4
+
+后续计划：
+
+- 使用 `user://controls.cfg` 保存自定义键位。
+
+---
+
+### CTRL-004：暂无手柄支持
+
+状态：Deferred
+优先级：Low
+影响节点：M5
+
+后续计划：
+
+- 支持左摇杆移动。
+- 支持手柄攻击、闪避、确认、取消。

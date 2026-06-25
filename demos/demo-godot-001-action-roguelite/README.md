@@ -82,6 +82,7 @@ prompt.md             generation prompt
 
 | File | Purpose |
 |---|---|
+| `controls.md` | 操作映射、默认键位、可配置键位规划 |
 | `design.md` | 玩法设计、标杆拆解、构筑方向 |
 | `milestones.md` | 开发节点、完成标准、当前下一步 |
 | `dev-log.md` | 实时开发日志，记录推进过程 |
