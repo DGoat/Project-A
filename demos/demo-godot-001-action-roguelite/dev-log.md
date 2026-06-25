@@ -1,4 +1,49 @@
-## 2026-06-25：实现 M2 基础手感强化第一版
+## 2026-06-25：区分伤害类型与击退规则
+
+### 本次目标
+
+修正 M2 手感改动后的伤害类型问题：燃烧伤害不应造成敌人后退。
+
+### 做了什么
+
+- 新增 Spec：`specs/spec-004-damage-types.md`。
+- 修改 `player.gd`：
+  - 普通攻击传入 `damage_type = "direct"`。
+- 修改 `melee_enemy.gd`：
+  - `take_damage()` 增加 `damage_type` 参数。
+  - 仅 `direct` 伤害触发 knockback。
+  - burn tick 传入 `damage_type = "burn"`。
+- 修改 `ranged_enemy.gd`：
+  - 同步增加 `damage_type` 参数。
+  - burn tick 不触发 knockback。
+- 更新 `issue-tracker.md`：
+  - 新增 `DMG-001`。
+
+### 遇到的问题
+
+- 直接伤害和燃烧持续伤害都走同一个 `take_damage()`。
+- M2 受击 knockback 逻辑只判断 `source != null`，导致燃烧 tick 也可能触发 knockback。
+
+### 如何解决
+
+- 引入轻量 `damage_type` 参数。
+- 当前只区分：
+  - `direct`：可以击退。
+  - `burn`：只扣血，不击退。
+
+### 仍未解决
+
+- 尚未做完整伤害系统。
+- 后续若加入冰冻、毒、爆炸等伤害，需要扩展伤害类型规则。
+
+### 下一步
+
+- 用户复测：
+  - 普攻是否仍击退敌人。
+  - 燃烧 tick 是否不再击退敌人。
+  - 燃烧是否仍能造成伤害和击杀。
+
+
 
 ### 本次目标
 

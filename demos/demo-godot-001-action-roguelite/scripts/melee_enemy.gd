@@ -52,10 +52,10 @@ func _physics_process(delta: float) -> void:
 	body.rotation = direction.angle()
 	_process_burn(delta)
 
-func take_damage(amount: int, source: Node = null) -> void:
+func take_damage(amount: int, source: Node = null, damage_type := "direct") -> void:
 	if dead:
 		return
-	if source != null:
+	if damage_type == "direct" and source != null:
 		knockback_direction = source.global_position.direction_to(global_position).normalized()
 		knockback_time = knockback_duration
 	hp -= amount
@@ -79,7 +79,7 @@ func _process_burn(delta: float) -> void:
 	if burn_timer <= 0.0:
 		burn_ticks_left -= 1
 		burn_timer = 0.45
-		take_damage(burn_damage, burn_owner)
+		take_damage(burn_damage, burn_owner, "burn")
 
 func _on_contact_body_entered(body_node: Node2D) -> void:
 	if body_node.has_method("take_damage"):

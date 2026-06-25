@@ -121,7 +121,7 @@ func _on_attack_body_entered(body_node: Node2D) -> void:
 	if dash_strike_ready:
 		damage *= dash_strike_multiplier
 		dash_strike_ready = false
-	body_node.take_damage(int(round(damage)), self)
+	body_node.take_damage(int(round(damage)), self, "direct")
 	_apply_hit_stop()
 	if burn_damage > 0 and body_node.has_method("apply_burn"):
 		body_node.apply_burn(burn_damage, burn_ticks, self)

@@ -50,10 +50,10 @@ func _physics_process(delta: float) -> void:
 		_shoot(to_player)
 	_process_burn(delta)
 
-func take_damage(amount: int, source: Node = null) -> void:
+func take_damage(amount: int, source: Node = null, damage_type := "direct") -> void:
 	if dead:
 		return
-	if source != null:
+	if damage_type == "direct" and source != null:
 		knockback_direction = source.global_position.direction_to(global_position).normalized()
 		knockback_time = knockback_duration
 	hp -= amount
@@ -77,7 +77,7 @@ func _process_burn(delta: float) -> void:
 	if burn_timer <= 0.0:
 		burn_ticks_left -= 1
 		burn_timer = 0.45
-		take_damage(burn_damage, burn_owner)
+		take_damage(burn_damage, burn_owner, "burn")
 
 func _shoot(direction: Vector2) -> void:
 	var projectile := projectile_scene.instantiate()

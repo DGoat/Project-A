@@ -34,10 +34,37 @@
 | FEEL-003 | In Progress | Medium | 增加敌人受击击退 | M2 |
 | FEEL-004 | Fixed | Medium | 玩家受伤后已有短暂无敌帧 | M2 |
 | BUILD-001 | Deferred | Medium | 祝福效果多数偏数值，缺少可见差异 | M3 |
+| DMG-001 | In Progress | Medium | 燃烧伤害不应触发敌人受击击退 | M2 |
 | CTRL-001 | Fixed | Medium | 祝福选择已改为 InputMap 动作 | M2 |
 | CTRL-002 | In Progress | Medium | 已增加只读 Controls 提示，暂无修改键位界面 | M2/M4 |
 | CTRL-003 | Deferred | Low | 暂无本地键位保存 | M4 |
 | CTRL-004 | Deferred | Low | 暂无手柄支持 | M5 |
+
+---
+
+### DMG-001：燃烧伤害不应触发敌人受击击退
+
+状态：In Progress
+优先级：Medium
+影响节点：M2
+
+现象：
+
+- M2 增加敌人受击 knockback 后，燃烧 tick 伤害也可能触发 knockback。
+- 这不符合伤害类型直觉：持续伤害应该扣血，但不应该推开敌人。
+
+处理方式：
+
+- 新增轻量 `damage_type` 参数。
+- `direct` 伤害触发 knockback。
+- `burn` 伤害不触发 knockback。
+- burn tick 仍保留 `burn_owner`，确保燃烧击杀可以归因给玩家。
+
+后续验证：
+
+- 普攻命中仍会击退。
+- 燃烧 tick 不会击退。
+- 燃烧仍能造成伤害并击杀。
 
 ---
 
