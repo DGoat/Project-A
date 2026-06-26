@@ -38,15 +38,15 @@ offset_left = 20.0
 offset_top = 48.0
 offset_right = 820.0
 offset_bottom = 82.0
-text = "Room 1"
+text = "准备开始"
 
 [node name="ControlsHint" type="Label" parent="CanvasLayer/UI"]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 86.0
-offset_right = 520.0
+offset_right = 620.0
 offset_bottom = 108.0
-text = "F1 Controls | R Restart"
+text = "WASD/方向键移动 | 鼠标/J攻击 | Space闪避 | R重开 | ` 显示Debug"
 modulate = Color(1, 1, 1, 0.55)
 
 [node name="DamageFlash" type="ColorRect" parent="CanvasLayer/UI"]
@@ -125,9 +125,9 @@ text = "长柄之势"
 visible = false
 layout_mode = 0
 offset_left = 180.0
-offset_top = 160.0
+offset_top = 150.0
 offset_right = 860.0
-offset_bottom = 420.0
+offset_bottom = 470.0
 
 [node name="BlessingList" type="VBoxContainer" parent="CanvasLayer/UI/BlessingPanel"]
 layout_mode = 2
@@ -148,3 +148,55 @@ text = "2"
 [node name="Blessing3" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingList"]
 layout_mode = 2
 text = "3"
+
+[node name="StartPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 140.0
+offset_right = 770.0
+offset_bottom = 430.0
+
+[node name="StartList" type="VBoxContainer" parent="CanvasLayer/UI/StartPanel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/UI/StartPanel/StartList"]
+layout_mode = 2
+text = "AI 协作动作 Roguelite Demo"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="CanvasLayer/UI/StartPanel/StartList"]
+layout_mode = 2
+text = "清理房间，选择赐福，完成 3 房间挑战。"
+horizontal_alignment = 1
+
+[node name="Controls" type="Label" parent="CanvasLayer/UI/StartPanel/StartList"]
+layout_mode = 2
+text = "移动：WASD / 方向键\n攻击：鼠标左键 / J\n闪避：Space\nDebug：键盘左上角 ` / ~ / · 所在键"
+
+[node name="StartButton" type="Button" parent="CanvasLayer/UI/StartPanel/StartList"]
+layout_mode = 2
+text = "开始游戏"
+
+[node name="ResultPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 0
+offset_left = 300.0
+offset_top = 150.0
+offset_right = 740.0
+offset_bottom = 420.0
+
+[node name="ResultList" type="VBoxContainer" parent="CanvasLayer/UI/ResultPanel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/UI/ResultPanel/ResultList"]
+layout_mode = 2
+text = "结果"
+horizontal_alignment = 1
+
+[node name="Blessings" type="Label" parent="CanvasLayer/UI/ResultPanel/ResultList"]
+layout_mode = 2
+text = "本局赐福：暂无"
+
+[node name="RestartButton" type="Button" parent="CanvasLayer/UI/ResultPanel/ResultList"]
+layout_mode = 2
+text = "重新开始"

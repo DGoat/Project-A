@@ -12,6 +12,8 @@ var acquired_blessings: Array = []
 var player: Node
 var damage_flash_tween: Tween
 var debug_toggle_down := false
+var run_started := false
+var run_ended := false
 
 @onready var room_root := $RoomRoot
 @onready var ui_status := $CanvasLayer/UI/Status
@@ -20,6 +22,12 @@ var debug_toggle_down := false
 @onready var acquired_blessings_panel := $CanvasLayer/UI/AcquiredBlessingsPanel
 @onready var acquired_blessings_items := $CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList/Items
 @onready var debug_panel := $CanvasLayer/UI/DebugPanel
+@onready var start_panel := $CanvasLayer/UI/StartPanel
+@onready var start_button := $CanvasLayer/UI/StartPanel/StartList/StartButton
+@onready var result_panel := $CanvasLayer/UI/ResultPanel
+@onready var result_title := $CanvasLayer/UI/ResultPanel/ResultList/Title
+@onready var result_blessings := $CanvasLayer/UI/ResultPanel/ResultList/Blessings
+@onready var restart_button := $CanvasLayer/UI/ResultPanel/ResultList/RestartButton
 @onready var blessing_panel := $CanvasLayer/UI/BlessingPanel
 @onready var blessing_buttons := [
 	$CanvasLayer/UI/BlessingPanel/BlessingList/Blessing1,
@@ -61,11 +69,17 @@ func _ready() -> void:
 	for i in debug_blessing_buttons.size():
 		var button_index := i
 		debug_blessing_buttons[i].pressed.connect(func(): _debug_apply_blessing(button_index))
+	start_button.pressed.connect(_start_run)
+	restart_button.pressed.connect(func(): get_tree().reload_current_scene())
 	acquired_blessings_panel.visible = false
 	debug_panel.visible = false
+	blessing_panel.visible = false
+	result_panel.visible = false
+	start_panel.visible = true
+	ui_status.text = ""
+	ui_message.text = "准备开始"
 	_update_debug_buttons()
 	_update_acquired_blessings()
-	_start_run()
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
@@ -92,6 +106,12 @@ func _load_blessings() -> void:
 		blessing_pool = parsed
 
 func _start_run() -> void:
+	if run_started:
+		return
+	run_started = true
+	run_ended = false
+	start_panel.visible = false
+	result_panel.visible = false
 	player = player_scene.instantiate()
 	player.global_position = Vector2(520, 520)
 	add_child(player)
@@ -126,6 +146,8 @@ func _spawn_room(index: int) -> void:
 	_update_status()
 
 func _on_enemy_died(_enemy: Node) -> void:
+	if run_ended:
+		return
 	enemies_alive -= 1
 	_update_status()
 	if enemies_alive <= 0:
@@ -133,13 +155,14 @@ func _on_enemy_died(_enemy: Node) -> void:
 
 func _on_room_cleared() -> void:
 	if current_room >= rooms.size() - 1:
-		ui_message.text = "胜利！按 R 重开。"
+		_show_result(true)
 		return
 	choosing_blessing = true
 	offered_blessings = _roll_blessings(3)
 	for i in offered_blessings.size():
 		var blessing: Dictionary = offered_blessings[i]
-		blessing_buttons[i].text = "%d. %s\n%s" % [i + 1, blessing["name"], blessing["description"]]
+		var tags_text := _format_tags(blessing)
+		blessing_buttons[i].text = "%d. [%s]\n%s\n%s" % [i + 1, tags_text, blessing["name"], blessing["description"]]
 	blessing_panel.visible = true
 	ui_message.text = "选择一个赐福"
 
@@ -151,11 +174,12 @@ func _roll_blessings(count: int) -> Array:
 func _pick_blessing(index: int) -> void:
 	if not choosing_blessing or index >= offered_blessings.size():
 		return
-	_apply_blessing(offered_blessings[index], false)
+	var blessing: Dictionary = offered_blessings[index]
+	_apply_blessing(blessing, false)
 	choosing_blessing = false
 	blessing_panel.visible = false
 	current_room += 1
-	ui_message.text = "房间 %d：清理敌人" % [current_room + 1]
+	ui_message.text = "获得赐福：%s。房间 %d：清理敌人" % [blessing["name"], current_room + 1]
 	_spawn_room(current_room)
 
 func _toggle_debug_panel() -> void:
@@ -164,7 +188,7 @@ func _toggle_debug_panel() -> void:
 	debug_panel.visible = next_visible
 
 func _debug_apply_blessing(index: int) -> void:
-	if index < blessing_pool.size():
+	if index < blessing_pool.size() and run_started and not run_ended:
 		_apply_blessing(blessing_pool[index], true)
 
 func _apply_blessing(blessing: Dictionary, debug := false) -> void:
@@ -192,8 +216,29 @@ func _update_acquired_blessings() -> void:
 		lines.append("- %s" % blessing["name"])
 	acquired_blessings_items.text = "\n".join(lines)
 
+func _show_result(victory: bool) -> void:
+	run_ended = true
+	choosing_blessing = false
+	blessing_panel.visible = false
+	result_title.text = "胜利" if victory else "失败"
+	result_blessings.text = _format_result_blessings()
+	result_panel.visible = true
+	ui_message.text = "胜利！" if victory else "失败。"
+
+func _format_result_blessings() -> String:
+	if acquired_blessings.is_empty():
+		return "本局赐福：暂无"
+	var lines: Array[String] = ["本局赐福："]
+	for blessing in acquired_blessings:
+		lines.append("- %s" % blessing["name"])
+	return "\n".join(lines)
+
+func _format_tags(blessing: Dictionary) -> String:
+	var tags: Array = blessing.get("tags", [])
+	return " / ".join(tags) if not tags.is_empty() else "通用"
+
 func _on_player_died() -> void:
-	ui_message.text = "失败。按 R 重开。"
+	_show_result(false)
 
 func _on_player_damaged() -> void:
 	if damage_flash_tween != null:
