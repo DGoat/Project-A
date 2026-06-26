@@ -1,45 +1,45 @@
 [
   {
     "id": "attack_up",
-    "name": "锋刃打磨",
-    "description": "攻击伤害 +20%。",
-    "tags": ["直接伤害"],
+    "name": "磨亮小木锤",
+    "description": "修理打击力度 +20%。",
+    "tags": ["积木", "直接修复"],
     "effects": {
       "attack_damage_multiplier": 1.2
     }
   },
   {
     "id": "attack_speed_up",
-    "name": "迅捷出手",
-    "description": "攻击冷却 -15%。",
-    "tags": ["攻速"],
+    "name": "发条上紧",
+    "description": "修理打击冷却 -15%。",
+    "tags": ["发条", "攻速"],
     "effects": {
       "attack_cooldown_multiplier": 0.85
     }
   },
   {
     "id": "dash_strike",
-    "name": "疾风步",
-    "description": "闪避后，下一次攻击伤害 +50%。",
-    "tags": ["闪避爆发"],
+    "name": "弹簧冲刺",
+    "description": "发条冲刺后，下一次修理打击力度 +50%。",
+    "tags": ["发条", "爆发"],
     "effects": {
       "dash_strike_multiplier": 1.5
     }
   },
   {
     "id": "kill_heal",
-    "name": "血暖余烬",
-    "description": "击杀敌人后回复 8 点生命。",
-    "tags": ["生存"],
+    "name": "纽扣心",
+    "description": "修复一个失控玩具后回复 8 点生命。",
+    "tags": ["缝补", "生存"],
     "effects": {
       "heal_on_kill": 8
     }
   },
   {
     "id": "burn_attack",
-    "name": "余火印记",
-    "description": "攻击会附加持续燃烧伤害。",
-    "tags": ["燃烧"],
+    "name": "暖灯余光",
+    "description": "修理打击会附加持续净化。",
+    "tags": ["灯光", "持续修复"],
     "effects": {
       "burn_damage": 4,
       "burn_ticks": 3
@@ -47,9 +47,9 @@
   },
   {
     "id": "range_up",
-    "name": "长柄之势",
-    "description": "攻击范围 +20%。",
-    "tags": ["范围"],
+    "name": "长木尺",
+    "description": "修理打击范围 +20%。",
+    "tags": ["积木", "范围"],
     "effects": {
       "attack_range_multiplier": 1.2
     }

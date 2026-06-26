@@ -77,7 +77,7 @@ func _ready() -> void:
 	result_panel.visible = false
 	start_panel.visible = true
 	ui_status.text = ""
-	ui_message.text = "准备开始"
+	ui_message.text = "等待入夜"
 	_update_debug_buttons()
 	_update_acquired_blessings()
 
@@ -120,7 +120,7 @@ func _start_run() -> void:
 	player.health_changed.connect(_on_player_health_changed)
 	current_room = 0
 	_spawn_room(current_room)
-	ui_message.text = "房间 1：清理敌人"
+	ui_message.text = "区域 1：修复失控玩具"
 	blessing_panel.visible = false
 
 func _spawn_room(index: int) -> void:
@@ -164,7 +164,7 @@ func _on_room_cleared() -> void:
 		var tags_text := _format_tags(blessing)
 		blessing_buttons[i].text = "%d. [%s]\n%s\n%s" % [i + 1, tags_text, blessing["name"], blessing["description"]]
 	blessing_panel.visible = true
-	ui_message.text = "选择一个赐福"
+	ui_message.text = "选择一个修理灵感"
 
 func _roll_blessings(count: int) -> Array:
 	var pool := blessing_pool.duplicate()
@@ -179,7 +179,7 @@ func _pick_blessing(index: int) -> void:
 	choosing_blessing = false
 	blessing_panel.visible = false
 	current_room += 1
-	ui_message.text = "获得赐福：%s。房间 %d：清理敌人" % [blessing["name"], current_room + 1]
+	ui_message.text = "获得修理灵感：%s。区域 %d：修复失控玩具" % [blessing["name"], current_room + 1]
 	_spawn_room(current_room)
 
 func _toggle_debug_panel() -> void:
@@ -198,7 +198,7 @@ func _apply_blessing(blessing: Dictionary, debug := false) -> void:
 	acquired_blessings.append(blessing)
 	_update_acquired_blessings()
 	if debug:
-		ui_message.text = "调试添加赐福：%s" % blessing["name"]
+		ui_message.text = "调试添加修理灵感：%s" % blessing["name"]
 
 func _update_debug_buttons() -> void:
 	for i in debug_blessing_buttons.size():
@@ -220,15 +220,15 @@ func _show_result(victory: bool) -> void:
 	run_ended = true
 	choosing_blessing = false
 	blessing_panel.visible = false
-	result_title.text = "胜利" if victory else "失败"
+	result_title.text = "黎明前修好了所有玩具" if victory else "小灯熄灭了"
 	result_blessings.text = _format_result_blessings()
 	result_panel.visible = true
-	ui_message.text = "胜利！" if victory else "失败。"
+	ui_message.text = "黎明前修好了所有玩具。" if victory else "小灯熄灭了，被送回修理台。"
 
 func _format_result_blessings() -> String:
 	if acquired_blessings.is_empty():
-		return "本局赐福：暂无"
-	var lines: Array[String] = ["本局赐福："]
+		return "本晚灵感：暂无"
+	var lines: Array[String] = ["本晚灵感："]
 	for blessing in acquired_blessings:
 		lines.append("- %s" % blessing["name"])
 	return "\n".join(lines)
@@ -248,8 +248,8 @@ func _on_player_damaged() -> void:
 	damage_flash_tween.tween_property(damage_flash, "color", Color(1.0, 0.0, 0.0, 0.0), 0.22)
 
 func _on_player_health_changed(current: int, maximum: int) -> void:
-	ui_status.text = "HP: %d/%d | 房间: %d/%d | 敌人: %d" % [current, maximum, current_room + 1, rooms.size(), enemies_alive]
+	ui_status.text = "HP: %d/%d | 区域: %d/%d | 失控玩具: %d" % [current, maximum, current_room + 1, rooms.size(), enemies_alive]
 
 func _update_status() -> void:
 	if player != null:
-		ui_status.text = "HP: %d/%d | 房间: %d/%d | 敌人: %d" % [player.hp, player.max_hp, current_room + 1, rooms.size(), enemies_alive]
+		ui_status.text = "HP: %d/%d | 区域: %d/%d | 失控玩具: %d" % [player.hp, player.max_hp, current_room + 1, rooms.size(), enemies_alive]

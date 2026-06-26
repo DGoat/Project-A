@@ -46,7 +46,7 @@ offset_left = 20.0
 offset_top = 86.0
 offset_right = 620.0
 offset_bottom = 108.0
-text = "WASD/方向键移动 | 鼠标/J攻击 | Space闪避 | R重开 | ` 显示Debug"
+text = "WASD/方向键移动 | 鼠标/J修理打击 | Space发条冲刺 | R重开 | ` 显示Debug"
 modulate = Color(1, 1, 1, 0.55)
 
 [node name="DamageFlash" type="ColorRect" parent="CanvasLayer/UI"]
@@ -73,7 +73,7 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList"]
 layout_mode = 2
-text = "赐福"
+text = "修理灵感"
 horizontal_alignment = 1
 
 [node name="Items" type="Label" parent="CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList"]
@@ -94,7 +94,7 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="CanvasLayer/UI/DebugPanel/DebugList"]
 layout_mode = 2
-text = "调试：添加赐福"
+text = "调试：添加修理灵感"
 horizontal_alignment = 1
 
 [node name="DebugBlessing1" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
@@ -134,7 +134,7 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="CanvasLayer/UI/BlessingPanel/BlessingList"]
 layout_mode = 2
-text = "选择一个赐福"
+text = "选择一个修理灵感"
 horizontal_alignment = 1
 
 [node name="Blessing1" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingList"]
@@ -161,21 +161,21 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="CanvasLayer/UI/StartPanel/StartList"]
 layout_mode = 2
-text = "AI 协作动作 Roguelite Demo"
+text = "玩具修理屋：夜间修理"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="CanvasLayer/UI/StartPanel/StartList"]
 layout_mode = 2
-text = "清理房间，选择赐福，完成 3 房间挑战。"
+text = "进入玩具箱王国，把失控玩具们修好。"
 horizontal_alignment = 1
 
 [node name="Controls" type="Label" parent="CanvasLayer/UI/StartPanel/StartList"]
 layout_mode = 2
-text = "移动：WASD / 方向键\n攻击：鼠标左键 / J\n闪避：Space\nDebug：键盘左上角 ` / ~ / · 所在键"
+text = "移动：WASD / 方向键\n修理打击：鼠标左键 / J\n发条冲刺：Space\nDebug：键盘左上角 ` / ~ / · 所在键"
 
 [node name="StartButton" type="Button" parent="CanvasLayer/UI/StartPanel/StartList"]
 layout_mode = 2
-text = "开始游戏"
+text = "开始夜间修理"
 
 [node name="ResultPanel" type="PanelContainer" parent="CanvasLayer/UI"]
 visible = false
@@ -195,7 +195,7 @@ horizontal_alignment = 1
 
 [node name="Blessings" type="Label" parent="CanvasLayer/UI/ResultPanel/ResultList"]
 layout_mode = 2
-text = "本局赐福：暂无"
+text = "本晚灵感：暂无"
 
 [node name="RestartButton" type="Button" parent="CanvasLayer/UI/ResultPanel/ResultList"]
 layout_mode = 2
