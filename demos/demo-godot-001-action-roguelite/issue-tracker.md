@@ -29,16 +29,16 @@
 | FEEL-005 | Fixed | High | 已增加攻击范围提示 | M1 |
 | FEEL-006 | Fixed | High | 已增加受伤无敌与近战命中后弹开 | M1 |
 | BAL-001 | Fixed | Medium | 已降低远程敌人攻击欲望 | M1 |
-| FEEL-001 | In Progress | Medium | 已补充攻击范围提示，继续补充 Hit Stop / knockback 手感 | M2 |
-| FEEL-002 | In Progress | Medium | 增加 Hit Stop | M2 |
-| FEEL-003 | In Progress | Medium | 增加敌人受击击退 | M2 |
+| FEEL-001 | Fixed | Medium | 攻击范围提示、Hit Stop、knockback 已可接受 | M2 |
+| FEEL-002 | Fixed | Medium | Hit Stop 可接受 | M2 |
+| FEEL-003 | Fixed | Medium | 敌人受击击退可接受 | M2 |
 | FEEL-004 | Fixed | Medium | 玩家受伤后已有短暂无敌帧 | M2 |
 | BUILD-001 | Deferred | Medium | 祝福效果多数偏数值，缺少可见差异 | M3 |
-| DMG-001 | Fixed | Medium | 燃烧伤害不触发击退，并补充燃烧闪色表现 | M2 |
-| UI-002 | In Progress | Low | Controls 提示遮挡/干扰战斗视野 | M2 |
-| FEEL-007 | In Progress | Low | 攻击范围提示已改为矩形，实际判定也已改为矩形，需要复测 | M2 |
+| DMG-001 | Fixed | Medium | 燃烧伤害不触发击退，燃烧闪色可见 | M2 |
+| UI-002 | Fixed | Low | Controls 提示暂时可接受 | M2 |
+| FEEL-007 | Fixed | Low | 攻击范围提示已改为矩形，实际判定也已改为矩形 | M2 |
 | CTRL-001 | Fixed | Medium | 祝福选择已改为 InputMap 动作 | M2 |
-| CTRL-002 | In Progress | Medium | 已增加只读 Controls 提示，暂无修改键位界面 | M2/M4 |
+| CTRL-002 | Fixed | Medium | 已增加只读 Controls 提示，暂时可接受 | M2/M4 |
 | CTRL-003 | Deferred | Low | 暂无本地键位保存 | M4 |
 | CTRL-004 | Deferred | Low | 暂无手柄支持 | M5 |
 
