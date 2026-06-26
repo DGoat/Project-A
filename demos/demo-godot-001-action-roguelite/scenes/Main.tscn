@@ -43,10 +43,11 @@ text = "Room 1"
 [node name="ControlsHint" type="Label" parent="CanvasLayer/UI"]
 layout_mode = 0
 offset_left = 20.0
-offset_top = 610.0
-offset_right = 1050.0
-offset_bottom = 640.0
-text = "Move: WASD/Arrows | Attack: Mouse/J | Dash: Space/K | Pick: 1/2/3 | Restart: R"
+offset_top = 86.0
+offset_right = 520.0
+offset_bottom = 108.0
+text = "F1 Controls | R Restart"
+modulate = Color(1, 1, 1, 0.55)
 
 [node name="BlessingPanel" type="PanelContainer" parent="CanvasLayer/UI"]
 visible = false

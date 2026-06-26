@@ -57,7 +57,10 @@ func take_damage(amount: int, source: Node = null, damage_type := "direct") -> v
 		knockback_direction = source.global_position.direction_to(global_position).normalized()
 		knockback_time = knockback_duration
 	hp -= amount
-	body.modulate = Color(1.0, 0.55, 0.55)
+	if damage_type == "burn":
+		body.modulate = Color(1.0, 0.45, 0.05)
+	else:
+		body.modulate = Color(1.0, 0.55, 0.55)
 	await get_tree().create_timer(0.06).timeout
 	if is_instance_valid(body):
 		body.modulate = Color(0.35, 0.55, 1.0)
