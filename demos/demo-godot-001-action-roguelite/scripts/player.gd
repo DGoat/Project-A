@@ -13,8 +13,8 @@ var dash_duration := 0.16
 var dash_cooldown := 0.55
 var attack_damage := 20.0
 var attack_cooldown := 0.35
-var attack_length := 50.0
-var attack_width := 36.0
+var attack_length := 65.0
+var attack_width := 47.0
 var heal_on_kill := 0
 var burn_damage := 0
 var burn_ticks := 0
@@ -28,11 +28,14 @@ var dash_strike_ready := false
 var invulnerable_time := 0.0
 var hurt_invulnerable_duration := 0.65
 var hit_stop_active := false
+var play_area_min := Vector2.ZERO
+var play_area_max := Vector2(3168.0, 1344.0)
 var dead := false
 
 @onready var body := $Body
 @onready var health_bar_fill := $HealthBarFill
 @onready var attack_preview := $AttackPreview
+@onready var attack_sprite := $AttackSprite
 @onready var attack_area := $AttackArea
 @onready var attack_shape := $AttackArea/CollisionShape2D
 
@@ -66,6 +69,7 @@ func _physics_process(delta: float) -> void:
 			_refresh_body_color()
 
 	move_and_slide()
+	global_position = global_position.clamp(play_area_min, play_area_max)
 	_update_visuals()
 
 	if Input.is_action_just_pressed("attack") and attack_cooldown_time <= 0.0:
@@ -73,16 +77,22 @@ func _physics_process(delta: float) -> void:
 
 func attack() -> void:
 	attack_cooldown_time = attack_cooldown
-	attack_area.position = facing * 18.0
+	attack_area.position = facing * 22.0
 	attack_area.rotation = facing.angle()
 	attack_preview.position = attack_area.position
 	attack_preview.rotation = attack_area.rotation
+	attack_sprite.position = attack_area.position + facing * (attack_length * 0.32)
+	attack_sprite.rotation = facing.angle() + PI * 0.5
+	attack_sprite.scale = Vector2(absf(attack_sprite.scale.x), -absf(attack_sprite.scale.y))
 	attack_preview.visible = true
+	attack_sprite.visible = true
 	attack_shape.disabled = false
 	await get_tree().create_timer(0.08).timeout
 	attack_shape.disabled = true
 	if is_instance_valid(attack_preview):
 		attack_preview.visible = false
+	if is_instance_valid(attack_sprite):
+		attack_sprite.visible = false
 
 func take_damage(amount: int) -> void:
 	if dead or invulnerable_time > 0.0:
@@ -169,10 +179,12 @@ func _update_attack_shape() -> void:
 		Vector2(attack_length, attack_width * 0.5),
 		Vector2(0.0, attack_width * 0.5)
 	])
-	attack_preview.color = Color(1.0, 0.55, 0.18, 0.28) if attack_damage > 20.0 else Color(1.0, 0.9, 0.25, 0.24)
+	attack_preview.color = Color(1.0, 0.55, 0.18, 0.18) if attack_damage > 20.0 else Color(1.0, 0.9, 0.25, 0.14)
+	if is_node_ready():
+		attack_sprite.scale = Vector2(attack_length / 560.0, attack_length / 560.0)
 
 func _refresh_body_color() -> void:
-	body.modulate = Color(0.35, 0.95, 1.0) if dash_strike_ready else Color(0.2, 0.9, 0.45)
+	body.modulate = Color(0.55, 1.15, 1.25) if dash_strike_ready else Color(1.0, 1.0, 1.0)
 
 func _update_visuals() -> void:
-	body.rotation = facing.angle()
+	body.flip_h = facing.x < 0

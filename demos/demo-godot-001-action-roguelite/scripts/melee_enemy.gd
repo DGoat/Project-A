@@ -33,7 +33,7 @@ func _ready() -> void:
 		max_hp = 90
 		move_speed = 145.0
 		contact_damage = 16
-		body.scale = Vector2(1.35, 1.35)
+		body.scale = Vector2(0.1495, 0.1495)
 	contact_area.body_entered.connect(_on_contact_body_entered)
 	_refresh_body_color()
 
@@ -49,9 +49,9 @@ func _physics_process(delta: float) -> void:
 		velocity = recoil_direction * recoil_speed
 	else:
 		velocity = direction * move_speed
-	move_and_slide()
-	body.rotation = direction.angle()
-	_process_burn(delta)
+		move_and_slide()
+		body.flip_h = direction.x < 0
+		_process_burn(delta)
 
 func take_damage(amount: int, source: Node = null, damage_type := "direct") -> void:
 	if dead:
@@ -96,9 +96,9 @@ func _on_contact_body_entered(body_node: Node2D) -> void:
 
 func _refresh_body_color() -> void:
 	if burn_ticks_left > 0:
-		body.modulate = Color(1.0, 0.55, 0.12)
+		body.modulate = Color(1.25, 0.75, 0.35)
 	else:
-		body.modulate = Color(1.0, 0.35, 0.25) if elite else Color(0.9, 0.25, 0.25)
+		body.modulate = Color(1.12, 0.85, 0.85) if elite else Color(1.0, 1.0, 1.0)
 
 func _die(source: Node = null) -> void:
 	dead = true

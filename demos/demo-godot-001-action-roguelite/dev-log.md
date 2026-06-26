@@ -1,3 +1,41 @@
+## 2026-06-26：第一批玩具修理屋美术资源接入
+
+### 本次目标
+
+将已生成的第一批 PNG 美术资源接入 Godot，替换主要几何占位，验证“童话治愈 × 玩具修理屋”主题是否更清楚。
+
+### 做了什么
+
+- 新增 Spec：`specs/spec-011-toy-art-asset-integration-01.md`。
+- 接入 6 个资源：
+  - `player_repairer.png`
+  - `enemy_block_soldier.png`
+  - `enemy_spring_cannon.png`
+  - `projectile_button.png`
+  - `attack_wood_ruler.png`
+  - `bg_repair_table.png`
+- 修改场景：
+  - `Main.tscn` 增加修理台背景。
+  - `Player.tscn` 用主角 Sprite 替换几何 Body，并增加攻击木尺 Sprite。
+  - `MeleeEnemy.tscn` 用积木兵 Sprite 替换几何 Body。
+  - `RangedEnemy.tscn` 用弹簧炮 Sprite 替换几何 Body。
+  - `Projectile.tscn` 用纽扣 Sprite 替换几何 Body。
+- 修改脚本：
+  - `player.gd` 同步攻击 Sprite 的显示、方向和缩放。
+  - `melee_enemy.gd` / `ranged_enemy.gd` 调整受击、燃烧、精英显示的 modulate 逻辑。
+  - `projectile.gd` 让投射物按飞行方向旋转。
+- 更新 `milestones.md`、`issue-tracker.md`、`README.md`。
+
+### 风险记录
+
+- 当前图片预览显示部分资源带棋盘格背景，可能不是透明 PNG。若 Godot 内也出现棋盘格，需要重新导出透明背景版本。
+- 图片为偏绘本正面图，旋转朝向时可能不够自然，后续可改为 4 向或 8 向 Sprite。
+
+### 下一步
+
+用户在 Godot 中复测：主题识别度、攻击提示、投射物、清房和通关流程。
+
+
 ## 2026-06-26：回滚 Toy Visual Pass 0.1 几何占位
 
 ### 本次目标

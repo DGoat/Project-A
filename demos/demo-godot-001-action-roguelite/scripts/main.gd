@@ -45,18 +45,18 @@ var run_ended := false
 
 var rooms := [
 	[
-		{"type": "melee", "pos": Vector2(300, 220)},
-		{"type": "melee", "pos": Vector2(720, 420)}
+		{"type": "melee", "pos": Vector2(1180, 520)},
+		{"type": "melee", "pos": Vector2(1980, 820)}
 	],
 	[
-		{"type": "melee", "pos": Vector2(260, 220)},
-		{"type": "melee", "pos": Vector2(760, 420)},
-		{"type": "ranged", "pos": Vector2(520, 160)}
+		{"type": "melee", "pos": Vector2(1120, 460)},
+		{"type": "melee", "pos": Vector2(2040, 820)},
+		{"type": "ranged", "pos": Vector2(1580, 360)}
 	],
 	[
-		{"type": "melee_elite", "pos": Vector2(520, 260)},
-		{"type": "ranged", "pos": Vector2(260, 430)},
-		{"type": "ranged", "pos": Vector2(780, 430)}
+		{"type": "melee_elite", "pos": Vector2(1580, 520)},
+		{"type": "ranged", "pos": Vector2(1080, 860)},
+		{"type": "ranged", "pos": Vector2(2140, 860)}
 	]
 ]
 
@@ -113,7 +113,7 @@ func _start_run() -> void:
 	start_panel.visible = false
 	result_panel.visible = false
 	player = player_scene.instantiate()
-	player.global_position = Vector2(520, 520)
+	player.global_position = Vector2(1584, 1030)
 	add_child(player)
 	player.died.connect(_on_player_died)
 	player.damaged.connect(_on_player_damaged)

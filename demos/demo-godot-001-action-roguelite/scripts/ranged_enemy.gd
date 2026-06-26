@@ -43,7 +43,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity = Vector2.ZERO
 	move_and_slide()
-	body.rotation = to_player.angle()
+	body.flip_h = to_player.x < 0
 
 	shoot_time -= delta
 	if shoot_time <= 0.0:
@@ -93,7 +93,7 @@ func _shoot(direction: Vector2) -> void:
 	get_tree().current_scene.add_child(projectile)
 
 func _refresh_body_color() -> void:
-	body.modulate = Color(1.0, 0.55, 0.12) if burn_ticks_left > 0 else Color(0.35, 0.55, 1.0)
+	body.modulate = Color(1.25, 0.75, 0.35) if burn_ticks_left > 0 else Color(1.0, 1.0, 1.0)
 
 func _die(source: Node = null) -> void:
 	dead = true

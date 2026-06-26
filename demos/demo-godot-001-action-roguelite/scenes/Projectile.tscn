@@ -1,18 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://projectile_scene"]
+[gd_scene load_steps=4 format=3 uid="uid://projectile_scene"]
 
 [ext_resource type="Script" path="res://scripts/projectile.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/toy_repair_prototype/projectile_button.png" id="2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_projectile"]
-radius = 6.0
+radius = 10.0
 
 [node name="Projectile" type="Area2D"]
 collision_layer = 4
 collision_mask = 1
 script = ExtResource("1")
 
-[node name="Body" type="Polygon2D" parent="."]
-color = Color(1, 0.75, 0.2, 1)
-polygon = PackedVector2Array(8, 0, 0, -5, -8, 0, 0, 5)
+[node name="Body" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+scale = Vector2(0.078, 0.078)
+modulate = Color(1.25, 1.08, 0.35, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_projectile")

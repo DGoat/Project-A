@@ -93,10 +93,11 @@ prompt.md             generation prompt
 | `generation-notes.md` | AI 辅助生产记录 |
 | `pitfalls.md` | 实现过程踩坑记录、原因、解决方式、预防措施 |
 | `prompt.md` | 可复现 Prompt |
+| `specs/spec-011-toy-art-asset-integration-01.md` | 第一批玩具修理屋美术资源接入 Spec |
 
 ## Known Issues
 
-- Placeholder visuals only
+- First toy repair art assets integrated, pending in-game review
 - No audio yet
 - No polished hit feedback yet
 - Rooms are fixed, not procedural

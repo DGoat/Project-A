@@ -1,22 +1,26 @@
-[gd_scene load_steps=2 format=3 uid="uid://main_scene"]
+[gd_scene format=3 uid="uid://yx6vkb61b1hu"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
+[ext_resource type="Script" uid="uid://cgsuky1i46lnm" path="res://scripts/main.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://dmlhi7y4gvvux" path="res://assets/art/toy_repair_prototype/bg_repair_table.png" id="2"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=1223229770]
 script = ExtResource("1")
 
-[node name="Arena" type="ColorRect" parent="."]
-offset_left = 120.0
-offset_top = 80.0
-offset_right = 920.0
-offset_bottom = 620.0
+[node name="Arena" type="ColorRect" parent="." unique_id=458421924]
+offset_right = 3168.0
+offset_bottom = 1344.0
 color = Color(0.08, 0.08, 0.1, 1)
 
-[node name="RoomRoot" type="Node2D" parent="."]
+[node name="RepairTableBg" type="Sprite2D" parent="." unique_id=486476463]
+position = Vector2(1584, 672)
+texture = ExtResource("2")
+centered = true
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="RoomRoot" type="Node2D" parent="." unique_id=1209738701]
 
-[node name="UI" type="Control" parent="CanvasLayer"]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=766902481]
+
+[node name="UI" type="Control" parent="CanvasLayer" unique_id=1516269449]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,7 +28,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Status" type="Label" parent="CanvasLayer/UI"]
+[node name="Status" type="Label" parent="CanvasLayer/UI" unique_id=2083817056]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 16.0
@@ -32,7 +36,7 @@ offset_right = 520.0
 offset_bottom = 48.0
 text = "HP: 100/100"
 
-[node name="Message" type="Label" parent="CanvasLayer/UI"]
+[node name="Message" type="Label" parent="CanvasLayer/UI" unique_id=1453845655]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 48.0
@@ -40,16 +44,16 @@ offset_right = 820.0
 offset_bottom = 82.0
 text = "准备开始"
 
-[node name="ControlsHint" type="Label" parent="CanvasLayer/UI"]
+[node name="ControlsHint" type="Label" parent="CanvasLayer/UI" unique_id=1209740586]
+modulate = Color(1, 1, 1, 0.55)
 layout_mode = 0
 offset_left = 20.0
 offset_top = 86.0
 offset_right = 620.0
 offset_bottom = 108.0
 text = "WASD/方向键移动 | 鼠标/J修理打击 | Space发条冲刺 | R重开 | ` 显示Debug"
-modulate = Color(1, 1, 1, 0.55)
 
-[node name="DamageFlash" type="ColorRect" parent="CanvasLayer/UI"]
+[node name="DamageFlash" type="ColorRect" parent="CanvasLayer/UI" unique_id=901653815]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -59,69 +63,69 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 0, 0, 0)
 
-[node name="AcquiredBlessingsPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+[node name="AcquiredBlessingsPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=2109374671]
 visible = false
+modulate = Color(1, 1, 1, 0.85)
 layout_mode = 0
 offset_left = 880.0
 offset_top = 12.0
 offset_right = 1130.0
 offset_bottom = 146.0
-modulate = Color(1, 1, 1, 0.85)
 
-[node name="AcquiredBlessingsList" type="VBoxContainer" parent="CanvasLayer/UI/AcquiredBlessingsPanel"]
+[node name="AcquiredBlessingsList" type="VBoxContainer" parent="CanvasLayer/UI/AcquiredBlessingsPanel" unique_id=620901379]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList"]
+[node name="Title" type="Label" parent="CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList" unique_id=29927231]
 layout_mode = 2
 text = "修理灵感"
 horizontal_alignment = 1
 
-[node name="Items" type="Label" parent="CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList"]
+[node name="Items" type="Label" parent="CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList" unique_id=535526110]
 layout_mode = 2
 text = "暂无"
 
-[node name="DebugPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+[node name="DebugPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=1861036314]
 visible = false
+modulate = Color(1, 1, 1, 0.85)
 layout_mode = 0
 offset_left = 880.0
 offset_top = 154.0
 offset_right = 1130.0
 offset_bottom = 370.0
-modulate = Color(1, 1, 1, 0.85)
 
-[node name="DebugList" type="VBoxContainer" parent="CanvasLayer/UI/DebugPanel"]
+[node name="DebugList" type="VBoxContainer" parent="CanvasLayer/UI/DebugPanel" unique_id=2001846888]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+[node name="Title" type="Label" parent="CanvasLayer/UI/DebugPanel/DebugList" unique_id=671128859]
 layout_mode = 2
 text = "调试：添加修理灵感"
 horizontal_alignment = 1
 
-[node name="DebugBlessing1" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+[node name="DebugBlessing1" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList" unique_id=1918048368]
 layout_mode = 2
 text = "锋刃打磨"
 
-[node name="DebugBlessing2" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+[node name="DebugBlessing2" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList" unique_id=1354935660]
 layout_mode = 2
 text = "迅捷出手"
 
-[node name="DebugBlessing3" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+[node name="DebugBlessing3" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList" unique_id=866614113]
 layout_mode = 2
 text = "疾风步"
 
-[node name="DebugBlessing4" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+[node name="DebugBlessing4" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList" unique_id=1268336294]
 layout_mode = 2
 text = "血暖余烬"
 
-[node name="DebugBlessing5" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+[node name="DebugBlessing5" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList" unique_id=231410591]
 layout_mode = 2
 text = "余火印记"
 
-[node name="DebugBlessing6" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+[node name="DebugBlessing6" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList" unique_id=49918794]
 layout_mode = 2
 text = "长柄之势"
 
-[node name="BlessingPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+[node name="BlessingPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=1241368618]
 visible = false
 layout_mode = 0
 offset_left = 180.0
@@ -129,55 +133,58 @@ offset_top = 150.0
 offset_right = 860.0
 offset_bottom = 470.0
 
-[node name="BlessingList" type="VBoxContainer" parent="CanvasLayer/UI/BlessingPanel"]
+[node name="BlessingList" type="VBoxContainer" parent="CanvasLayer/UI/BlessingPanel" unique_id=445422710]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="CanvasLayer/UI/BlessingPanel/BlessingList"]
+[node name="Title" type="Label" parent="CanvasLayer/UI/BlessingPanel/BlessingList" unique_id=56953833]
 layout_mode = 2
 text = "选择一个修理灵感"
 horizontal_alignment = 1
 
-[node name="Blessing1" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingList"]
+[node name="Blessing1" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingList" unique_id=2092036338]
 layout_mode = 2
 text = "1"
 
-[node name="Blessing2" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingList"]
+[node name="Blessing2" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingList" unique_id=1542750067]
 layout_mode = 2
 text = "2"
 
-[node name="Blessing3" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingList"]
+[node name="Blessing3" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingList" unique_id=156437126]
 layout_mode = 2
 text = "3"
 
-[node name="StartPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+[node name="StartPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=1445451771]
 layout_mode = 0
 offset_left = 270.0
 offset_top = 140.0
 offset_right = 770.0
 offset_bottom = 430.0
 
-[node name="StartList" type="VBoxContainer" parent="CanvasLayer/UI/StartPanel"]
+[node name="StartList" type="VBoxContainer" parent="CanvasLayer/UI/StartPanel" unique_id=1979720860]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="CanvasLayer/UI/StartPanel/StartList"]
+[node name="Title" type="Label" parent="CanvasLayer/UI/StartPanel/StartList" unique_id=765864982]
 layout_mode = 2
 text = "玩具修理屋：夜间修理"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="CanvasLayer/UI/StartPanel/StartList"]
+[node name="Subtitle" type="Label" parent="CanvasLayer/UI/StartPanel/StartList" unique_id=2012833059]
 layout_mode = 2
 text = "进入玩具箱王国，把失控玩具们修好。"
 horizontal_alignment = 1
 
-[node name="Controls" type="Label" parent="CanvasLayer/UI/StartPanel/StartList"]
+[node name="Controls" type="Label" parent="CanvasLayer/UI/StartPanel/StartList" unique_id=1508495029]
 layout_mode = 2
-text = "移动：WASD / 方向键\n修理打击：鼠标左键 / J\n发条冲刺：Space\nDebug：键盘左上角 ` / ~ / · 所在键"
+text = "移动：WASD / 方向键
+修理打击：鼠标左键 / J
+发条冲刺：Space
+Debug：键盘左上角 ` / ~ / · 所在键"
 
-[node name="StartButton" type="Button" parent="CanvasLayer/UI/StartPanel/StartList"]
+[node name="StartButton" type="Button" parent="CanvasLayer/UI/StartPanel/StartList" unique_id=79180392]
 layout_mode = 2
 text = "开始夜间修理"
 
-[node name="ResultPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+[node name="ResultPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=786109767]
 visible = false
 layout_mode = 0
 offset_left = 300.0
@@ -185,18 +192,18 @@ offset_top = 150.0
 offset_right = 740.0
 offset_bottom = 420.0
 
-[node name="ResultList" type="VBoxContainer" parent="CanvasLayer/UI/ResultPanel"]
+[node name="ResultList" type="VBoxContainer" parent="CanvasLayer/UI/ResultPanel" unique_id=714452821]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="CanvasLayer/UI/ResultPanel/ResultList"]
+[node name="Title" type="Label" parent="CanvasLayer/UI/ResultPanel/ResultList" unique_id=109649213]
 layout_mode = 2
 text = "结果"
 horizontal_alignment = 1
 
-[node name="Blessings" type="Label" parent="CanvasLayer/UI/ResultPanel/ResultList"]
+[node name="Blessings" type="Label" parent="CanvasLayer/UI/ResultPanel/ResultList" unique_id=55469147]
 layout_mode = 2
 text = "本晚灵感：暂无"
 
-[node name="RestartButton" type="Button" parent="CanvasLayer/UI/ResultPanel/ResultList"]
+[node name="RestartButton" type="Button" parent="CanvasLayer/UI/ResultPanel/ResultList" unique_id=361328855]
 layout_mode = 2
 text = "重新开始"
