@@ -1,3 +1,29 @@
+## 2026-06-26：Debug 面板收起与隐藏
+
+### 本次目标
+
+让 Debug 赐福面板默认隐藏，避免遮挡战斗画面；通过 `·` 按钮展开/收起。
+
+### 做了什么
+
+- 修改 `Main.tscn`：
+  - 新增 `DebugToggle` 按钮，文本为 `·`。
+  - `DebugPanel` 默认 `visible = false`。
+- 修改 `main.gd`：
+  - 连接 `DebugToggle.pressed`。
+  - 增加 `_toggle_debug_panel()`，点击后切换 Debug 面板显示状态。
+
+### 下一步
+
+用户复测：
+
+1. 进入游戏后 Debug 面板是否默认隐藏。
+2. 点击 `·` 是否展开 Debug 面板。
+3. 再点 `·` 是否收起 Debug 面板。
+4. Debug 面板按钮是否仍能添加赐福。
+
+
+
 ## 2026-06-26：M3 Debug 赐福面板与中文赐福
 
 ### 本次目标

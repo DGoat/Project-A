@@ -17,6 +17,8 @@ var damage_flash_tween: Tween
 @onready var ui_message := $CanvasLayer/UI/Message
 @onready var damage_flash := $CanvasLayer/UI/DamageFlash
 @onready var acquired_blessings_items := $CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList/Items
+@onready var debug_toggle := $CanvasLayer/UI/DebugToggle
+@onready var debug_panel := $CanvasLayer/UI/DebugPanel
 @onready var blessing_panel := $CanvasLayer/UI/BlessingPanel
 @onready var blessing_buttons := [
 	$CanvasLayer/UI/BlessingPanel/BlessingList/Blessing1,
@@ -58,6 +60,7 @@ func _ready() -> void:
 	for i in debug_blessing_buttons.size():
 		var button_index := i
 		debug_blessing_buttons[i].pressed.connect(func(): _debug_apply_blessing(button_index))
+	debug_toggle.pressed.connect(_toggle_debug_panel)
 	_update_debug_buttons()
 	_update_acquired_blessings()
 	_start_run()
@@ -148,6 +151,9 @@ func _pick_blessing(index: int) -> void:
 	current_room += 1
 	ui_message.text = "房间 %d：清理敌人" % [current_room + 1]
 	_spawn_room(current_room)
+
+func _toggle_debug_panel() -> void:
+	debug_panel.visible = not debug_panel.visible
 
 func _debug_apply_blessing(index: int) -> void:
 	if index < blessing_pool.size():
