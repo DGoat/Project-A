@@ -1,3 +1,94 @@
+## 2026-06-26：M3 Debug 赐福面板与中文赐福
+
+### 本次目标
+
+根据反馈，将测试祝福从热键改为 Debug 面板，并将赐福相关名称和描述改为中文。
+
+### 做了什么
+
+- 修改 `data/blessings.json`：
+  - 6 个赐福名称和描述改为中文。
+- 修改 `Main.tscn`：
+  - 增加右侧 Debug 面板。
+  - Debug 面板提供 6 个按钮，可直接添加指定赐福。
+  - 已获得赐福面板标题和空状态改为中文。
+  - 三选一标题改为中文。
+- 修改 `main.gd`：
+  - 移除 `4-9` 测试热键逻辑。
+  - Debug 面板按钮直接调用添加赐福逻辑。
+  - UI Message、状态文本、胜利/失败提示改为中文。
+- 修改 `project.godot`：
+  - 移除 `debug_blessing_1-6` 输入动作。
+- 修改 `controls.md` / `README.md`：
+  - 测试方式改为 Debug 面板按钮。
+- 更新 `spec-007-debug-blessings-and-damage-flash.md`：
+  - 从测试热键方案改为 Debug 面板方案。
+
+### 下一步
+
+用户复测：
+
+1. 右侧 Debug 面板按钮是否能添加指定赐福。
+2. 三选一赐福是否显示中文名称和描述。
+3. 已获得赐福面板是否显示中文赐福名。
+4. 受伤红闪是否正常。
+5. 是否仍能通关。
+
+
+
+## 2026-06-26：M3 测试祝福、祝福记录面板与受伤红闪
+
+### 本次目标
+
+解决 M3 复测中的两个验证问题和一个反馈问题：
+
+1. 指定祝福不方便测试。
+2. 当前 Run 已获得祝福缺少记录面板。
+3. 玩家受伤反馈不够强。
+
+### 做了什么
+
+- 新增 Spec：`specs/spec-007-debug-blessings-and-damage-flash.md`。
+- 修改 `project.godot`：
+  - 增加 `debug_blessing_1-6`，对应数字键 `4-9`。
+  - 补回 `pick_blessing_3`。
+- 修改 `Main.tscn`：
+  - 增加 `DamageFlash` 全屏红色覆盖层。
+  - 增加 `AcquiredBlessingsPanel` 已获得祝福面板。
+- 修改 `main.gd`：
+  - 支持按 `4-9` 手动添加指定祝福。
+  - 三选一和测试热键获得祝福都会记录到面板。
+  - 玩家受伤时触发全屏红闪并快速淡出。
+- 修改 `player.gd`：
+  - 增加 `damaged` signal。
+- 修改 `controls.md`：
+  - 记录测试祝福热键。
+- 更新 `issue-tracker.md`：
+  - 新增测试便利性、祝福面板、受伤红闪相关问题。
+
+### 测试祝福热键
+
+```text
+4 Sharpened Edge
+5 Quick Hands
+6 Wind Step
+7 Blood Warmth
+8 Ember Mark
+9 Long Reach
+```
+
+### 下一步
+
+用户复测：
+
+1. 按 `4-9` 是否能添加对应祝福。
+2. 右上角 Blessings 面板是否记录当前获得的祝福。
+3. 被敌人命中时是否有全屏红闪。
+4. 三选一祝福是否仍可用。
+5. 是否仍可通关。
+
+
+
 ## 2026-06-26：M3 现有祝福表现强化实现
 
 ### 本次目标

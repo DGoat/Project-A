@@ -42,6 +42,7 @@ Enter room
 | Space | Dash |
 | 1 / 2 / 3 | Pick blessing |
 | R | Restart |
+| Debug panel buttons | Add blessing for testing |
 
 ## How to Run
 

@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 signal died
+signal damaged
 signal health_changed(current: int, maximum: int)
 signal enemy_killed
 
@@ -90,6 +91,7 @@ func take_damage(amount: int) -> void:
 	hp = max(0, hp - amount)
 	_update_health_bar()
 	health_changed.emit(hp, max_hp)
+	damaged.emit()
 	body.modulate = Color(1.0, 0.55, 0.55)
 	await get_tree().create_timer(0.08).timeout
 	if is_instance_valid(body):

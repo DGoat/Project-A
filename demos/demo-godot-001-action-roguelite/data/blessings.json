@@ -1,40 +1,40 @@
 [
   {
     "id": "attack_up",
-    "name": "Sharpened Edge",
-    "description": "Attack damage +20%.",
+    "name": "锋刃打磨",
+    "description": "攻击伤害 +20%。",
     "effects": {
       "attack_damage_multiplier": 1.2
     }
   },
   {
     "id": "attack_speed_up",
-    "name": "Quick Hands",
-    "description": "Attack cooldown -15%.",
+    "name": "迅捷出手",
+    "description": "攻击冷却 -15%。",
     "effects": {
       "attack_cooldown_multiplier": 0.85
     }
   },
   {
     "id": "dash_strike",
-    "name": "Wind Step",
-    "description": "After dash, next attack deals +50% damage.",
+    "name": "疾风步",
+    "description": "闪避后，下一次攻击伤害 +50%。",
     "effects": {
       "dash_strike_multiplier": 1.5
     }
   },
   {
     "id": "kill_heal",
-    "name": "Blood Warmth",
-    "description": "Heal 8 HP after killing an enemy.",
+    "name": "血暖余烬",
+    "description": "击杀敌人后回复 8 点生命。",
     "effects": {
       "heal_on_kill": 8
     }
   },
   {
     "id": "burn_attack",
-    "name": "Ember Mark",
-    "description": "Attacks apply burn damage over time.",
+    "name": "余火印记",
+    "description": "攻击会附加持续燃烧伤害。",
     "effects": {
       "burn_damage": 4,
       "burn_ticks": 3
@@ -42,8 +42,8 @@
   },
   {
     "id": "range_up",
-    "name": "Long Reach",
-    "description": "Attack range +20%.",
+    "name": "长柄之势",
+    "description": "攻击范围 +20%。",
     "effects": {
       "attack_range_multiplier": 1.2
     }

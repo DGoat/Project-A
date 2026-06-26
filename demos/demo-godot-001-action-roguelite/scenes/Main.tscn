@@ -49,6 +49,76 @@ offset_bottom = 108.0
 text = "F1 Controls | R Restart"
 modulate = Color(1, 1, 1, 0.55)
 
+[node name="DamageFlash" type="ColorRect" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 0, 0, 0)
+
+[node name="AcquiredBlessingsPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 760.0
+offset_top = 16.0
+offset_right = 1000.0
+offset_bottom = 150.0
+modulate = Color(1, 1, 1, 0.85)
+
+[node name="AcquiredBlessingsList" type="VBoxContainer" parent="CanvasLayer/UI/AcquiredBlessingsPanel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList"]
+layout_mode = 2
+text = "赐福"
+horizontal_alignment = 1
+
+[node name="Items" type="Label" parent="CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList"]
+layout_mode = 2
+text = "暂无"
+
+[node name="DebugPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 760.0
+offset_top = 164.0
+offset_right = 1000.0
+offset_bottom = 380.0
+modulate = Color(1, 1, 1, 0.85)
+
+[node name="DebugList" type="VBoxContainer" parent="CanvasLayer/UI/DebugPanel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+layout_mode = 2
+text = "调试：添加赐福"
+horizontal_alignment = 1
+
+[node name="DebugBlessing1" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+layout_mode = 2
+text = "锋刃打磨"
+
+[node name="DebugBlessing2" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+layout_mode = 2
+text = "迅捷出手"
+
+[node name="DebugBlessing3" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+layout_mode = 2
+text = "疾风步"
+
+[node name="DebugBlessing4" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+layout_mode = 2
+text = "血暖余烬"
+
+[node name="DebugBlessing5" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+layout_mode = 2
+text = "余火印记"
+
+[node name="DebugBlessing6" type="Button" parent="CanvasLayer/UI/DebugPanel/DebugList"]
+layout_mode = 2
+text = "长柄之势"
+
 [node name="BlessingPanel" type="PanelContainer" parent="CanvasLayer/UI"]
 visible = false
 layout_mode = 0
@@ -62,7 +132,7 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="CanvasLayer/UI/BlessingPanel/BlessingList"]
 layout_mode = 2
-text = "Choose one blessing"
+text = "选择一个赐福"
 horizontal_alignment = 1
 
 [node name="Blessing1" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingList"]

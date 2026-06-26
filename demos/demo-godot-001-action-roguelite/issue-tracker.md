@@ -42,9 +42,10 @@
 | CTRL-003 | Deferred | Low | 暂无本地键位保存 | M4 |
 | CTRL-004 | Deferred | Low | 暂无手柄支持 | M5 |
 
----
+| M3-TEST-001 | In Progress | Medium | 需要手动添加祝福，便于验证指定效果 | M3 |
+| M3-UI-001 | In Progress | Medium | 需要面板显示当前已获得祝福 | M3 |
+| FEEL-008 | In Progress | Medium | 玩家受伤需要全屏红闪反馈 | M3 |
 
-### DMG-001：燃烧伤害不应触发敌人受击击退
 
 状态：In Progress
 优先级：Medium
