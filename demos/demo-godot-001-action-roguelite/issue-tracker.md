@@ -42,6 +42,7 @@
 | CTRL-003 | Deferred | Low | 暂无本地键位保存 | M4 |
 | CTRL-004 | Deferred | Low | 暂无手柄支持 | M5 |
 
+| VISUAL-001 | Deferred | Medium | 几何视觉占位复测失败，改为先生成第一批美术资源 | M3/M4 |
 | THEME-001 | In Progress | Medium | 已开始将通用动作 Roguelite 包装为玩具修理屋主题 | M3/M4 |
 | UI-FLOW-001 | Fixed | Medium | 开始 / 胜利 / 失败流程界面已通过测试 | M3/M4 |
 | UI-FLOW-002 | Fixed | Medium | 赐福选择界面构筑标签已通过测试 | M3/M4 |

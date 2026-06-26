@@ -75,6 +75,7 @@ scripts/              GDScript files
 data/blessings.json   blessing data
 config.example.json   demo config example
 design.md             gameplay design notes
+art-brief-001-toy-repair-prototype.md  first prototype art asset brief
 generation-notes.md   AI production notes
 prompt.md             generation prompt
 ```

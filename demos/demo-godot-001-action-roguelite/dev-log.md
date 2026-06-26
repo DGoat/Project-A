@@ -1,3 +1,157 @@
+## 2026-06-26：回滚 Toy Visual Pass 0.1 几何占位
+
+### 本次目标
+
+根据复测反馈，回滚 Toy Visual Pass 0.1 中失败的几何视觉占位改动。
+
+### 复测结论
+
+用户反馈：
+
+- 场景不像夜晚修理屋/玩具箱。
+- 玩家不像小修理师/工具占位。
+- 近战敌人不像积木兵。
+- 远程敌人不像铁皮/弹簧炮玩具。
+- 投射物不像纽扣/螺丝。
+- 攻击提示不像木尺/工具挥击。
+- 受击、燃烧、发条冲刺、回血反馈不清楚。
+- 仍能通关。
+
+### 做了什么
+
+- 回滚以下文件中的几何视觉占位改动：
+  - `scenes/Main.tscn`
+  - `scenes/Player.tscn`
+  - `scenes/MeleeEnemy.tscn`
+  - `scenes/RangedEnemy.tscn`
+  - `scenes/Projectile.tscn`
+  - `scripts/player.gd`
+  - `scripts/melee_enemy.gd`
+  - `scripts/ranged_enemy.gd`
+- 保留：
+  - `spec-010-toy-visual-pass-01.md`，作为失败尝试记录。
+  - `art-brief-001-toy-repair-prototype.md`，作为下一步美术资源生成依据。
+- 更新 `issue-tracker.md`：
+  - `VISUAL-001` 改为 Deferred。
+- 更新 `milestones.md`：
+  - 标记几何视觉占位复测失败并已回滚。
+
+### 下一步
+
+基于 `art-brief-001-toy-repair-prototype.md` 生成第一批美术资源，再接入 Godot。
+
+
+
+## 2026-06-26：第一批玩具修理屋美术资源 Brief
+
+### 本次目标
+
+几何视觉占位复测失败后，转向生成第一批最小美术资源，用于验证玩具修理屋主题是否能在画面上成立。
+
+### 做了什么
+
+- 新增 `art-brief-001-toy-repair-prototype.md`。
+- 明确第一批 6 个资源：
+  - `player_repairer.png`
+  - `enemy_block_soldier.png`
+  - `enemy_spring_cannon.png`
+  - `projectile_button.png`
+  - `attack_wood_ruler.png`
+  - `bg_repair_table.png`
+- 为每个资源提供：
+  - 用途说明。
+  - 中文 Prompt。
+  - English Prompt。
+  - Negative Prompt。
+  - 尺寸建议。
+  - 透明背景要求。
+- 更新 `README.md` 文件索引。
+
+### 下一步
+
+用该 Brief 生成第一批美术资源，再接入 Godot 替换几何占位。
+
+
+
+## 2026-06-26：Toy Visual Pass 0.1 实现
+
+### 本次目标
+
+按 `spec-010-toy-visual-pass-01.md` 实现玩具修理屋基础视觉占位，让当前 Demo 在不引入外部美术资源的情况下更接近童话修理屋方向。
+
+### 做了什么
+
+- 修改 `Main.tscn`：
+  - Arena 背景从冷黑改为暖暗棕，更接近夜晚修理台。
+- 修改 `Player.tscn`：
+  - 玩家颜色改为青绿色围裙感。
+  - 玩家占位形状改得更像小工具朝向剪影。
+  - 攻击提示改为暖木色，语义接近木尺/工具挥击。
+  - 生命条改为温暖黄绿色。
+- 修改 `MeleeEnemy.tscn`：
+  - 近战敌人改为红棕积木块占位。
+- 修改 `RangedEnemy.tscn`：
+  - 远程敌人改为铁皮蓝弹簧炮占位。
+- 修改 `Projectile.tscn`：
+  - 投射物改为纽扣/螺丝色和六边形占位。
+- 修改脚本颜色恢复逻辑：
+  - `player.gd`
+  - `melee_enemy.gd`
+  - `ranged_enemy.gd`
+- 更新 `issue-tracker.md`：
+  - `VISUAL-001` 标记为 In Progress。
+- 更新 `milestones.md`：
+  - 记录 Toy Visual Pass 0.1 实现完成，待复测。
+
+### 下一步
+
+用户复测：
+
+1. 场景是否更像夜晚修理屋/玩具箱。
+2. 玩家是否比之前更有小修理师/工具占位感。
+3. 近战敌人是否更像积木兵。
+4. 远程敌人是否更像铁皮/弹簧炮玩具。
+5. 投射物是否更像纽扣/螺丝。
+6. 攻击提示是否更像木尺/工具挥击。
+7. 受击、燃烧、发条冲刺、回血反馈是否仍清楚。
+8. 是否仍能完整通关。
+
+
+
+## 2026-06-26：Toy Visual Pass 0.1 Spec
+
+### 本次目标
+
+在机制深化前，先规划玩具修理屋基础视觉占位，让画面能更直观地表达主题。
+
+### 做了什么
+
+- 新增 Spec：`specs/spec-010-toy-visual-pass-01.md`。
+- 规划视觉方向：
+  - 夜晚修理屋。
+  - 暖灯。
+  - 木头。
+  - 布偶。
+  - 发条。
+  - 积木。
+  - 纽扣。
+  - 小工具。
+- 规划改动范围：
+  - Arena 背景色。
+  - 玩家占位色彩。
+  - 近战敌人积木兵占位。
+  - 远程敌人弹簧炮玩具占位。
+  - 投射物纽扣/螺丝占位。
+  - 攻击提示木尺/工具挥击占位。
+- 更新 `issue-tracker.md`：新增 `VISUAL-001`。
+- 更新 `milestones.md`：记录 Toy Visual Pass 0.1 Spec 完成。
+
+### 下一步
+
+按 Spec 实现基础视觉占位。
+
+
+
 ## 2026-06-26：玩具修理屋主题替换层实现
 
 ### 本次目标
