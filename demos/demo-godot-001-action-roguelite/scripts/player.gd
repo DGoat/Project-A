@@ -69,8 +69,10 @@ func _physics_process(delta: float) -> void:
 
 func attack() -> void:
 	attack_cooldown_time = attack_cooldown
-	attack_area.position = facing * attack_range
+	attack_area.position = facing * (attack_range - 8.0)
+	attack_area.rotation = facing.angle()
 	attack_preview.position = attack_area.position
+	attack_preview.rotation = attack_area.rotation
 	attack_preview.visible = true
 	attack_shape.disabled = false
 	await get_tree().create_timer(0.08).timeout
