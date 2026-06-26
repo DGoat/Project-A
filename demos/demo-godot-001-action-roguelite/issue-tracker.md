@@ -33,7 +33,7 @@
 | FEEL-002 | Fixed | Medium | Hit Stop 可接受 | M2 |
 | FEEL-003 | Fixed | Medium | 敌人受击击退可接受 | M2 |
 | FEEL-004 | Fixed | Medium | 玩家受伤后已有短暂无敌帧 | M2 |
-| BUILD-001 | Deferred | Medium | 祝福效果多数偏数值，缺少可见差异 | M3 |
+| BUILD-001 | In Progress | Medium | M3 正在强化现有祝福可见表现 | M3 |
 | DMG-001 | Fixed | Medium | 燃烧伤害不触发击退，燃烧闪色可见 | M2 |
 | UI-002 | Fixed | Low | Controls 提示暂时可接受 | M2 |
 | FEEL-007 | Fixed | Low | 攻击范围提示已改为矩形，实际判定也已改为矩形 | M2 |

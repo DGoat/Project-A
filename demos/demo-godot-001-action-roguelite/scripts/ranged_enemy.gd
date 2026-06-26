@@ -26,6 +26,7 @@ var projectile_scene := preload("res://scenes/Projectile.tscn")
 func _ready() -> void:
 	hp = max_hp
 	shoot_time = shoot_cooldown * 0.7
+	_refresh_body_color()
 
 func _physics_process(delta: float) -> void:
 	if dead or player == null:
@@ -63,7 +64,7 @@ func take_damage(amount: int, source: Node = null, damage_type := "direct") -> v
 		body.modulate = Color(1.0, 0.55, 0.55)
 	await get_tree().create_timer(0.06).timeout
 	if is_instance_valid(body):
-		body.modulate = Color(0.35, 0.55, 1.0)
+		_refresh_body_color()
 	if hp <= 0:
 		_die(source)
 
@@ -72,6 +73,7 @@ func apply_burn(amount: int, ticks: int, source: Node = null) -> void:
 	burn_ticks_left = ticks
 	burn_owner = source
 	burn_timer = 0.45
+	_refresh_body_color()
 
 func _process_burn(delta: float) -> void:
 	if burn_ticks_left <= 0:
@@ -81,12 +83,17 @@ func _process_burn(delta: float) -> void:
 		burn_ticks_left -= 1
 		burn_timer = 0.45
 		take_damage(burn_damage, burn_owner, "burn")
+		if burn_ticks_left <= 0:
+			_refresh_body_color()
 
 func _shoot(direction: Vector2) -> void:
 	var projectile := projectile_scene.instantiate()
 	projectile.global_position = global_position + direction * 24.0
 	projectile.direction = direction
 	get_tree().current_scene.add_child(projectile)
+
+func _refresh_body_color() -> void:
+	body.modulate = Color(1.0, 0.55, 0.12) if burn_ticks_left > 0 else Color(0.35, 0.55, 1.0)
 
 func _die(source: Node = null) -> void:
 	dead = true

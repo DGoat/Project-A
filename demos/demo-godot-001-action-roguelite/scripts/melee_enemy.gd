@@ -35,6 +35,7 @@ func _ready() -> void:
 		contact_damage = 16
 		body.scale = Vector2(1.35, 1.35)
 	contact_area.body_entered.connect(_on_contact_body_entered)
+	_refresh_body_color()
 
 func _physics_process(delta: float) -> void:
 	if dead or player == null:
@@ -65,7 +66,7 @@ func take_damage(amount: int, source: Node = null, damage_type := "direct") -> v
 		body.modulate = Color(1.0, 0.45, 0.45)
 	await get_tree().create_timer(0.06).timeout
 	if is_instance_valid(body):
-		body.modulate = Color(1.0, 0.35, 0.25) if elite else Color(0.9, 0.25, 0.25)
+		_refresh_body_color()
 	if hp <= 0:
 		_die(source)
 
@@ -74,6 +75,7 @@ func apply_burn(amount: int, ticks: int, source: Node = null) -> void:
 	burn_ticks_left = ticks
 	burn_owner = source
 	burn_timer = 0.45
+	_refresh_body_color()
 
 func _process_burn(delta: float) -> void:
 	if burn_ticks_left <= 0:
@@ -83,12 +85,20 @@ func _process_burn(delta: float) -> void:
 		burn_ticks_left -= 1
 		burn_timer = 0.45
 		take_damage(burn_damage, burn_owner, "burn")
+		if burn_ticks_left <= 0:
+			_refresh_body_color()
 
 func _on_contact_body_entered(body_node: Node2D) -> void:
 	if body_node.has_method("take_damage"):
 		body_node.take_damage(contact_damage)
 		recoil_direction = body_node.global_position.direction_to(global_position).normalized()
 		recoil_time = recoil_duration
+
+func _refresh_body_color() -> void:
+	if burn_ticks_left > 0:
+		body.modulate = Color(1.0, 0.55, 0.12)
+	else:
+		body.modulate = Color(1.0, 0.35, 0.25) if elite else Color(0.9, 0.25, 0.25)
 
 func _die(source: Node = null) -> void:
 	dead = true

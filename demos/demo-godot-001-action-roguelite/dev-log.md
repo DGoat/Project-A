@@ -1,3 +1,56 @@
+## 2026-06-26：M3 现有祝福表现强化实现
+
+### 本次目标
+
+按 `spec-006-build-identity-and-visible-blessings.md` 推进 M3 起步：先让现有祝福更可见。
+
+### 做了什么
+
+- 新增 Spec：`specs/spec-006-build-identity-and-visible-blessings.md`。
+- 修改 `player.gd`：
+  - `range_up` 同步改变矩形攻击提示长度和实际判定长度。
+  - Dash Strike 充能时玩家变为青色，命中后恢复。
+  - Kill Heal 触发时玩家短暂绿色闪色。
+  - Attack Up 后攻击提示颜色更深。
+- 修改 `melee_enemy.gd`：
+  - 燃烧期间保持橙色状态。
+  - burn tick 时加深橙色闪色。
+- 修改 `ranged_enemy.gd`：
+  - 同步燃烧持续状态和 tick 闪色。
+- 更新 `milestones.md`：M3 标记为 In Progress。
+- 更新 `issue-tracker.md`：`BUILD-001` 标记为 In Progress。
+
+### 遇到的问题
+
+- `range_up` 原本只改变攻击位置距离，不改变矩形长度。
+- `dash_strike` 原本没有充能状态提示。
+- `kill_heal` 原本只能通过血条变化感知。
+- 燃烧原本只有 tick 闪色，持续状态不明显。
+
+### 如何解决
+
+- 用脚本动态调整 `RectangleShape2D.size.x` 和 `AttackPreview.polygon`。
+- 用玩家/敌人 `Body.modulate` 做 M3 占位反馈。
+- 保持轻量实现，不引入粒子、音效或完整 Buff UI。
+
+### 仍未解决
+
+- 祝福表现仍是占位视觉，不是最终美术。
+- `attack_speed_up` 还缺少明确视觉反馈。
+- 还没做构筑路线标签和更完整祝福选择体验。
+
+### 下一步
+
+用户复测：
+
+1. 拿到 `Long Reach` 后，攻击矩形是否明显变长，命中范围是否同步变长。
+2. 拿到 `Wind Step` 后，Dash 后玩家是否变青色，下一击后是否恢复。
+3. 拿到 `Ember Mark` 后，敌人燃烧期间是否有橙色状态。
+4. 拿到 `Blood Warmth` 后，击杀回血是否有绿色闪色。
+5. 是否仍能通关。
+
+
+
 ## 2026-06-26：M2 基础手感验收通过
 
 ### 本次目标

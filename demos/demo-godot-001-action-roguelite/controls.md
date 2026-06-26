@@ -9,7 +9,7 @@
 | `move_left` | 向左移动 | `A` / `←` |
 | `move_right` | 向右移动 | `D` / `→` |
 | `attack` | 普通攻击 | 鼠标左键 / `J` |
-| `dash` | 闪避 | `Space` / `K` |
+| `dash` | 闪避 | `Space` |
 | `restart` | 重开 | `R` |
 
 ## 当前实现方式
@@ -111,7 +111,7 @@ Input.is_key_pressed(KEY_SPACE)
 ```text
 Move: WASD / Arrow Keys
 Attack: Left Mouse / J
-Dash: Space / K
+Dash: Space
 Restart: R
 ```
 
@@ -162,7 +162,7 @@ user://controls.cfg
 | `move_left` | 向左移动 | `A` / `←` | Left Stick Left |
 | `move_right` | 向右移动 | `D` / `→` | Left Stick Right |
 | `attack` | 普通攻击 | Left Mouse / `J` | X / Square |
-| `dash` | 闪避 | `Space` / `K` | B / Circle |
+| `dash` | 闪避 | `Space` | B / Circle |
 | `pick_blessing_1` | 选择祝福 1 | `1` | D-Pad Left |
 | `pick_blessing_2` | 选择祝福 2 | `2` | D-Pad Up |
 | `pick_blessing_3` | 选择祝福 3 | `3` | D-Pad Right |

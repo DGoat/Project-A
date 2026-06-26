@@ -12,7 +12,8 @@ var dash_duration := 0.16
 var dash_cooldown := 0.55
 var attack_damage := 20.0
 var attack_cooldown := 0.35
-var attack_range := 56.0
+var attack_length := 50.0
+var attack_width := 36.0
 var heal_on_kill := 0
 var burn_damage := 0
 var burn_ticks := 0
@@ -36,6 +37,7 @@ var dead := false
 
 func _ready() -> void:
 	attack_area.body_entered.connect(_on_attack_body_entered)
+	_update_attack_shape()
 	_update_health_bar()
 	health_changed.emit(hp, max_hp)
 
@@ -60,6 +62,7 @@ func _physics_process(delta: float) -> void:
 			dash_time = dash_duration
 			dash_cooldown_time = dash_cooldown
 			dash_strike_ready = dash_strike_multiplier > 1.0
+			_refresh_body_color()
 
 	move_and_slide()
 	_update_visuals()
@@ -69,7 +72,7 @@ func _physics_process(delta: float) -> void:
 
 func attack() -> void:
 	attack_cooldown_time = attack_cooldown
-	attack_area.position = facing * (attack_range - 8.0)
+	attack_area.position = facing * 18.0
 	attack_area.rotation = facing.angle()
 	attack_preview.position = attack_area.position
 	attack_preview.rotation = attack_area.rotation
@@ -90,7 +93,7 @@ func take_damage(amount: int) -> void:
 	body.modulate = Color(1.0, 0.55, 0.55)
 	await get_tree().create_timer(0.08).timeout
 	if is_instance_valid(body):
-		body.modulate = Color(0.2, 0.9, 0.45)
+		_refresh_body_color()
 	if hp == 0:
 		dead = true
 		died.emit()
@@ -99,6 +102,7 @@ func apply_blessing(blessing: Dictionary) -> void:
 	var effects: Dictionary = blessing.get("effects", {})
 	if effects.has("attack_damage_multiplier"):
 		attack_damage *= float(effects["attack_damage_multiplier"])
+		_update_attack_shape()
 	if effects.has("attack_cooldown_multiplier"):
 		attack_cooldown *= float(effects["attack_cooldown_multiplier"])
 	if effects.has("dash_strike_multiplier"):
@@ -109,12 +113,17 @@ func apply_blessing(blessing: Dictionary) -> void:
 		burn_damage = max(burn_damage, int(effects["burn_damage"]))
 		burn_ticks = max(burn_ticks, int(effects.get("burn_ticks", 0)))
 	if effects.has("attack_range_multiplier"):
-		attack_range *= float(effects["attack_range_multiplier"])
+		attack_length *= float(effects["attack_range_multiplier"])
+		_update_attack_shape()
 
 func heal(amount: int) -> void:
 	hp = min(max_hp, hp + amount)
 	_update_health_bar()
 	health_changed.emit(hp, max_hp)
+	body.modulate = Color(0.45, 1.0, 0.45)
+	await get_tree().create_timer(0.1).timeout
+	if is_instance_valid(body):
+		_refresh_body_color()
 
 func _on_attack_body_entered(body_node: Node2D) -> void:
 	if not body_node.has_method("take_damage"):
@@ -123,6 +132,7 @@ func _on_attack_body_entered(body_node: Node2D) -> void:
 	if dash_strike_ready:
 		damage *= dash_strike_multiplier
 		dash_strike_ready = false
+		_refresh_body_color()
 	body_node.take_damage(int(round(damage)), self, "direct")
 	_apply_hit_stop()
 	if burn_damage > 0 and body_node.has_method("apply_burn"):
@@ -145,6 +155,22 @@ func _apply_hit_stop() -> void:
 func _update_health_bar() -> void:
 	var ratio := float(hp) / float(max_hp)
 	health_bar_fill.offset_right = -19.0 + 38.0 * ratio
+
+func _update_attack_shape() -> void:
+	var shape := attack_shape.shape as RectangleShape2D
+	if shape != null:
+		shape.size = Vector2(attack_length, attack_width)
+	attack_shape.position = Vector2(attack_length * 0.5, 0.0)
+	attack_preview.polygon = PackedVector2Array([
+		Vector2(0.0, -attack_width * 0.5),
+		Vector2(attack_length, -attack_width * 0.5),
+		Vector2(attack_length, attack_width * 0.5),
+		Vector2(0.0, attack_width * 0.5)
+	])
+	attack_preview.color = Color(1.0, 0.55, 0.18, 0.28) if attack_damage > 20.0 else Color(1.0, 0.9, 0.25, 0.24)
+
+func _refresh_body_color() -> void:
+	body.modulate = Color(0.35, 0.95, 1.0) if dash_strike_ready else Color(0.2, 0.9, 0.45)
 
 func _update_visuals() -> void:
 	body.rotation = facing.angle()

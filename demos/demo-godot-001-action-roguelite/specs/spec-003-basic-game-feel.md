@@ -192,7 +192,7 @@ Input.is_action_just_pressed("pick_blessing_3")
 示例：
 
 ```text
-Move: WASD/Arrows | Attack: Mouse/J | Dash: Space/K | Pick: 1/2/3 | Restart: R
+Move: WASD/Arrows | Attack: Mouse/J | Dash: Space | Pick: 1/2/3 | Restart: R
 ```
 
 位置：屏幕底部或左上角 HUD 下方。

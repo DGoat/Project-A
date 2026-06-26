@@ -39,7 +39,7 @@ Enter room
 |---|---|
 | WASD / Arrow Keys | Move |
 | Left Mouse / J | Attack |
-| Space / K | Dash |
+| Space | Dash |
 | 1 / 2 / 3 | Pick blessing |
 | R | Restart |
 
