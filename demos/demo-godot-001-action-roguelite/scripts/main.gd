@@ -17,7 +17,6 @@ var damage_flash_tween: Tween
 @onready var ui_message := $CanvasLayer/UI/Message
 @onready var damage_flash := $CanvasLayer/UI/DamageFlash
 @onready var acquired_blessings_items := $CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList/Items
-@onready var debug_toggle := $CanvasLayer/UI/DebugToggle
 @onready var debug_panel := $CanvasLayer/UI/DebugPanel
 @onready var blessing_panel := $CanvasLayer/UI/BlessingPanel
 @onready var blessing_buttons := [
@@ -60,7 +59,6 @@ func _ready() -> void:
 	for i in debug_blessing_buttons.size():
 		var button_index := i
 		debug_blessing_buttons[i].pressed.connect(func(): _debug_apply_blessing(button_index))
-	debug_toggle.pressed.connect(_toggle_debug_panel)
 	_update_debug_buttons()
 	_update_acquired_blessings()
 	_start_run()
@@ -68,6 +66,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
+	if Input.is_action_just_pressed("toggle_debug_panel"):
+		_toggle_debug_panel()
 	if choosing_blessing:
 		if Input.is_action_just_pressed("pick_blessing_1"):
 			_pick_blessing(0)

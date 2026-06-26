@@ -1,3 +1,35 @@
+## 2026-06-26：Debug 面板改为按键映射触发
+
+### 本次目标
+
+修正 Debug 面板触发方式：不在画面上增加 `·` 按钮，而是映射键盘 `·` 按键，按下后显示/隐藏整个 Debug 面板。
+
+### 做了什么
+
+- 修改 `project.godot`：
+  - 新增 `toggle_debug_panel` 输入动作。
+  - 映射到 `·` 按键。
+- 修改 `Main.tscn`：
+  - 删除画面上的 `DebugToggle` 按钮。
+  - `DebugPanel` 保持默认隐藏。
+- 修改 `main.gd`：
+  - 移除 `DebugToggle.pressed` 连接。
+  - 在 `_process()` 中监听 `toggle_debug_panel`。
+  - 按下后切换 Debug 面板显示状态。
+- 修改 `controls.md` / `README.md`：
+  - 记录 `·` 显示/隐藏 Debug 面板。
+
+### 下一步
+
+用户复测：
+
+1. 进入游戏后 Debug 面板是否默认隐藏。
+2. 按 `·` 是否展开 Debug 面板。
+3. 再按 `·` 是否收起 Debug 面板。
+4. Debug 面板按钮是否仍能添加赐福。
+
+
+
 ## 2026-06-26：Debug 面板收起与隐藏
 
 ### 本次目标
