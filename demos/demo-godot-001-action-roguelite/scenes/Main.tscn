@@ -60,11 +60,12 @@ mouse_filter = 2
 color = Color(1, 0, 0, 0)
 
 [node name="AcquiredBlessingsPanel" type="PanelContainer" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 0
-offset_left = 760.0
-offset_top = 16.0
-offset_right = 1000.0
-offset_bottom = 150.0
+offset_left = 880.0
+offset_top = 12.0
+offset_right = 1130.0
+offset_bottom = 146.0
 modulate = Color(1, 1, 1, 0.85)
 
 [node name="AcquiredBlessingsList" type="VBoxContainer" parent="CanvasLayer/UI/AcquiredBlessingsPanel"]
@@ -82,10 +83,10 @@ text = "暂无"
 [node name="DebugPanel" type="PanelContainer" parent="CanvasLayer/UI"]
 visible = false
 layout_mode = 0
-offset_left = 760.0
-offset_top = 164.0
-offset_right = 1000.0
-offset_bottom = 380.0
+offset_left = 880.0
+offset_top = 154.0
+offset_right = 1130.0
+offset_bottom = 370.0
 modulate = Color(1, 1, 1, 0.85)
 
 [node name="DebugList" type="VBoxContainer" parent="CanvasLayer/UI/DebugPanel"]

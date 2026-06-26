@@ -42,7 +42,7 @@ Enter room
 | Space | Dash |
 | 1 / 2 / 3 | Pick blessing |
 | R | Restart |
-| `·` | Show / hide debug panel |
+| ` / ~ key | Show / hide blessing debug panels |
 
 ## How to Run
 

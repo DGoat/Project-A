@@ -11,11 +11,13 @@ var offered_blessings: Array = []
 var acquired_blessings: Array = []
 var player: Node
 var damage_flash_tween: Tween
+var debug_toggle_down := false
 
 @onready var room_root := $RoomRoot
 @onready var ui_status := $CanvasLayer/UI/Status
 @onready var ui_message := $CanvasLayer/UI/Message
 @onready var damage_flash := $CanvasLayer/UI/DamageFlash
+@onready var acquired_blessings_panel := $CanvasLayer/UI/AcquiredBlessingsPanel
 @onready var acquired_blessings_items := $CanvasLayer/UI/AcquiredBlessingsPanel/AcquiredBlessingsList/Items
 @onready var debug_panel := $CanvasLayer/UI/DebugPanel
 @onready var blessing_panel := $CanvasLayer/UI/BlessingPanel
@@ -59,6 +61,8 @@ func _ready() -> void:
 	for i in debug_blessing_buttons.size():
 		var button_index := i
 		debug_blessing_buttons[i].pressed.connect(func(): _debug_apply_blessing(button_index))
+	acquired_blessings_panel.visible = false
+	debug_panel.visible = false
 	_update_debug_buttons()
 	_update_acquired_blessings()
 	_start_run()
@@ -66,8 +70,10 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
-	if Input.is_action_just_pressed("toggle_debug_panel"):
+	var debug_key_down := Input.is_physical_key_pressed(KEY_QUOTELEFT) or Input.is_key_pressed(KEY_ASCIITILDE)
+	if debug_key_down and not debug_toggle_down:
 		_toggle_debug_panel()
+	debug_toggle_down = debug_key_down
 	if choosing_blessing:
 		if Input.is_action_just_pressed("pick_blessing_1"):
 			_pick_blessing(0)
@@ -153,7 +159,9 @@ func _pick_blessing(index: int) -> void:
 	_spawn_room(current_room)
 
 func _toggle_debug_panel() -> void:
-	debug_panel.visible = not debug_panel.visible
+	var next_visible: bool = not debug_panel.visible
+	acquired_blessings_panel.visible = next_visible
+	debug_panel.visible = next_visible
 
 func _debug_apply_blessing(index: int) -> void:
 	if index < blessing_pool.size():
