@@ -42,8 +42,12 @@
 | CTRL-003 | Deferred | Low | 暂无本地键位保存 | M4 |
 | CTRL-004 | Deferred | Low | 暂无手柄支持 | M5 |
 
-| VISUAL-001 | Fixed | Medium | 第一批美术资源已接入，棋盘格/相机/角色尺寸/攻击方向等首轮问题已修正，进入完整复测 | M3/M4 |
-| VISUAL-002 | In Progress | Medium | 需要复测大地图相机、角色移动、敌人移动、攻击表现、投射物可读性和完整通关流程 | M3/M4 |
+| VISUAL-001 | Fixed | Medium | 第一批美术资源已接入，棋盘格/相机/角色尺寸/攻击方向等首轮问题已修正，完整复测通过 | M3/M4 |
+| VISUAL-002 | Fixed | Medium | 大地图相机、角色移动、敌人移动、攻击表现、投射物可读性和完整通关流程复测通过 | M3/M4 |
+| VISUAL-003 | Open | Low | 地图边界基本正常，但角色在左上边界附近可能半露/贴边过近 | M3/M4 |
+| ANIM-001 | Open | High | 缺少移动、冲刺、攻击、受击、死亡等动画表现 | M4 |
+| UI-POLISH-001 | Open | High | UI 界面过于粗糙，需要符合童话治愈 × 玩具修理屋主题的视觉升级 | M4 |
+| MAP-001 | Open | High | 地图目前只有背景图，缺少地形、障碍、机关和房间布局变化 | M4 |
 | THEME-001 | In Progress | Medium | 已开始将通用动作 Roguelite 包装为玩具修理屋主题 | M3/M4 |
 | UI-FLOW-001 | Fixed | Medium | 开始 / 胜利 / 失败流程界面已通过测试 | M3/M4 |
 | UI-FLOW-002 | Fixed | Medium | 赐福选择界面构筑标签已通过测试 | M3/M4 |
