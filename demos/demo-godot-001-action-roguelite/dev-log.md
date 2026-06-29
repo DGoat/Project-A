@@ -1,3 +1,69 @@
+## 2026-06-29：UI Redesign 0.2 Spec
+
+### 本次目标
+
+根据 UI Polish 0.1 手测反馈，先写 UI Redesign 0.2 Spec，明确标题层级、三选一横向三卡、HUD 重设，以及需要用户生成的 UI 图片资源提示词。
+
+### 反馈结论
+
+- 标题层级区分不明显，需要参考《空洞骑士》《Beyond Time》《Arco》增强主标题识别。
+- 三选一不应继续竖排，应改为横向三卡并列，类似海克斯选择。
+- Debug 面板暂时可以保留现状。
+- HUD 太粗糙，需要结构化底板与信息分层。
+
+### 做了什么
+
+- 新增 `specs/spec-013-ui-redesign-02.md`。
+- 规划无资源版 UI 0.2：
+  - 开始界面标题层级增强。
+  - 三选一横向三卡。
+  - HUD 改为结构化木牌/布片底板。
+- 提供 UI 图片资源提示词：
+  - `ui_title_ornament.png`
+  - `ui_blessing_card_frame.png`
+  - `ui_hud_wood_plaque.png`
+  - `ui_button_wood.png`
+- 更新 `README.md` Spec 索引。
+
+### 下一步
+
+先实现无资源版 UI 0.2；图片资源后续作为 UI 0.3 质感升级接入。
+
+
+## 2026-06-29：UI Polish 0.1 实现
+
+### 本次目标
+
+按 `spec-012-animation-and-ui-polish-01.md` 实现第一轮 UI 打磨，让界面摆脱 Godot 默认控件感，更贴近玩具修理屋主题。
+
+### 做了什么
+
+- `main.gd`
+  - 新增 `_setup_ui_style()`。
+  - 新增面板、按钮、标签样式构造函数。
+  - 开始界面、修理灵感三选一、结算界面改为暖色木质面板风格。
+  - Debug 面板改为更偏灰黑的调试风格，与正式 UI 区分。
+  - HUD、提示、面板文字增加暖色字体、阴影和更清晰字号。
+  - 修理灵感按钮改为卡片式视觉。
+- `Main.tscn`
+  - 调整开始界面、三选一界面、结算界面尺寸和位置。
+- `todo.md`
+  - UI 打磨相关 P0 项标记完成。
+
+### 验证结果
+
+- Godot headless 场景检查通过。
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+### 下一步
+
+用户手测 UI：开始界面、三选一修理灵感、结算界面、Debug 面板、HUD 可读性。
+
+
 ## 2026-06-29：Animation Feedback 0.1 首批修正
 
 ### 本次目标

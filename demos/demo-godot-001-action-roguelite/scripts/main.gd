@@ -71,6 +71,7 @@ func _ready() -> void:
 		debug_blessing_buttons[i].pressed.connect(func(): _debug_apply_blessing(button_index))
 	start_button.pressed.connect(_start_run)
 	restart_button.pressed.connect(func(): get_tree().reload_current_scene())
+	_setup_ui_style()
 	acquired_blessings_panel.visible = false
 	debug_panel.visible = false
 	blessing_panel.visible = false
@@ -163,6 +164,7 @@ func _on_room_cleared() -> void:
 		var blessing: Dictionary = offered_blessings[i]
 		var tags_text := _format_tags(blessing)
 		blessing_buttons[i].text = "%d. [%s]\n%s\n%s" % [i + 1, tags_text, blessing["name"], blessing["description"]]
+		_style_button(blessing_buttons[i], true)
 	blessing_panel.visible = true
 	ui_message.text = "选择一个修理灵感"
 
@@ -232,6 +234,83 @@ func _format_result_blessings() -> String:
 	for blessing in acquired_blessings:
 		lines.append("- %s" % blessing["name"])
 	return "\n".join(lines)
+
+func _setup_ui_style() -> void:
+	var panel_style := _make_panel_style(Color(0.12, 0.07, 0.04, 0.82), Color(0.78, 0.55, 0.28, 0.95), 10, 3)
+	var side_style := _make_panel_style(Color(0.08, 0.05, 0.035, 0.72), Color(0.42, 0.64, 0.74, 0.8), 8, 2)
+	var debug_style := _make_panel_style(Color(0.05, 0.05, 0.06, 0.78), Color(0.55, 0.55, 0.6, 0.7), 6, 2)
+	for panel in [start_panel, blessing_panel, result_panel]:
+		panel.add_theme_stylebox_override("panel", panel_style)
+	for panel in [acquired_blessings_panel]:
+		panel.add_theme_stylebox_override("panel", side_style)
+	debug_panel.add_theme_stylebox_override("panel", debug_style)
+	_style_label(ui_status, 18, Color(0.98, 0.9, 0.72))
+	_style_label(ui_message, 18, Color(0.98, 0.86, 0.58))
+	_style_label($CanvasLayer/UI/ControlsHint, 15, Color(0.92, 0.82, 0.68, 0.72))
+	_style_button(start_button, false)
+	_style_button(restart_button, false)
+	for button in blessing_buttons:
+		_style_button(button, true)
+	for button in debug_blessing_buttons:
+		_style_button(button, false)
+	_style_panel_labels(start_panel)
+	_style_panel_labels(blessing_panel)
+	_style_panel_labels(result_panel)
+	_style_panel_labels(acquired_blessings_panel)
+	_style_panel_labels(debug_panel)
+
+func _make_panel_style(fill: Color, border: Color, radius: int, border_width: int) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = fill
+	style.border_color = border
+	style.set_border_width_all(border_width)
+	style.set_corner_radius_all(radius)
+	style.content_margin_left = 18
+	style.content_margin_right = 18
+	style.content_margin_top = 14
+	style.content_margin_bottom = 14
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.35)
+	style.shadow_size = 10
+	return style
+
+func _make_button_style(fill: Color, border: Color) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = fill
+	style.border_color = border
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(8)
+	style.content_margin_left = 12
+	style.content_margin_right = 12
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
+	return style
+
+func _style_button(button: Button, card := false) -> void:
+	var normal := _make_button_style(Color(0.34, 0.18, 0.09, 0.92), Color(0.86, 0.62, 0.32, 0.95))
+	var hover := _make_button_style(Color(0.48, 0.28, 0.13, 0.96), Color(0.98, 0.78, 0.42, 1.0))
+	var pressed := _make_button_style(Color(0.22, 0.12, 0.07, 0.98), Color(0.98, 0.82, 0.48, 1.0))
+	if card:
+		normal = _make_button_style(Color(0.16, 0.10, 0.07, 0.94), Color(0.78, 0.55, 0.28, 0.95))
+		hover = _make_button_style(Color(0.24, 0.15, 0.09, 0.98), Color(0.98, 0.78, 0.42, 1.0))
+		pressed = _make_button_style(Color(0.12, 0.08, 0.055, 1.0), Color(0.98, 0.82, 0.48, 1.0))
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", pressed)
+	button.add_theme_color_override("font_color", Color(0.98, 0.9, 0.72))
+	button.add_theme_color_override("font_hover_color", Color(1.0, 0.94, 0.78))
+	button.add_theme_font_size_override("font_size", 17 if card else 16)
+
+func _style_label(label: Label, size: int, color: Color) -> void:
+	label.add_theme_color_override("font_color", color)
+	label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.75))
+	label.add_theme_constant_override("shadow_offset_x", 2)
+	label.add_theme_constant_override("shadow_offset_y", 2)
+	label.add_theme_font_size_override("font_size", size)
+
+func _style_panel_labels(root_node: Node) -> void:
+	for child in root_node.find_children("*", "Label", true, false):
+		var label := child as Label
+		_style_label(label, 18, Color(0.96, 0.86, 0.66))
 
 func _format_tags(blessing: Dictionary) -> String:
 	var tags: Array = blessing.get("tags", [])

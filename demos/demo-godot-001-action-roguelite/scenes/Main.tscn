@@ -128,10 +128,10 @@ text = "长柄之势"
 [node name="BlessingPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=1241368618]
 visible = false
 layout_mode = 0
-offset_left = 180.0
-offset_top = 150.0
-offset_right = 860.0
-offset_bottom = 470.0
+offset_left = 176.0
+offset_top = 126.0
+offset_right = 976.0
+offset_bottom = 502.0
 
 [node name="BlessingList" type="VBoxContainer" parent="CanvasLayer/UI/BlessingPanel" unique_id=445422710]
 layout_mode = 2
@@ -155,10 +155,10 @@ text = "3"
 
 [node name="StartPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=1445451771]
 layout_mode = 0
-offset_left = 270.0
-offset_top = 140.0
-offset_right = 770.0
-offset_bottom = 430.0
+offset_left = 286.0
+offset_top = 118.0
+offset_right = 866.0
+offset_bottom = 438.0
 
 [node name="StartList" type="VBoxContainer" parent="CanvasLayer/UI/StartPanel" unique_id=1979720860]
 layout_mode = 2
@@ -187,10 +187,10 @@ text = "开始夜间修理"
 [node name="ResultPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=786109767]
 visible = false
 layout_mode = 0
-offset_left = 300.0
-offset_top = 150.0
-offset_right = 740.0
-offset_bottom = 420.0
+offset_left = 330.0
+offset_top = 138.0
+offset_right = 822.0
+offset_bottom = 430.0
 
 [node name="ResultList" type="VBoxContainer" parent="CanvasLayer/UI/ResultPanel" unique_id=714452821]
 layout_mode = 2

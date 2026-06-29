@@ -95,6 +95,7 @@ prompt.md             generation prompt
 | `prompt.md` | 可复现 Prompt |
 | `specs/spec-011-toy-art-asset-integration-01.md` | 第一批玩具修理屋美术资源接入 Spec |
 | `specs/spec-012-animation-and-ui-polish-01.md` | 动画与 UI 表现升级 Spec |
+| `specs/spec-013-ui-redesign-02.md` | UI 标题层级、三卡横排、HUD 重设 Spec |
 | `tests/` | AI 辅助 smoke test 与测试说明 |
 | `todo.md` | 后续动画、UI、地图、机关、构筑等待办列表 |
 

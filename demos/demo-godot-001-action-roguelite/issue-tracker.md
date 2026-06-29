@@ -50,7 +50,10 @@
 | ANIM-002 | Fixed | Medium | 已强化攻击木尺显示时长、缩放峰值和亮度，待手测确认 | M4 |
 | ANIM-003 | Fixed | Medium | 已强化主角受击颜色和抖动幅度，待手测确认 | M4 |
 | ART-ANIM-001 | Open | Medium | 主角只有单张图片，后续需要规划移动、攻击、受击、倒下等动作资源 | M4 |
-| UI-POLISH-001 | Open | High | UI 界面过于粗糙，需要符合童话治愈 × 玩具修理屋主题的视觉升级 | M4 |
+| UI-POLISH-001 | In Progress | High | UI Polish 0.1 已实现但标题层级、三选一布局、HUD 仍需重设；已新增 UI Redesign 0.2 Spec | M4 |
+| UI-POLISH-002 | Open | High | 三选一修理灵感需要改为横向三卡并列，类似海克斯选择 | M4 |
+| UI-POLISH-003 | Open | High | HUD 需要从裸文字改为结构化木牌/布片底板与信息分层 | M4 |
+| UI-ASSET-001 | Open | Medium | 可选生成标题装饰、卡牌边框、HUD 木牌、木牌按钮等 UI 资源用于 UI 0.3 | M4 |
 | MAP-001 | Open | High | 地图目前只有背景图，缺少地形、障碍、机关和房间布局变化 | M4 |
 | THEME-001 | In Progress | Medium | 已开始将通用动作 Roguelite 包装为玩具修理屋主题 | M3/M4 |
 | UI-FLOW-001 | Fixed | Medium | 开始 / 胜利 / 失败流程界面已通过测试 | M3/M4 |
