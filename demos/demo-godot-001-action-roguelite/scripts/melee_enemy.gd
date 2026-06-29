@@ -12,6 +12,8 @@ signal died(enemy: Node)
 @export var elite := false
 @export var separation_radius := 46.0
 @export var separation_strength := 160.0
+@export var obstacle_avoid_distance := 58.0
+@export var obstacle_avoid_strength := 190.0
 
 var hp := 40
 var player: Node2D
@@ -30,6 +32,7 @@ var dead := false
 
 @onready var body := $Body
 @onready var contact_area := $ContactArea
+@onready var navigation_agent := $NavigationAgent2D
 
 func _ready() -> void:
 	body_base_position = body.position
@@ -55,7 +58,12 @@ func _physics_process(delta: float) -> void:
 		recoil_time -= delta
 		velocity = recoil_direction * recoil_speed
 	else:
-		velocity = direction * move_speed
+		navigation_agent.target_position = player.global_position
+		var next_position: Vector2 = navigation_agent.get_next_path_position()
+		var move_direction := global_position.direction_to(next_position)
+		if navigation_agent.is_navigation_finished() or global_position.distance_to(next_position) < 3.0:
+			move_direction = direction
+		velocity = move_direction * move_speed
 		velocity += _get_separation_velocity()
 	move_and_slide()
 	body.flip_h = direction.x < 0
@@ -124,6 +132,30 @@ func _get_separation_velocity() -> Vector2:
 		if distance > 0.0 and distance < separation_radius:
 			separation += offset.normalized() * ((separation_radius - distance) / separation_radius)
 	return separation * separation_strength
+
+func _get_obstacle_avoidance_velocity(direction: Vector2) -> Vector2:
+	var avoidance := Vector2.ZERO
+	var side := direction.orthogonal().normalized()
+	for node in get_tree().get_nodes_in_group("obstacles"):
+		var obstacle := node as StaticBody2D
+		if obstacle == null:
+			continue
+		var shape_node := obstacle.get_node_or_null("CollisionShape2D") as CollisionShape2D
+		if shape_node == null or not shape_node.shape is RectangleShape2D:
+			continue
+		var rect := shape_node.shape as RectangleShape2D
+		var local := global_position - obstacle.global_position
+		var half := rect.size * 0.5
+		var closest := Vector2(clampf(local.x, -half.x, half.x), clampf(local.y, -half.y, half.y))
+		var offset := local - closest
+		var distance := offset.length()
+		var ahead := (obstacle.global_position - global_position).dot(direction)
+		if ahead > -12.0 and ahead < obstacle_avoid_distance and distance < obstacle_avoid_distance:
+			var side_sign := signf((obstacle.global_position - global_position).dot(side))
+			if side_sign == 0.0:
+				side_sign = 1.0
+			avoidance -= side * side_sign * ((obstacle_avoid_distance - distance) / obstacle_avoid_distance)
+	return avoidance * obstacle_avoid_strength
 
 func _update_visuals(delta: float) -> void:
 	visual_time += delta

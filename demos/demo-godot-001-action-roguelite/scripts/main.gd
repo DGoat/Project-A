@@ -65,7 +65,7 @@ var rooms := [
 var room_maps := [
 	{
 		"obstacles": [
-			{"pos": Vector2(1450, 640), "size": Vector2(170, 82), "color": Color(0.52, 0.28, 0.12, 0.92)}
+			{"pos": Vector2(1450, 640), "size": Vector2(140, 62), "color": Color(0.52, 0.28, 0.12, 0.92)}
 		],
 		"glue": [
 			{"pos": Vector2(1860, 620), "size": Vector2(150, 88)}
@@ -73,8 +73,8 @@ var room_maps := [
 	},
 	{
 		"obstacles": [
-			{"pos": Vector2(1380, 610), "size": Vector2(160, 82), "color": Color(0.42, 0.26, 0.62, 0.9)},
-			{"pos": Vector2(1820, 720), "size": Vector2(190, 76), "color": Color(0.52, 0.32, 0.16, 0.92)}
+			{"pos": Vector2(1380, 610), "size": Vector2(132, 62), "color": Color(0.42, 0.26, 0.62, 0.9)},
+			{"pos": Vector2(1820, 720), "size": Vector2(150, 58), "color": Color(0.52, 0.32, 0.16, 0.92)}
 		],
 		"glue": [
 			{"pos": Vector2(1580, 860), "size": Vector2(170, 92)}
@@ -82,9 +82,9 @@ var room_maps := [
 	},
 	{
 		"obstacles": [
-			{"pos": Vector2(1330, 680), "size": Vector2(180, 78), "color": Color(0.46, 0.28, 0.16, 0.92)},
-			{"pos": Vector2(1820, 600), "size": Vector2(180, 78), "color": Color(0.32, 0.42, 0.58, 0.9)},
-			{"pos": Vector2(1580, 880), "size": Vector2(220, 72), "color": Color(0.55, 0.36, 0.16, 0.9)}
+			{"pos": Vector2(1330, 680), "size": Vector2(138, 58), "color": Color(0.46, 0.28, 0.16, 0.92)},
+			{"pos": Vector2(1820, 600), "size": Vector2(138, 58), "color": Color(0.32, 0.42, 0.58, 0.9)},
+			{"pos": Vector2(1580, 880), "size": Vector2(170, 54), "color": Color(0.55, 0.36, 0.16, 0.9)}
 		],
 		"glue": [
 			{"pos": Vector2(1180, 840), "size": Vector2(150, 88)},
@@ -185,16 +185,41 @@ func _spawn_room_map(index: int) -> void:
 	for child in map_root.get_children():
 		child.queue_free()
 	var map_data: Dictionary = room_maps[index]
+	_create_navigation_region(map_data)
 	for obstacle_data in map_data.get("obstacles", []):
 		_create_obstacle(obstacle_data)
 	for glue_data in map_data.get("glue", []):
 		_create_glue_puddle(glue_data)
 
+func _create_navigation_region(map_data: Dictionary) -> void:
+	var region := NavigationRegion2D.new()
+	region.name = "NavigationRegion2D"
+	var polygon := NavigationPolygon.new()
+	polygon.add_outline(PackedVector2Array([
+		Vector2(120, 220),
+		Vector2(3048, 220),
+		Vector2(3048, 1230),
+		Vector2(120, 1230)
+	]))
+	for obstacle_data in map_data.get("obstacles", []):
+		var position: Vector2 = obstacle_data["pos"]
+		var size: Vector2 = obstacle_data["size"] + Vector2(96, 96)
+		var half := size * 0.5
+		polygon.add_outline(PackedVector2Array([
+			position + Vector2(-half.x, -half.y),
+			position + Vector2(half.x, -half.y),
+			position + Vector2(half.x, half.y),
+			position + Vector2(-half.x, half.y)
+		]))
+	polygon.make_polygons_from_outlines()
+	region.navigation_polygon = polygon
+	map_root.add_child(region)
+
 func _create_obstacle(data: Dictionary) -> void:
 	var body := StaticBody2D.new()
 	body.name = "Obstacle"
 	body.collision_layer = 8
-	body.collision_mask = 0
+	body.collision_mask = 3
 	body.global_position = data["pos"]
 	body.add_to_group("obstacles")
 	var shape := CollisionShape2D.new()

@@ -58,6 +58,10 @@
 | UI-POLISH-003 | Open | High | HUD 需要从裸文字改为结构化木牌/布片底板与信息分层 | M4 |
 | UI-ASSET-001 | Open | Medium | 可选生成标题装饰、卡牌边框、HUD 木牌、木牌按钮等 UI 资源用于 UI 0.3 | M4 |
 | MAP-001 | Fixed | High | 已新增 MapRoot、三房间不同障碍布局和胶水坑减速区域，地图不再只有背景图 | M4 |
+| MAP-002 | Fixed | High | 硬障碍只能阻挡投射物，不能阻挡玩家和敌人；已修正玩家、敌人与障碍碰撞掩码 | M4 |
+| MAP-003 | Fixed | High | 硬障碍阻挡后敌人直线追击会卡住，已增加轻量障碍规避 steering | M4 |
+| MAP-004 | Fixed | High | 近战敌人已迁移到 NavigationAgent2D，并按房间障碍生成 NavigationRegion2D | M4 |
+| MAP-005 | Fixed | High | 近战敌人 NavigationAgent2D 仍易卡障碍，已改用 outline 生成导航洞、扩大 margin 并缩小占位障碍 | M4 |
 | THEME-001 | In Progress | Medium | 已开始将通用动作 Roguelite 包装为玩具修理屋主题 | M3/M4 |
 | UI-FLOW-001 | Fixed | Medium | 开始 / 胜利 / 失败流程界面已通过测试 | M3/M4 |
 | UI-FLOW-002 | Fixed | Medium | 赐福选择界面构筑标签已通过测试 | M3/M4 |

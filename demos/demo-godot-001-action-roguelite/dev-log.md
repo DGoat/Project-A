@@ -1,3 +1,121 @@
+## 2026-06-29：近战寻路二次修正
+
+### 本次目标
+
+修复近战敌人迁移到 `NavigationAgent2D` 后，绕障碍仍容易卡住的问题。
+
+### 做了什么
+
+- `main.gd`
+  - 改用 `NavigationPolygon.add_outline()` + `make_polygons_from_outlines()` 生成带障碍洞的导航多边形。
+  - 障碍导航挖洞 margin 提高到 `96px`。
+  - 缩小当前占位障碍物尺寸，减少狭窄缝隙和卡边。
+- `melee_enemy.gd`
+  - 当导航路径已完成或下一路径点过近时，回退为直接朝玩家方向，避免原地零向量停住。
+
+### 验证结果
+
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+### 备注
+
+Godot 4.7 对 `make_polygons_from_outlines()` 会给 deprecated warning，但当前可运行。后续若继续深化地形系统，应迁移到 `NavigationServer2D` bake 流程。
+
+
+## 2026-06-29：近战敌人 NavigationAgent2D 寻路 0.1
+
+### 本次目标
+
+按 `spec-015-melee-navigation-agent-01.md` 将近战敌人迁移到 `NavigationAgent2D`，替代临时 steering 追击。
+
+### 做了什么
+
+- 新增 `specs/spec-015-melee-navigation-agent-01.md`。
+- `Main.tscn` / `main.gd`
+  - 每个房间生成 `NavigationRegion2D`。
+  - 运行时根据当前房间障碍配置创建 `NavigationPolygon`，障碍区域按 margin 从导航区域中排除。
+- `MeleeEnemy.tscn`
+  - 增加 `NavigationAgent2D`。
+- `melee_enemy.gd`
+  - 近战敌人普通追击改为：设置玩家为 target，朝 `get_next_path_position()` 移动。
+  - 保留 recoil、knockback 和敌人分离。
+- `tests/smoke_test.gd`
+  - 增加 NavigationRegion2D 与近战敌人 NavigationAgent2D 检查。
+
+### 验证结果
+
+- Godot headless 场景检查通过。
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+### 备注
+
+本轮只迁移近战敌人。远程敌人仍保留当前移动逻辑，避免 preferred distance 与寻路目标点同时引入复杂度。
+
+
+## 2026-06-29：敌人障碍绕行微调
+
+### 本次目标
+
+修复硬障碍能阻挡后，敌人直线追击被障碍卡住的问题。
+
+### 做了什么
+
+- `melee_enemy.gd`
+  - 增加简单障碍规避速度：敌人接近前方障碍时向侧向绕开。
+- `ranged_enemy.gd`
+  - 增加同样的障碍规避速度，适配远程敌人的靠近/后退逻辑。
+
+### 验证结果
+
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+### 备注
+
+这是轻量 steering 方案，不是完整寻路。若后续障碍变多，需要改为 NavigationAgent2D 或简化障碍布局。
+
+
+## 2026-06-29：修复硬障碍碰撞掩码
+
+### 本次目标
+
+修复硬障碍只能阻挡投射物，不能阻挡玩家和敌人的问题。
+
+### 根因
+
+硬障碍在第 8 层，但玩家和敌人的 `collision_mask` 没有包含第 8 层；同时运行时创建的硬障碍 `collision_mask` 为 `0`，不会参与与玩家/敌人的物理碰撞响应。
+
+### 做了什么
+
+- `Player.tscn`
+  - 玩家 `collision_layer = 1`，`collision_mask = 8`。
+- `MeleeEnemy.tscn` / `RangedEnemy.tscn`
+  - 敌人 `collision_mask = 8`。
+- `main.gd`
+  - 硬障碍 `collision_layer = 8`，`collision_mask = 3`。
+- `tests/smoke_test.gd`
+  - 增加玩家/敌人地形碰撞掩码检查。
+
+### 验证结果
+
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
 ## 2026-06-29：修复精英怪受击后缩小
 
 ### 本次目标

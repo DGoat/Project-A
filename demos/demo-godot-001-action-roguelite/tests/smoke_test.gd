@@ -14,6 +14,7 @@ func _run() -> void:
 	_test_player_slow_multiplier()
 	_test_ranged_enemy_motion()
 	_test_enemy_separation_group()
+	_test_terrain_collision_masks()
 	_report()
 	quit(1 if failures.size() > 0 else 0)
 
@@ -114,7 +115,21 @@ func _test_enemy_separation_group() -> void:
 	for enemy in main.room_root.get_children():
 		_expect(enemy.is_in_group("enemies"), "spawned enemy should be in enemies group")
 	_expect(main.map_root.get_child_count() > 0, "room map should spawn obstacles or hazards")
+	_expect(main.map_root.has_node("NavigationRegion2D"), "room map should spawn NavigationRegion2D")
 	main.queue_free()
+
+func _test_terrain_collision_masks() -> void:
+	var player = load("res://scenes/Player.tscn").instantiate()
+	var melee = load("res://scenes/MeleeEnemy.tscn").instantiate()
+	var ranged = load("res://scenes/RangedEnemy.tscn").instantiate()
+	_expect(player.collision_layer == 1, "player should stay on collision layer 1")
+	_expect((player.collision_mask & 8) != 0, "player should collide with terrain layer")
+	_expect((melee.collision_mask & 8) != 0, "melee enemy should collide with terrain layer")
+	_expect(melee.has_node("NavigationAgent2D"), "melee enemy should have NavigationAgent2D")
+	_expect((ranged.collision_mask & 8) != 0, "ranged enemy should collide with terrain layer")
+	player.queue_free()
+	melee.queue_free()
+	ranged.queue_free()
 
 func _report() -> void:
 	if failures.is_empty():
