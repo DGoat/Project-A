@@ -11,6 +11,7 @@ func _run() -> void:
 	_test_player_core_values()
 	_test_player_dash_motion()
 	_test_player_attack_shape()
+	_test_player_slow_multiplier()
 	_test_ranged_enemy_motion()
 	_test_enemy_separation_group()
 	_report()
@@ -79,6 +80,16 @@ func _test_player_attack_shape() -> void:
 		_expect(shape.size == Vector2(78.0, 52.0), "attack shape size not synced")
 	player.queue_free()
 
+func _test_player_slow_multiplier() -> void:
+	var player = load("res://scenes/Player.tscn").instantiate()
+	root.add_child(player)
+	await process_frame
+	player.set_slow_multiplier(0.65)
+	_expect(player.slow_multiplier == 0.65, "player slow multiplier not applied")
+	player.set_slow_multiplier(1.0)
+	_expect(player.slow_multiplier == 1.0, "player slow multiplier not restored")
+	player.queue_free()
+
 func _test_ranged_enemy_motion() -> void:
 	var player = load("res://scenes/Player.tscn").instantiate()
 	var enemy = load("res://scenes/RangedEnemy.tscn").instantiate()
@@ -102,6 +113,7 @@ func _test_enemy_separation_group() -> void:
 	await process_frame
 	for enemy in main.room_root.get_children():
 		_expect(enemy.is_in_group("enemies"), "spawned enemy should be in enemies group")
+	_expect(main.map_root.get_child_count() > 0, "room map should spawn obstacles or hazards")
 	main.queue_free()
 
 func _report() -> void:

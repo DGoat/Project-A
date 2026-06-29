@@ -18,6 +18,8 @@ centered = true
 
 [node name="RoomRoot" type="Node2D" parent="." unique_id=1209738701]
 
+[node name="MapRoot" type="Node2D" parent="." unique_id=489315260]
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=766902481]
 
 [node name="UI" type="Control" parent="CanvasLayer" unique_id=1516269449]

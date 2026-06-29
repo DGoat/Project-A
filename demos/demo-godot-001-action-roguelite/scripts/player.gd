@@ -19,6 +19,7 @@ var heal_on_kill := 0
 var burn_damage := 0
 var burn_ticks := 0
 var dash_strike_multiplier := 1.0
+var slow_multiplier := 1.0
 
 var facing := Vector2.RIGHT
 var dash_time := 0.0
@@ -68,7 +69,7 @@ func _physics_process(delta: float) -> void:
 		dash_time -= delta
 		velocity = facing * dash_speed
 	else:
-		velocity = input_vector * move_speed
+		velocity = input_vector * move_speed * slow_multiplier
 	if Input.is_action_just_pressed("dash") and dash_cooldown_time <= 0.0:
 		dash_time = dash_duration
 		dash_cooldown_time = dash_cooldown
@@ -127,6 +128,9 @@ func take_damage(amount: int) -> void:
 		dead = true
 		_play_death_feedback()
 		died.emit()
+
+func set_slow_multiplier(value: float) -> void:
+	slow_multiplier = value
 
 func apply_blessing(blessing: Dictionary) -> void:
 	var effects: Dictionary = blessing.get("effects", {})

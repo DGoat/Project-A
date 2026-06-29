@@ -56,7 +56,7 @@
 | UI-POLISH-002 | Open | High | 三选一修理灵感需要改为横向三卡并列，类似海克斯选择 | M4 |
 | UI-POLISH-003 | Open | High | HUD 需要从裸文字改为结构化木牌/布片底板与信息分层 | M4 |
 | UI-ASSET-001 | Open | Medium | 可选生成标题装饰、卡牌边框、HUD 木牌、木牌按钮等 UI 资源用于 UI 0.3 | M4 |
-| MAP-001 | Open | High | 地图目前只有背景图，缺少地形、障碍、机关和房间布局变化 | M4 |
+| MAP-001 | Fixed | High | 已新增 MapRoot、三房间不同障碍布局和胶水坑减速区域，地图不再只有背景图 | M4 |
 | THEME-001 | In Progress | Medium | 已开始将通用动作 Roguelite 包装为玩具修理屋主题 | M3/M4 |
 | UI-FLOW-001 | Fixed | Medium | 开始 / 胜利 / 失败流程界面已通过测试 | M3/M4 |
 | UI-FLOW-002 | Fixed | Medium | 赐福选择界面构筑标签已通过测试 | M3/M4 |

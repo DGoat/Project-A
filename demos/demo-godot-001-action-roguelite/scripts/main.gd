@@ -16,6 +16,7 @@ var run_started := false
 var run_ended := false
 
 @onready var room_root := $RoomRoot
+@onready var map_root := $MapRoot
 @onready var hud_panel := $CanvasLayer/UI/HudPanel
 @onready var ui_status := $CanvasLayer/UI/HudPanel/HudList/Status
 @onready var ui_message := $CanvasLayer/UI/HudPanel/HudList/Message
@@ -59,6 +60,37 @@ var rooms := [
 		{"type": "ranged", "pos": Vector2(1080, 860)},
 		{"type": "ranged", "pos": Vector2(2140, 860)}
 	]
+]
+
+var room_maps := [
+	{
+		"obstacles": [
+			{"pos": Vector2(1450, 640), "size": Vector2(170, 82), "color": Color(0.52, 0.28, 0.12, 0.92)}
+		],
+		"glue": [
+			{"pos": Vector2(1860, 620), "size": Vector2(150, 88)}
+		]
+	},
+	{
+		"obstacles": [
+			{"pos": Vector2(1380, 610), "size": Vector2(160, 82), "color": Color(0.42, 0.26, 0.62, 0.9)},
+			{"pos": Vector2(1820, 720), "size": Vector2(190, 76), "color": Color(0.52, 0.32, 0.16, 0.92)}
+		],
+		"glue": [
+			{"pos": Vector2(1580, 860), "size": Vector2(170, 92)}
+		]
+	},
+	{
+		"obstacles": [
+			{"pos": Vector2(1330, 680), "size": Vector2(180, 78), "color": Color(0.46, 0.28, 0.16, 0.92)},
+			{"pos": Vector2(1820, 600), "size": Vector2(180, 78), "color": Color(0.32, 0.42, 0.58, 0.9)},
+			{"pos": Vector2(1580, 880), "size": Vector2(220, 72), "color": Color(0.55, 0.36, 0.16, 0.9)}
+		],
+		"glue": [
+			{"pos": Vector2(1180, 840), "size": Vector2(150, 88)},
+			{"pos": Vector2(2040, 820), "size": Vector2(150, 88)}
+		]
+	}
 ]
 
 func _ready() -> void:
@@ -128,6 +160,7 @@ func _start_run() -> void:
 func _spawn_room(index: int) -> void:
 	for child in room_root.get_children():
 		child.queue_free()
+	_spawn_room_map(index)
 	enemies_alive = 0
 	var room = rooms[index]
 	for enemy_data in room:
@@ -147,6 +180,60 @@ func _spawn_room(index: int) -> void:
 		enemy.add_to_group("enemies")
 		enemies_alive += 1
 	_update_status()
+
+func _spawn_room_map(index: int) -> void:
+	for child in map_root.get_children():
+		child.queue_free()
+	var map_data: Dictionary = room_maps[index]
+	for obstacle_data in map_data.get("obstacles", []):
+		_create_obstacle(obstacle_data)
+	for glue_data in map_data.get("glue", []):
+		_create_glue_puddle(glue_data)
+
+func _create_obstacle(data: Dictionary) -> void:
+	var body := StaticBody2D.new()
+	body.name = "Obstacle"
+	body.collision_layer = 8
+	body.collision_mask = 0
+	body.global_position = data["pos"]
+	body.add_to_group("obstacles")
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = data["size"]
+	shape.shape = rect
+	body.add_child(shape)
+	var visual := ColorRect.new()
+	visual.color = data.get("color", Color(0.52, 0.32, 0.16, 0.9))
+	visual.size = data["size"]
+	visual.position = -data["size"] * 0.5
+	body.add_child(visual)
+	map_root.add_child(body)
+
+func _create_glue_puddle(data: Dictionary) -> void:
+	var area := Area2D.new()
+	area.name = "GluePuddle"
+	area.collision_layer = 0
+	area.collision_mask = 1
+	area.global_position = data["pos"]
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = data["size"]
+	shape.shape = rect
+	area.add_child(shape)
+	var visual := ColorRect.new()
+	visual.color = Color(0.95, 0.72, 0.22, 0.28)
+	visual.size = data["size"]
+	visual.position = -data["size"] * 0.5
+	area.add_child(visual)
+	area.body_entered.connect(func(body: Node2D):
+		if body.has_method("set_slow_multiplier"):
+			body.set_slow_multiplier(0.65)
+	)
+	area.body_exited.connect(func(body: Node2D):
+		if body.has_method("set_slow_multiplier"):
+			body.set_slow_multiplier(1.0)
+	)
+	map_root.add_child(area)
 
 func _on_enemy_died(_enemy: Node) -> void:
 	if run_ended:

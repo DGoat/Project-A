@@ -1,3 +1,37 @@
+## 2026-06-29：地图地形与机关 0.1 实现
+
+### 本次目标
+
+按 `spec-014-map-terrain-and-hazards-01.md` 实现第一版地图地形与机关，让房间不再只是纯背景。
+
+### 做了什么
+
+- `Main.tscn`
+  - 新增 `MapRoot`，用于承载每个房间的动态地图元素。
+- `main.gd`
+  - 新增 `room_maps` 配置。
+  - 每个房间生成不同障碍与胶水坑布局。
+  - 硬障碍使用 `StaticBody2D` 阻挡玩家、敌人和投射物。
+  - 胶水坑使用 `Area2D`，玩家进入后移动速度变为 `0.65x`，离开恢复。
+- `player.gd`
+  - 新增 `slow_multiplier` 与 `set_slow_multiplier()`。
+- `projectile.gd` / `Projectile.tscn`
+  - 投射物碰到硬障碍后消失。
+- `tests/smoke_test.gd`
+  - 增加地图元素生成与玩家减速参数检查。
+- `todo.md`
+  - 标记地图地形/胶水坑/三房间布局相关项完成。
+
+### 验证结果
+
+- Godot headless 场景检查通过。
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
 ## 2026-06-29：HUD 简化与敌人分离
 
 ### 本次目标
