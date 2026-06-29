@@ -50,6 +50,7 @@
 | FEEL-009 | Fixed | High | 已修复近战敌人 recoil 分支缩进，并加强命中后弹开速度和时长，待手测确认 | M3/M4 |
 | ANIM-002 | Fixed | Medium | 已强化攻击木尺显示时长、缩放峰值和亮度，待手测确认 | M4 |
 | ANIM-003 | Fixed | Medium | 已强化主角受击颜色和抖动幅度，待手测确认 | M4 |
+| ANIM-004 | Fixed | Medium | 精英近战怪受击后缩回普通尺寸，已改为精英尺寸设置后再记录 body_base_scale | M4 |
 | ART-ANIM-001 | Open | Medium | 主角只有单张图片，后续需要规划移动、攻击、受击、倒下等动作资源 | M4 |
 | FEEL-010 | Fixed | Medium | 敌人单位之间会互相重叠，已增加 enemies 分组与分离速度减少重叠 | M4 |
 | UI-POLISH-001 | In Progress | High | UI Polish 0.1 已实现但标题层级、三选一布局、HUD 仍需重设；已新增 UI Redesign 0.2 Spec | M4 |

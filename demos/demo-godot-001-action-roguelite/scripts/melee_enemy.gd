@@ -33,7 +33,6 @@ var dead := false
 
 func _ready() -> void:
 	body_base_position = body.position
-	body_base_scale = body.scale
 	hp = max_hp
 	if elite:
 		hp = 90
@@ -41,6 +40,7 @@ func _ready() -> void:
 		move_speed = 145.0
 		contact_damage = 16
 		body.scale = Vector2(0.1495, 0.1495)
+	body_base_scale = body.scale
 	contact_area.body_entered.connect(_on_contact_body_entered)
 	_refresh_body_color()
 
