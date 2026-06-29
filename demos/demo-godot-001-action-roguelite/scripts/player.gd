@@ -92,14 +92,14 @@ func attack() -> void:
 	attack_sprite.position = attack_area.position + facing * (attack_length * 0.32)
 	attack_sprite.rotation = facing.angle() + PI * 0.5
 	attack_sprite.scale = Vector2(absf(attack_sprite_base_scale.x), -absf(attack_sprite_base_scale.y))
-	attack_sprite.modulate = Color(1.25, 1.15, 0.75, 0.95)
+	attack_sprite.modulate = Color(1.45, 1.25, 0.55, 1.0)
 	var attack_tween := create_tween()
-	attack_tween.tween_property(attack_sprite, "scale", Vector2(absf(attack_sprite_base_scale.x) * 1.22, -absf(attack_sprite_base_scale.y) * 1.22), 0.04)
-	attack_tween.tween_property(attack_sprite, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.08)
+	attack_tween.tween_property(attack_sprite, "scale", Vector2(absf(attack_sprite_base_scale.x) * 1.55, -absf(attack_sprite_base_scale.y) * 1.55), 0.05)
+	attack_tween.tween_property(attack_sprite, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.16)
 	attack_preview.visible = true
 	attack_sprite.visible = true
 	attack_shape.disabled = false
-	await get_tree().create_timer(0.08).timeout
+	await get_tree().create_timer(0.14).timeout
 	attack_shape.disabled = true
 	if is_instance_valid(attack_preview):
 		attack_preview.visible = false
@@ -115,11 +115,12 @@ func take_damage(amount: int) -> void:
 	_update_health_bar()
 	health_changed.emit(hp, max_hp)
 	damaged.emit()
-	body.modulate = Color(1.0, 0.55, 0.55)
+	body.modulate = Color(1.0, 0.25, 0.25)
 	var hurt_tween := create_tween()
-	hurt_tween.tween_property(body, "position", body_base_position + Vector2(randf_range(-5.0, 5.0), randf_range(-3.0, 3.0)), 0.03)
-	hurt_tween.tween_property(body, "position", body_base_position, 0.04)
-	await get_tree().create_timer(0.08).timeout
+	hurt_tween.tween_property(body, "position", body_base_position + Vector2(randf_range(-11.0, 11.0), randf_range(-7.0, 7.0)), 0.035)
+	hurt_tween.tween_property(body, "position", body_base_position + Vector2(randf_range(-7.0, 7.0), randf_range(-5.0, 5.0)), 0.035)
+	hurt_tween.tween_property(body, "position", body_base_position, 0.05)
+	await get_tree().create_timer(0.12).timeout
 	if is_instance_valid(body):
 		_refresh_body_color()
 	if hp == 0:

@@ -5,8 +5,8 @@ signal died(enemy: Node)
 @export var max_hp := 40
 @export var move_speed := 120.0
 @export var contact_damage := 10
-@export var recoil_speed := 260.0
-@export var recoil_duration := 0.18
+@export var recoil_speed := 360.0
+@export var recoil_duration := 0.32
 @export var knockback_speed := 220.0
 @export var knockback_duration := 0.12
 @export var elite := false
@@ -54,10 +54,10 @@ func _physics_process(delta: float) -> void:
 		velocity = recoil_direction * recoil_speed
 	else:
 		velocity = direction * move_speed
-		move_and_slide()
-		body.flip_h = direction.x < 0
-		_update_visuals(delta)
-		_process_burn(delta)
+	move_and_slide()
+	body.flip_h = direction.x < 0
+	_update_visuals(delta)
+	_process_burn(delta)
 
 func take_damage(amount: int, source: Node = null, damage_type := "direct") -> void:
 	if dead:
@@ -102,6 +102,7 @@ func _on_contact_body_entered(body_node: Node2D) -> void:
 		body_node.take_damage(contact_damage)
 		recoil_direction = body_node.global_position.direction_to(global_position).normalized()
 		recoil_time = recoil_duration
+		knockback_time = 0.0
 
 func _refresh_body_color() -> void:
 	if burn_ticks_left > 0:
