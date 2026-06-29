@@ -51,6 +51,7 @@
 | ANIM-002 | Fixed | Medium | 已强化攻击木尺显示时长、缩放峰值和亮度，待手测确认 | M4 |
 | ANIM-003 | Fixed | Medium | 已强化主角受击颜色和抖动幅度，待手测确认 | M4 |
 | ART-ANIM-001 | Open | Medium | 主角只有单张图片，后续需要规划移动、攻击、受击、倒下等动作资源 | M4 |
+| FEEL-010 | Fixed | Medium | 敌人单位之间会互相重叠，已增加 enemies 分组与分离速度减少重叠 | M4 |
 | UI-POLISH-001 | In Progress | High | UI Polish 0.1 已实现但标题层级、三选一布局、HUD 仍需重设；已新增 UI Redesign 0.2 Spec | M4 |
 | UI-POLISH-002 | Open | High | 三选一修理灵感需要改为横向三卡并列，类似海克斯选择 | M4 |
 | UI-POLISH-003 | Open | High | HUD 需要从裸文字改为结构化木牌/布片底板与信息分层 | M4 |

@@ -12,6 +12,7 @@ func _run() -> void:
 	_test_player_dash_motion()
 	_test_player_attack_shape()
 	_test_ranged_enemy_motion()
+	_test_enemy_separation_group()
 	_report()
 	quit(1 if failures.size() > 0 else 0)
 
@@ -91,6 +92,17 @@ func _test_ranged_enemy_motion() -> void:
 	_expect(enemy.velocity.length() > 0.0, "ranged enemy should move when far from player")
 	enemy.queue_free()
 	player.queue_free()
+
+func _test_enemy_separation_group() -> void:
+	var main_scene := load("res://scenes/Main.tscn")
+	var main = main_scene.instantiate()
+	root.add_child(main)
+	await process_frame
+	main._start_run()
+	await process_frame
+	for enemy in main.room_root.get_children():
+		_expect(enemy.is_in_group("enemies"), "spawned enemy should be in enemies group")
+	main.queue_free()
 
 func _report() -> void:
 	if failures.is_empty():

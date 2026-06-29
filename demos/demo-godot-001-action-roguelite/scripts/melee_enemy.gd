@@ -10,6 +10,8 @@ signal died(enemy: Node)
 @export var knockback_speed := 220.0
 @export var knockback_duration := 0.12
 @export var elite := false
+@export var separation_radius := 46.0
+@export var separation_strength := 160.0
 
 var hp := 40
 var player: Node2D
@@ -54,6 +56,7 @@ func _physics_process(delta: float) -> void:
 		velocity = recoil_direction * recoil_speed
 	else:
 		velocity = direction * move_speed
+		velocity += _get_separation_velocity()
 	move_and_slide()
 	body.flip_h = direction.x < 0
 	_update_visuals(delta)
@@ -109,6 +112,18 @@ func _refresh_body_color() -> void:
 		body.modulate = Color(1.25, 0.75, 0.35)
 	else:
 		body.modulate = Color(1.12, 0.85, 0.85) if elite else Color(1.0, 1.0, 1.0)
+
+func _get_separation_velocity() -> Vector2:
+	var separation := Vector2.ZERO
+	for node in get_tree().get_nodes_in_group("enemies"):
+		var other := node as Node2D
+		if other == null or other == self:
+			continue
+		var offset: Vector2 = global_position - other.global_position
+		var distance := offset.length()
+		if distance > 0.0 and distance < separation_radius:
+			separation += offset.normalized() * ((separation_radius - distance) / separation_radius)
+	return separation * separation_strength
 
 func _update_visuals(delta: float) -> void:
 	visual_time += delta
