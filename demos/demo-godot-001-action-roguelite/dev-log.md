@@ -1,3 +1,199 @@
+## 2026-06-29：修复跑动停止缩放跳变
+
+### 本次目标
+
+修复主角从移动停下时出现明显缩放跳变，并继续略微放大移动帧。
+
+### 做了什么
+
+- `player.gd`
+  - `walk_sheet_scale_multiplier` 从 `1.65` 调整为 `1.78`。
+  - 停止移动时直接恢复 `body_base_scale`，避免因为切回 idle 后 `_get_visual_scale_multiplier()` 变化导致 lerp 产生明显缩放过渡。
+
+### 验证结果
+
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
+## 2026-06-29：Walk Sheet 尺寸与 Dash 残影二次微调
+
+### 本次目标
+
+根据手测反馈，略微放大移动帧，并加强 Dash 残影表现。
+
+### 做了什么
+
+- `player.gd`
+  - `walk_sheet_scale_multiplier` 从 `1.55` 调整为 `1.65`。
+  - Dash 残影透明度从 `0.35` 提升到 `0.5`。
+  - 残影持续时间从 `0.18s` 提升到 `0.22s`。
+  - 残影淡出时略微放大到 `1.08x`。
+
+### 验证结果
+
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
+## 2026-06-29：Walk Sheet 尺寸与 Dash 残影修正
+
+### 本次目标
+
+根据手测反馈，修复移动时角色偏大，以及 Dash 时出现四个残影的问题。
+
+### 做了什么
+
+- `player.gd`
+  - `walk_sheet_scale_multiplier` 从 `2.0` 调整为 `1.55`，降低移动帧尺寸。
+  - Dash 残影复制 `hframes`、`vframes`、`frame`，只显示当前帧，不再显示整张 2x2 sheet。
+
+### 验证结果
+
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
+## 2026-06-29：修复 Walk Sheet 移动缩小
+
+### 本次目标
+
+修复主角移动时切到 `player_walk_sheet.png` 后明显缩小的问题。
+
+### 根因
+
+单张动作图是 `1024x1024` 整图显示；walk sheet 是 `1024x1024` 的 `2x2` 帧动画，每帧实际只有 `512x512`。同样 `Sprite2D.scale` 下，单帧显示面积变成一半，所以看起来移动时缩小很多。
+
+### 做了什么
+
+- `player.gd`
+  - 新增 `walk_sheet_scale_multiplier = 2.0`。
+  - 移动使用 walk sheet 时自动放大 2 倍补偿帧尺寸。
+  - 停止/攻击/受击/死亡仍使用原始单张姿态尺寸。
+- `tests/smoke_test.gd`
+  - 增加 walk sheet 缩放补偿检查。
+
+### 验证结果
+
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
+## 2026-06-29：主角 Walk Sprite Sheet 接入 0.1
+
+### 本次目标
+
+接入用户上传的 `player_walk_sheet.png`，让主角移动从单张 walk pose 变为 4 帧循环。
+
+### 资源确认
+
+- 路径：`assets/art/toy_repair_prototype/player_actions/player_walk_sheet.png`
+- 尺寸：`1024x1024`
+- 结构：`2x2`
+- 单帧：`512x512`
+- 已转换为 RGBA 并重新导入，Godot 可正常加载。
+
+### 做了什么
+
+- 新增 `specs/spec-019-player-walk-sprite-sheet-01.md`。
+- `player.gd`
+  - preload `player_walk_sheet.png`。
+  - 移动时设置 `Body.hframes = 2`、`Body.vframes = 2`。
+  - 按 `0.11s` 节奏循环 4 帧。
+  - 停止、攻击、受击、死亡时恢复单张贴图模式。
+  - 降低程序化左右摆动，避免和 walk sheet 冲突。
+- `tests/smoke_test.gd`
+  - 增加 walk sheet 加载与 2x2 frame 设置检查。
+
+### 验证结果
+
+- Godot import 通过。
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
+## 2026-06-29：主角动作表现微调
+
+### 本次目标
+
+根据手测反馈，延长主角受击姿态，并增强移动时的跑动感。
+
+### 做了什么
+
+- `player.gd`
+  - 受击姿态持续时间从 `0.16s` 增加到 `0.28s`。
+  - 受击抖动恢复时间延长，避免受击图一闪而过。
+  - 移动时在 `player_walk_lean.png` 基础上增加左右踏步偏移、轻微旋转摆动和更明显 bob/scale，形成跑动伪动画。
+
+### 说明
+
+当前仍是单张 walk 姿态，不是帧动画；现在通过程序化踏步让它更像跑动。若要真正跑动，需要后续生成 `walk_1/walk_2` 或 Sprite Sheet。
+
+### 验证结果
+
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
+## 2026-06-29：主角动作资源接入 Animation 0.2
+
+### 本次目标
+
+确认主角动作资源命名已修正，并接入单张姿态切换动画。
+
+### 资源确认
+
+`assets/art/toy_repair_prototype/player_actions/` 下已存在：
+
+- `player_idle.png`
+- `player_walk_lean.png`
+- `player_attack_pose.png`
+- `player_hurt_pose.png`
+- `player_down_pose.png`
+
+### 做了什么
+
+- 新增 `specs/spec-018-player-action-animation-02.md`。
+- `Player.tscn`
+  - Body 默认贴图改为 `player_idle.png`。
+- `player.gd`
+  - preload 五张主角动作图。
+  - 站立/移动自动在 idle 与 walk 之间切换。
+  - 攻击时短暂切到 attack pose。
+  - 受击时短暂切到 hurt pose。
+  - 死亡时切到 down pose，并保留倒下图，不再完全淡出。
+  - 保留 Dash 残影、攻击木尺、受击抖动和血条。
+- `tests/smoke_test.gd`
+  - 增加主角五张动作贴图加载检查。
+
+### 验证结果
+
+- Godot headless 场景检查通过。
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
 ## 2026-06-29：主角动作资源规划 0.1
 
 ### 本次目标

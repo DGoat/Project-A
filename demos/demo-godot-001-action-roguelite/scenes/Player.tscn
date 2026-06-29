@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dha6maif2uf2q"]
 
 [ext_resource type="Script" uid="uid://ni2r2lfxxywe" path="res://scripts/player.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://b1g1ra3toykuv" path="res://assets/art/toy_repair_prototype/player_repairer.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://b1g1ra3toykuv" path="res://assets/art/toy_repair_prototype/player_actions/player_idle.png" id="2"]
 [ext_resource type="Texture2D" path="res://assets/art/toy_repair_prototype/attack_wood_ruler_flipped.png" id="3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]

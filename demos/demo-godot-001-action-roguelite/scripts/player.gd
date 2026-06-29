@@ -5,6 +5,13 @@ signal damaged
 signal health_changed(current: int, maximum: int)
 signal enemy_killed
 
+var idle_texture := preload("res://assets/art/toy_repair_prototype/player_actions/player_idle.png")
+var walk_texture := preload("res://assets/art/toy_repair_prototype/player_actions/player_walk_lean.png")
+var walk_sheet_texture := preload("res://assets/art/toy_repair_prototype/player_actions/player_walk_sheet.png")
+var attack_texture := preload("res://assets/art/toy_repair_prototype/player_actions/player_attack_pose.png")
+var hurt_texture := preload("res://assets/art/toy_repair_prototype/player_actions/player_hurt_pose.png")
+var down_texture := preload("res://assets/art/toy_repair_prototype/player_actions/player_down_pose.png")
+
 var max_hp := 100
 var hp := 100
 var move_speed := 240.0
@@ -32,6 +39,12 @@ var hit_stop_active := false
 var play_area_min := Vector2(80.0, 120.0)
 var play_area_max := Vector2(3088.0, 1264.0)
 var visual_time := 0.0
+var action_pose_time := 0.0
+var action_pose_locked := false
+var walk_step_time := 0.0
+var walk_step_side := 1.0
+var walk_frame := 0
+var walk_sheet_scale_multiplier := 1.78
 var body_base_position := Vector2.ZERO
 var body_base_scale := Vector2.ONE
 var attack_sprite_base_scale := Vector2.ONE
@@ -46,6 +59,7 @@ var dead := false
 
 func _ready() -> void:
 	body_base_position = body.position
+	body.texture = idle_texture
 	body_base_scale = body.scale
 	attack_sprite_base_scale = attack_sprite.scale
 	attack_area.body_entered.connect(_on_attack_body_entered)
@@ -57,6 +71,7 @@ func _physics_process(delta: float) -> void:
 	if dead:
 		return
 
+	action_pose_time = maxf(0.0, action_pose_time - delta)
 	var input_vector := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if input_vector.length() > 0.0:
 		facing = input_vector.normalized()
@@ -85,6 +100,7 @@ func _physics_process(delta: float) -> void:
 		attack()
 
 func attack() -> void:
+	_set_action_pose(attack_texture, 0.18)
 	attack_cooldown_time = attack_cooldown
 	attack_area.position = facing * 22.0
 	attack_area.rotation = facing.angle()
@@ -116,12 +132,14 @@ func take_damage(amount: int) -> void:
 	_update_health_bar()
 	health_changed.emit(hp, max_hp)
 	damaged.emit()
+	_set_action_pose(hurt_texture, 0.28)
 	body.modulate = Color(1.0, 0.25, 0.25)
 	var hurt_tween := create_tween()
 	hurt_tween.tween_property(body, "position", body_base_position + Vector2(randf_range(-11.0, 11.0), randf_range(-7.0, 7.0)), 0.035)
 	hurt_tween.tween_property(body, "position", body_base_position + Vector2(randf_range(-7.0, 7.0), randf_range(-5.0, 5.0)), 0.035)
-	hurt_tween.tween_property(body, "position", body_base_position, 0.05)
-	await get_tree().create_timer(0.12).timeout
+	hurt_tween.tween_property(body, "position", body_base_position + Vector2(randf_range(-5.0, 5.0), randf_range(-4.0, 4.0)), 0.055)
+	hurt_tween.tween_property(body, "position", body_base_position, 0.08)
+	await get_tree().create_timer(0.22).timeout
 	if is_instance_valid(body):
 		_refresh_body_color()
 	if hp == 0:
@@ -209,31 +227,75 @@ func _update_attack_shape() -> void:
 func _refresh_body_color() -> void:
 	body.modulate = Color(0.55, 1.15, 1.25) if dash_strike_ready else Color(1.0, 1.0, 1.0)
 
+func _set_action_pose(texture: Texture2D, duration: float, lock_pose := false) -> void:
+	body.hframes = 1
+	body.vframes = 1
+	body.frame = 0
+	body.texture = texture
+	action_pose_time = duration
+	action_pose_locked = lock_pose
+
+func _update_action_texture() -> void:
+	if action_pose_locked or action_pose_time > 0.0:
+		return
+	if velocity.length() > 1.0:
+		body.texture = walk_sheet_texture
+		body.hframes = 2
+		body.vframes = 2
+		body.frame = walk_frame
+	else:
+		body.hframes = 1
+		body.vframes = 1
+		body.frame = 0
+		body.texture = idle_texture
+
+func _get_visual_scale_multiplier() -> float:
+	return walk_sheet_scale_multiplier if body.texture == walk_sheet_texture else 1.0
+
 func _spawn_dash_afterimage() -> void:
 	var ghost := Sprite2D.new()
 	ghost.texture = body.texture
+	ghost.hframes = body.hframes
+	ghost.vframes = body.vframes
+	ghost.frame = body.frame
 	ghost.global_position = body.global_position
 	ghost.global_rotation = body.global_rotation
 	ghost.global_scale = body.global_scale
 	ghost.flip_h = body.flip_h
-	ghost.modulate = Color(0.55, 0.95, 1.0, 0.35)
+	ghost.modulate = Color(0.45, 0.9, 1.0, 0.5)
 	get_tree().current_scene.add_child(ghost)
 	var tween := ghost.create_tween()
-	tween.tween_property(ghost, "modulate", Color(0.55, 0.95, 1.0, 0.0), 0.18)
+	tween.tween_property(ghost, "scale", ghost.scale * 1.08, 0.22)
+	tween.parallel().tween_property(ghost, "modulate", Color(0.45, 0.9, 1.0, 0.0), 0.22)
 	tween.finished.connect(ghost.queue_free)
 
 func _play_death_feedback() -> void:
+	_set_action_pose(down_texture, 999.0, true)
 	var tween := create_tween()
-	tween.tween_property(body, "scale", body_base_scale * 0.55, 0.18)
-	tween.parallel().tween_property(body, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.18)
+	tween.tween_property(body, "scale", body_base_scale * 0.9, 0.18)
+	tween.parallel().tween_property(body, "modulate", Color(1.0, 1.0, 1.0, 0.92), 0.18)
 
 func _update_visuals(delta: float) -> void:
 	visual_time += delta
 	body.flip_h = facing.x < 0
-	if velocity.length() > 1.0:
-		var bob := sin(visual_time * 14.0) * 2.0
-		body.position = body_base_position + Vector2(0.0, bob)
-		body.scale = body_base_scale * (1.0 + sin(visual_time * 14.0) * 0.025)
+	_update_action_texture()
+	if velocity.length() > 1.0 and not action_pose_locked:
+		walk_step_time += delta
+		if walk_step_time >= 0.11:
+			walk_step_time = 0.0
+			walk_step_side *= -1.0
+			walk_frame = (walk_frame + 1) % 4
+			if not action_pose_locked and action_pose_time <= 0.0:
+				body.frame = walk_frame
+		var bob := sin(visual_time * 16.0) * 1.5
+		var sway := sin(visual_time * 8.0) * 0.025
+		var step_offset := facing.orthogonal() * walk_step_side * 0.8
+		body.position = body_base_position + step_offset + Vector2(0.0, bob)
+		body.rotation = lerpf(body.rotation, sway, minf(delta * 10.0, 1.0))
+		body.scale = body_base_scale * _get_visual_scale_multiplier() * (1.0 + sin(visual_time * 16.0) * 0.035)
 	else:
+		walk_step_time = 0.0
+		walk_frame = 0
 		body.position = body.position.lerp(body_base_position, minf(delta * 12.0, 1.0))
-		body.scale = body.scale.lerp(body_base_scale, minf(delta * 12.0, 1.0))
+		body.rotation = lerpf(body.rotation, 0.0, minf(delta * 12.0, 1.0))
+		body.scale = body_base_scale

@@ -51,6 +51,8 @@
 | ANIM-002 | Fixed | Medium | 已强化攻击木尺显示时长、缩放峰值和亮度，待手测确认 | M4 |
 | ANIM-003 | Fixed | Medium | 已强化主角受击颜色和抖动幅度，待手测确认 | M4 |
 | ANIM-004 | Fixed | Medium | 精英近战怪受击后缩回普通尺寸，已改为精英尺寸设置后再记录 body_base_scale | M4 |
+| ANIM-006 | Fixed | High | 主角移动已接入 2x2 walk sprite sheet，移动时循环 4 帧 | M4 |
+| ANIM-005 | Fixed | High | 主角动作资源已接入：idle/walk/attack/hurt/down 单张姿态切换 | M4 |
 | ART-ANIM-001 | Fixed | Medium | 主角只有单张图片；已新增主角 idle/walk/attack/hurt/down 动作资源规划与生成提示词 | M4 |
 | FEEL-010 | Fixed | Medium | 敌人单位之间会互相重叠，已增加 enemies 分组与分离速度减少重叠 | M4 |
 | UI-POLISH-001 | In Progress | High | UI Polish 0.1 已实现但标题层级、三选一布局、HUD 仍需重设；已新增 UI Redesign 0.2 Spec | M4 |

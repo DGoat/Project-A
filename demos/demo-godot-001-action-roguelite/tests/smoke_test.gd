@@ -13,6 +13,7 @@ func _run() -> void:
 	_test_player_attack_shape()
 	_test_player_play_area_margin()
 	_test_player_slow_multiplier()
+	_test_player_walk_sheet()
 	_test_ranged_enemy_motion()
 	_test_enemy_separation_group()
 	_test_terrain_collision_masks()
@@ -38,6 +39,7 @@ func _test_main_scene_start_flow() -> void:
 	_expect(main.has_node("RepairTableBg"), "missing RepairTableBg")
 	_expect(main.has_node("RoomRoot"), "missing RoomRoot")
 	_expect(main.has_node("CanvasLayer/UI/StartPanel"), "missing StartPanel")
+	_expect(main.player_scene != null, "missing player scene preload")
 	main._start_run()
 	await process_frame
 	_expect(main.player != null, "player not spawned after _start_run")
@@ -57,6 +59,12 @@ func _test_player_core_values() -> void:
 	_expect(player.attack_width >= 47.0, "player attack_width should match enlarged character")
 	_expect(player.has_node("Camera2D"), "player missing Camera2D")
 	_expect(player.has_node("AttackSprite"), "player missing AttackSprite")
+	_expect(player.idle_texture != null, "player missing idle texture")
+	_expect(player.walk_texture != null, "player missing walk texture")
+	_expect(player.walk_sheet_texture != null, "player missing walk sheet texture")
+	_expect(player.attack_texture != null, "player missing attack texture")
+	_expect(player.hurt_texture != null, "player missing hurt texture")
+	_expect(player.down_texture != null, "player missing down texture")
 	player.queue_free()
 
 func _test_player_dash_motion() -> void:
@@ -101,6 +109,21 @@ func _test_player_slow_multiplier() -> void:
 	_expect(player.slow_multiplier == 0.65, "player slow multiplier not applied")
 	player.set_slow_multiplier(1.0)
 	_expect(player.slow_multiplier == 1.0, "player slow multiplier not restored")
+	player.queue_free()
+
+func _test_player_walk_sheet() -> void:
+	var player = load("res://scenes/Player.tscn").instantiate()
+	root.add_child(player)
+	await process_frame
+	player.velocity = Vector2.RIGHT * player.move_speed
+	player._update_action_texture()
+	_expect(player.body.texture == player.walk_sheet_texture, "moving player should use walk sheet")
+	_expect(player.body.hframes == 2 and player.body.vframes == 2, "walk sheet should be 2x2")
+	_expect(player._get_visual_scale_multiplier() == player.walk_sheet_scale_multiplier, "walk sheet should use scale compensation")
+	player.velocity = Vector2.ZERO
+	player._update_action_texture()
+	_expect(player.body.texture == player.idle_texture, "idle player should use idle texture")
+	_expect(player.body.hframes == 1 and player.body.vframes == 1, "idle texture should reset sheet frames")
 	player.queue_free()
 
 func _test_ranged_enemy_motion() -> void:
