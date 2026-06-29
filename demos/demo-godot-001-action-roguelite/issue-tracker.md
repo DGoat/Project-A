@@ -45,13 +45,13 @@
 
 | VISUAL-001 | Fixed | Medium | 第一批美术资源已接入，棋盘格/相机/角色尺寸/攻击方向等首轮问题已修正，完整复测通过 | M3/M4 |
 | VISUAL-002 | Fixed | Medium | 大地图相机、角色移动、敌人移动、攻击表现、投射物可读性和完整通关流程复测通过 | M3/M4 |
-| VISUAL-003 | Open | Low | 地图边界基本正常，但角色在左上边界附近可能半露/贴边过近 | M3/M4 |
+| VISUAL-003 | Fixed | Low | 地图边界贴边/半露问题已通过收缩玩家可移动区域修正 | M3/M4 |
 | ANIM-001 | In Progress | High | 伪动画已实现；Dash、敌人、投射物反馈可接受，但主角移动仍缺真实动作，攻击/受击反馈不明显，死亡需要倒下动画 | M4 |
 | FEEL-009 | Fixed | High | 已修复近战敌人 recoil 分支缩进，并加强命中后弹开速度和时长，待手测确认 | M3/M4 |
 | ANIM-002 | Fixed | Medium | 已强化攻击木尺显示时长、缩放峰值和亮度，待手测确认 | M4 |
 | ANIM-003 | Fixed | Medium | 已强化主角受击颜色和抖动幅度，待手测确认 | M4 |
 | ANIM-004 | Fixed | Medium | 精英近战怪受击后缩回普通尺寸，已改为精英尺寸设置后再记录 body_base_scale | M4 |
-| ART-ANIM-001 | Open | Medium | 主角只有单张图片，后续需要规划移动、攻击、受击、倒下等动作资源 | M4 |
+| ART-ANIM-001 | Fixed | Medium | 主角只有单张图片；已新增主角 idle/walk/attack/hurt/down 动作资源规划与生成提示词 | M4 |
 | FEEL-010 | Fixed | Medium | 敌人单位之间会互相重叠，已增加 enemies 分组与分离速度减少重叠 | M4 |
 | UI-POLISH-001 | In Progress | High | UI Polish 0.1 已实现但标题层级、三选一布局、HUD 仍需重设；已新增 UI Redesign 0.2 Spec | M4 |
 | UI-POLISH-002 | Open | High | 三选一修理灵感需要改为横向三卡并列，类似海克斯选择 | M4 |
@@ -62,6 +62,7 @@
 | MAP-003 | Fixed | High | 硬障碍阻挡后敌人直线追击会卡住，已增加轻量障碍规避 steering | M4 |
 | MAP-004 | Fixed | High | 近战敌人已迁移到 NavigationAgent2D，并按房间障碍生成 NavigationRegion2D | M4 |
 | MAP-005 | Fixed | High | 近战敌人 NavigationAgent2D 仍易卡障碍，已改用 outline 生成导航洞、扩大 margin 并缩小占位障碍 | M4 |
+| MAP-006 | Open | Medium | 地图边界已有不可通行限制，但需要增加玩具箱边缘/桌面边框等美术提示，避免玩家误以为可跨越 | M4 |
 | THEME-001 | In Progress | Medium | 已开始将通用动作 Roguelite 包装为玩具修理屋主题 | M3/M4 |
 | UI-FLOW-001 | Fixed | Medium | 开始 / 胜利 / 失败流程界面已通过测试 | M3/M4 |
 | UI-FLOW-002 | Fixed | Medium | 赐福选择界面构筑标签已通过测试 | M3/M4 |

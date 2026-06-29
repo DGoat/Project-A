@@ -1,3 +1,58 @@
+## 2026-06-29：主角动作资源规划 0.1
+
+### 本次目标
+
+按 P0 优先级补齐主角移动、攻击、受击、倒下动作资源规划，为后续 Animation 0.2 接入做准备。
+
+### 做了什么
+
+- 新增 `specs/spec-017-player-action-assets-01.md`。
+- 规划 5 张主角动作图：
+  - `player_idle.png`
+  - `player_walk_lean.png`
+  - `player_attack_pose.png`
+  - `player_hurt_pose.png`
+  - `player_down_pose.png`
+- 明确资源路径：
+  - `assets/art/toy_repair_prototype/player_actions/`
+- 为每张图提供中文 Prompt、English Prompt、Negative Prompt。
+- 明确后续 Animation 0.2 接入策略。
+- 更新 `todo.md` 与 `issue-tracker.md`。
+
+### 下一步
+
+用户可先生成这 5 张 PNG；生成完成后接入 Animation 0.2。
+
+
+## 2026-06-29：地图边界与角色可见性修正 0.1
+
+### 本次目标
+
+按 P0 优先级修正地图边界贴边/半露问题。
+
+### 做了什么
+
+- 新增 `specs/spec-016-map-boundary-visibility-01.md`。
+- `player.gd`
+  - 将玩家可移动区域从整图边界收缩为带 margin 的区域：
+    - `play_area_min = Vector2(80, 120)`
+    - `play_area_max = Vector2(3088, 1264)`
+  - Dash 后仍会 clamp 到安全区域。
+- `tests/smoke_test.gd`
+  - 增加玩家可移动区域 margin 与 clamp 检查。
+- `todo.md`
+  - 标记地图边界贴边/半露问题完成。
+
+### 验证结果
+
+- Godot headless 场景检查通过。
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
 ## 2026-06-29：近战寻路二次修正
 
 ### 本次目标

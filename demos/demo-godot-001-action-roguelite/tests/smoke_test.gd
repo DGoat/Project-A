@@ -11,6 +11,7 @@ func _run() -> void:
 	_test_player_core_values()
 	_test_player_dash_motion()
 	_test_player_attack_shape()
+	_test_player_play_area_margin()
 	_test_player_slow_multiplier()
 	_test_ranged_enemy_motion()
 	_test_enemy_separation_group()
@@ -79,6 +80,17 @@ func _test_player_attack_shape() -> void:
 	_expect(shape != null, "attack shape is not RectangleShape2D")
 	if shape != null:
 		_expect(shape.size == Vector2(78.0, 52.0), "attack shape size not synced")
+	player.queue_free()
+
+func _test_player_play_area_margin() -> void:
+	var player = load("res://scenes/Player.tscn").instantiate()
+	root.add_child(player)
+	await process_frame
+	_expect(player.play_area_min == Vector2(80.0, 120.0), "player play area min should keep visibility margin")
+	_expect(player.play_area_max == Vector2(3088.0, 1264.0), "player play area max should keep visibility margin")
+	player.global_position = Vector2(-200.0, -200.0)
+	player._physics_process(0.016)
+	_expect(player.global_position.x >= player.play_area_min.x and player.global_position.y >= player.play_area_min.y, "player should clamp to play area min")
 	player.queue_free()
 
 func _test_player_slow_multiplier() -> void:
