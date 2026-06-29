@@ -151,6 +151,7 @@ func _test_enemy_separation_group() -> void:
 		_expect(enemy.is_in_group("enemies"), "spawned enemy should be in enemies group")
 	_expect(main.map_root.get_child_count() > 0, "room map should spawn obstacles or hazards")
 	_expect(main.map_root.has_node("NavigationRegion2D"), "room map should spawn NavigationRegion2D")
+	_expect(main.map_root.has_node("BoundaryHint"), "room map should spawn BoundaryHint")
 	main.queue_free()
 
 func _test_terrain_collision_masks() -> void:
@@ -162,6 +163,7 @@ func _test_terrain_collision_masks() -> void:
 	_expect((melee.collision_mask & 8) != 0, "melee enemy should collide with terrain layer")
 	_expect(melee.has_node("NavigationAgent2D"), "melee enemy should have NavigationAgent2D")
 	_expect((ranged.collision_mask & 8) != 0, "ranged enemy should collide with terrain layer")
+	_expect(ranged.has_node("NavigationAgent2D"), "ranged enemy should have NavigationAgent2D")
 	player.queue_free()
 	melee.queue_free()
 	ranged.queue_free()

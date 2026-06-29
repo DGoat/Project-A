@@ -14,7 +14,6 @@ color = Color(0.08, 0.08, 0.1, 1)
 [node name="RepairTableBg" type="Sprite2D" parent="." unique_id=486476463]
 position = Vector2(1584, 672)
 texture = ExtResource("2")
-centered = true
 
 [node name="RoomRoot" type="Node2D" parent="." unique_id=1209738701]
 
@@ -155,21 +154,18 @@ custom_minimum_size = Vector2(292, 330)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "1"
-vertical_icon_alignment = 1
 
 [node name="Blessing2" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingRoot/CardRow" unique_id=1542750067]
 custom_minimum_size = Vector2(292, 330)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "2"
-vertical_icon_alignment = 1
 
 [node name="Blessing3" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingRoot/CardRow" unique_id=156437126]
 custom_minimum_size = Vector2(292, 330)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "3"
-vertical_icon_alignment = 1
 
 [node name="StartPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=1445451771]
 layout_mode = 0

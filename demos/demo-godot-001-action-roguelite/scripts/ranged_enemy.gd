@@ -29,6 +29,7 @@ var dead := false
 var projectile_scene := preload("res://scenes/Projectile.tscn")
 
 @onready var body := $Body
+@onready var navigation_agent := $NavigationAgent2D
 
 func _ready() -> void:
 	body_base_position = body.position
@@ -46,14 +47,11 @@ func _physics_process(delta: float) -> void:
 		knockback_time -= delta
 		velocity = knockback_direction * knockback_speed
 	elif distance < preferred_distance * 0.75:
-		velocity = -to_player * move_speed
+		velocity = _get_navigation_velocity(global_position - to_player * preferred_distance)
 	elif distance > preferred_distance:
-		velocity = to_player * move_speed
+		velocity = _get_navigation_velocity(player.global_position)
 	else:
 		velocity = Vector2.ZERO
-	var move_direction := velocity.normalized()
-	if move_direction != Vector2.ZERO:
-		velocity += _get_obstacle_avoidance_velocity(move_direction)
 	velocity += _get_separation_velocity()
 	move_and_slide()
 	body.flip_h = to_player.x < 0
@@ -116,6 +114,13 @@ func _shoot(direction: Vector2) -> void:
 
 func _refresh_body_color() -> void:
 	body.modulate = Color(1.25, 0.75, 0.35) if burn_ticks_left > 0 else Color(1.0, 1.0, 1.0)
+
+func _get_navigation_velocity(target_position: Vector2) -> Vector2:
+	navigation_agent.target_position = target_position
+	var next_position: Vector2 = navigation_agent.get_next_path_position()
+	if navigation_agent.is_navigation_finished() or global_position.distance_to(next_position) < 3.0:
+		return global_position.direction_to(target_position) * move_speed
+	return global_position.direction_to(next_position) * move_speed
 
 func _get_separation_velocity() -> Vector2:
 	var separation := Vector2.ZERO

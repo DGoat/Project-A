@@ -64,7 +64,8 @@
 | MAP-003 | Fixed | High | 硬障碍阻挡后敌人直线追击会卡住，已增加轻量障碍规避 steering | M4 |
 | MAP-004 | Fixed | High | 近战敌人已迁移到 NavigationAgent2D，并按房间障碍生成 NavigationRegion2D | M4 |
 | MAP-005 | Fixed | High | 近战敌人 NavigationAgent2D 仍易卡障碍，已改用 outline 生成导航洞、扩大 margin 并缩小占位障碍 | M4 |
-| MAP-006 | Open | Medium | 地图边界已有不可通行限制，但需要增加玩具箱边缘/桌面边框等美术提示，避免玩家误以为可跨越 | M4 |
+| MAP-006 | Fixed | Medium | 已增加边缘暗边和细框线提示不可通行区域，后续可替换为玩具箱边缘/桌面边框美术 | M4 |
+| MAP-007 | Fixed | High | 远程敌人已增加 NavigationAgent2D，靠近/拉开距离时沿导航路径移动 | M4 |
 | THEME-001 | In Progress | Medium | 已开始将通用动作 Roguelite 包装为玩具修理屋主题 | M3/M4 |
 | UI-FLOW-001 | Fixed | Medium | 开始 / 胜利 / 失败流程界面已通过测试 | M3/M4 |
 | UI-FLOW-002 | Fixed | Medium | 赐福选择界面构筑标签已通过测试 | M3/M4 |

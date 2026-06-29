@@ -14,6 +14,9 @@ var damage_flash_tween: Tween
 var debug_toggle_down := false
 var run_started := false
 var run_ended := false
+var world_size := Vector2(3168.0, 1344.0)
+var play_area_min := Vector2(80.0, 120.0)
+var play_area_max := Vector2(3088.0, 1264.0)
 
 @onready var room_root := $RoomRoot
 @onready var map_root := $MapRoot
@@ -184,12 +187,35 @@ func _spawn_room(index: int) -> void:
 func _spawn_room_map(index: int) -> void:
 	for child in map_root.get_children():
 		child.queue_free()
+	_create_boundary_hint()
 	var map_data: Dictionary = room_maps[index]
 	_create_navigation_region(map_data)
 	for obstacle_data in map_data.get("obstacles", []):
 		_create_obstacle(obstacle_data)
 	for glue_data in map_data.get("glue", []):
 		_create_glue_puddle(glue_data)
+
+func _create_boundary_hint() -> void:
+	var root := Node2D.new()
+	root.name = "BoundaryHint"
+	var shade := Color(0.05, 0.025, 0.01, 0.24)
+	var line := Color(0.8, 0.55, 0.28, 0.36)
+	_add_boundary_rect(root, Vector2.ZERO, Vector2(world_size.x, play_area_min.y), shade)
+	_add_boundary_rect(root, Vector2(0.0, play_area_max.y), Vector2(world_size.x, world_size.y - play_area_max.y), shade)
+	_add_boundary_rect(root, Vector2.ZERO, Vector2(play_area_min.x, world_size.y), shade)
+	_add_boundary_rect(root, Vector2(play_area_max.x, 0.0), Vector2(world_size.x - play_area_max.x, world_size.y), shade)
+	_add_boundary_rect(root, Vector2(play_area_min.x, play_area_min.y), Vector2(play_area_max.x - play_area_min.x, 3.0), line)
+	_add_boundary_rect(root, Vector2(play_area_min.x, play_area_max.y - 3.0), Vector2(play_area_max.x - play_area_min.x, 3.0), line)
+	_add_boundary_rect(root, Vector2(play_area_min.x, play_area_min.y), Vector2(3.0, play_area_max.y - play_area_min.y), line)
+	_add_boundary_rect(root, Vector2(play_area_max.x - 3.0, play_area_min.y), Vector2(3.0, play_area_max.y - play_area_min.y), line)
+	map_root.add_child(root)
+
+func _add_boundary_rect(root: Node, position: Vector2, size: Vector2, color: Color) -> void:
+	var rect := ColorRect.new()
+	rect.position = position
+	rect.size = size
+	rect.color = color
+	root.add_child(rect)
 
 func _create_navigation_region(map_data: Dictionary) -> void:
 	var region := NavigationRegion2D.new()

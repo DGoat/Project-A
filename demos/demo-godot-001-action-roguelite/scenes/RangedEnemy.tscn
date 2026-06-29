@@ -21,6 +21,11 @@ scale = Vector2(0.137, 0.137)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_body")
 
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 8.0
+target_desired_distance = 24.0
+radius = 14.0
+
 [node name="ContactArea" type="Area2D" parent="."]
 collision_mask = 1
 

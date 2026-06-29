@@ -1,3 +1,58 @@
+## 2026-06-29：远程敌人 NavigationAgent2D 寻路 0.1
+
+### 本次目标
+
+给远程敌人加上与近战同基础的 `NavigationAgent2D` 寻路，减少障碍卡住风险。
+
+### 做了什么
+
+- 新增 `specs/spec-021-ranged-navigation-agent-01.md`。
+- `RangedEnemy.tscn`
+  - 新增 `NavigationAgent2D`。
+- `ranged_enemy.gd`
+  - 距离过远时沿导航路径靠近玩家。
+  - 距离过近时沿导航路径移动到远离玩家的目标点。
+  - 保留 preferred distance、射击、knockback、敌人分离。
+- `tests/smoke_test.gd`
+  - 增加远程敌人 `NavigationAgent2D` 检查。
+
+### 验证结果
+
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
+## 2026-06-29：地图边缘视觉提示 0.1
+
+### 本次目标
+
+按 P0 优先级增加地图边缘不可跨越的美术提示，避免玩家误以为边缘区域可通行。
+
+### 做了什么
+
+- 新增 `specs/spec-020-map-boundary-visual-hint-01.md`。
+- `main.gd`
+  - 新增 `BoundaryHint` 动态节点。
+  - 在玩家可移动区域外生成四条低透明暗边。
+  - 在可移动区域内侧生成暖色细框线。
+  - 不改变碰撞、寻路和相机。
+- `tests/smoke_test.gd`
+  - 增加 `BoundaryHint` 生成检查。
+- `todo.md` / `issue-tracker.md`
+  - 标记地图边缘视觉提示完成。
+
+### 验证结果
+
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
 ## 2026-06-29：修复跑动停止缩放跳变
 
 ### 本次目标
