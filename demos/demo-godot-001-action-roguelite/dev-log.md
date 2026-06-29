@@ -1,3 +1,28 @@
+## 2026-06-29：Animation and UI Polish 0.1 Spec
+
+### 本次目标
+
+基于完整复测结果，先写动画与 UI 表现升级 Spec，再进入实现，遵守 Spec First。
+
+### 做了什么
+
+- 新增 `specs/spec-012-animation-and-ui-polish-01.md`。
+- 明确本轮目标：
+  - 主角移动、Dash、攻击、受击、死亡伪动画。
+  - 近战/远程敌人移动、受击、射击前摇、死亡反馈。
+  - 投射物可读性增强。
+  - 开始界面、三选一修理灵感、胜利/失败界面、HUD、Debug 面板 UI 风格升级。
+- 明确非目标：
+  - 不做帧动画 Sprite Sheet。
+  - 不接入骨骼动画。
+  - 不扩展构筑、地图机关或房间数量。
+- 更新 `README.md` Spec 索引。
+
+### 下一步
+
+按 Spec 实现 Animation and UI Polish 0.1，并保持 `tests/smoke_test.gd` 通过。
+
+
 ## 2026-06-29：新增 Todo List
 
 ### 本次目标
