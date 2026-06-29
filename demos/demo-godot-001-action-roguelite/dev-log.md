@@ -1,3 +1,30 @@
+## 2026-06-29：修复敌人死亡动画导致提前结算
+
+### 本次目标
+
+修复“场上还有怪物时游戏提前结束”的问题。
+
+### 根因
+
+Animation Feedback 0.1 中，敌人 `_die()` 先 `died.emit(self)` 再播放缩小淡出动画。主流程收到 `died` 信号后立刻减少 `enemies_alive` 并判断清房/胜利，但敌人此时还在场上播放死亡动画，视觉上看起来像还有怪物却已经结算。
+
+### 做了什么
+
+- `melee_enemy.gd`
+  - 将 `notify_enemy_killed()`、`died.emit(self)`、`queue_free()` 延后到死亡 tween 完成后执行。
+- `ranged_enemy.gd`
+  - 同样将死亡计数与移除延后到死亡 tween 完成后执行。
+
+### 验证结果
+
+- Godot headless 场景检查通过。
+- `tests/smoke_test.gd` 输出：
+
+```text
+AI_TEST_PASS
+```
+
+
 ## 2026-06-29：UI Redesign 0.2 Spec
 
 ### 本次目标

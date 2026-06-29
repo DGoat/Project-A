@@ -117,10 +117,12 @@ func _update_visuals(delta: float) -> void:
 
 func _die(source: Node = null) -> void:
 	dead = true
-	if source != null and source.has_method("notify_enemy_killed"):
-		source.notify_enemy_killed()
-	died.emit(self)
 	var tween := create_tween()
 	tween.tween_property(body, "scale", body_base_scale * 0.45, 0.16)
 	tween.parallel().tween_property(body, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.16)
-	tween.finished.connect(queue_free)
+	tween.finished.connect(func():
+		if source != null and source.has_method("notify_enemy_killed"):
+			source.notify_enemy_killed()
+		died.emit(self)
+		queue_free()
+	)

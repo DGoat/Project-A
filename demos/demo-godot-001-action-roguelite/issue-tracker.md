@@ -24,6 +24,7 @@
 | DEMO-003 | Fixed | High | 清房后祝福三选一正常出现 | M1 |
 | DEMO-004 | Fixed | High | 选择祝福后可进入下一房间 | M1 |
 | DEMO-005 | Open | Medium | 尚未确认死亡后 `R` 是否能重开 | M1 |
+| DEMO-006 | Fixed | High | 敌人死亡动画期间提前触发清房/胜利，已改为死亡 tween 完成后再发出 died 信号 | M3/M4 |
 | VIS-001 | Open | Medium | Godot 编辑器/运行画面中出现异常图片或背景，需要确认来源 | M1 |
 | UI-001 | Fixed | High | 已增加角色头顶血条 | M1 |
 | FEEL-005 | Fixed | High | 已增加攻击范围提示 | M1 |
