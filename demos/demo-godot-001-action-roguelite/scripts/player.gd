@@ -30,6 +30,10 @@ var hurt_invulnerable_duration := 0.65
 var hit_stop_active := false
 var play_area_min := Vector2.ZERO
 var play_area_max := Vector2(3168.0, 1344.0)
+var visual_time := 0.0
+var body_base_position := Vector2.ZERO
+var body_base_scale := Vector2.ONE
+var attack_sprite_base_scale := Vector2.ONE
 var dead := false
 
 @onready var body := $Body
@@ -40,6 +44,9 @@ var dead := false
 @onready var attack_shape := $AttackArea/CollisionShape2D
 
 func _ready() -> void:
+	body_base_position = body.position
+	body_base_scale = body.scale
+	attack_sprite_base_scale = attack_sprite.scale
 	attack_area.body_entered.connect(_on_attack_body_entered)
 	_update_attack_shape()
 	_update_health_bar()
@@ -62,15 +69,16 @@ func _physics_process(delta: float) -> void:
 		velocity = facing * dash_speed
 	else:
 		velocity = input_vector * move_speed
-		if Input.is_action_just_pressed("dash") and dash_cooldown_time <= 0.0:
-			dash_time = dash_duration
-			dash_cooldown_time = dash_cooldown
-			dash_strike_ready = dash_strike_multiplier > 1.0
-			_refresh_body_color()
+	if Input.is_action_just_pressed("dash") and dash_cooldown_time <= 0.0:
+		dash_time = dash_duration
+		dash_cooldown_time = dash_cooldown
+		dash_strike_ready = dash_strike_multiplier > 1.0
+		_spawn_dash_afterimage()
+		_refresh_body_color()
 
 	move_and_slide()
 	global_position = global_position.clamp(play_area_min, play_area_max)
-	_update_visuals()
+	_update_visuals(delta)
 
 	if Input.is_action_just_pressed("attack") and attack_cooldown_time <= 0.0:
 		attack()
@@ -83,7 +91,11 @@ func attack() -> void:
 	attack_preview.rotation = attack_area.rotation
 	attack_sprite.position = attack_area.position + facing * (attack_length * 0.32)
 	attack_sprite.rotation = facing.angle() + PI * 0.5
-	attack_sprite.scale = Vector2(absf(attack_sprite.scale.x), -absf(attack_sprite.scale.y))
+	attack_sprite.scale = Vector2(absf(attack_sprite_base_scale.x), -absf(attack_sprite_base_scale.y))
+	attack_sprite.modulate = Color(1.25, 1.15, 0.75, 0.95)
+	var attack_tween := create_tween()
+	attack_tween.tween_property(attack_sprite, "scale", Vector2(absf(attack_sprite_base_scale.x) * 1.22, -absf(attack_sprite_base_scale.y) * 1.22), 0.04)
+	attack_tween.tween_property(attack_sprite, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.08)
 	attack_preview.visible = true
 	attack_sprite.visible = true
 	attack_shape.disabled = false
@@ -93,6 +105,7 @@ func attack() -> void:
 		attack_preview.visible = false
 	if is_instance_valid(attack_sprite):
 		attack_sprite.visible = false
+		attack_sprite.modulate = Color(1.0, 1.0, 1.0, 0.82)
 
 func take_damage(amount: int) -> void:
 	if dead or invulnerable_time > 0.0:
@@ -103,11 +116,15 @@ func take_damage(amount: int) -> void:
 	health_changed.emit(hp, max_hp)
 	damaged.emit()
 	body.modulate = Color(1.0, 0.55, 0.55)
+	var hurt_tween := create_tween()
+	hurt_tween.tween_property(body, "position", body_base_position + Vector2(randf_range(-5.0, 5.0), randf_range(-3.0, 3.0)), 0.03)
+	hurt_tween.tween_property(body, "position", body_base_position, 0.04)
 	await get_tree().create_timer(0.08).timeout
 	if is_instance_valid(body):
 		_refresh_body_color()
 	if hp == 0:
 		dead = true
+		_play_death_feedback()
 		died.emit()
 
 func apply_blessing(blessing: Dictionary) -> void:
@@ -181,10 +198,37 @@ func _update_attack_shape() -> void:
 	])
 	attack_preview.color = Color(1.0, 0.55, 0.18, 0.18) if attack_damage > 20.0 else Color(1.0, 0.9, 0.25, 0.14)
 	if is_node_ready():
-		attack_sprite.scale = Vector2(attack_length / 560.0, attack_length / 560.0)
+		attack_sprite.scale = Vector2(attack_length / 560.0, -attack_length / 560.0)
+		attack_sprite_base_scale = attack_sprite.scale
 
 func _refresh_body_color() -> void:
 	body.modulate = Color(0.55, 1.15, 1.25) if dash_strike_ready else Color(1.0, 1.0, 1.0)
 
-func _update_visuals() -> void:
+func _spawn_dash_afterimage() -> void:
+	var ghost := Sprite2D.new()
+	ghost.texture = body.texture
+	ghost.global_position = body.global_position
+	ghost.global_rotation = body.global_rotation
+	ghost.global_scale = body.global_scale
+	ghost.flip_h = body.flip_h
+	ghost.modulate = Color(0.55, 0.95, 1.0, 0.35)
+	get_tree().current_scene.add_child(ghost)
+	var tween := ghost.create_tween()
+	tween.tween_property(ghost, "modulate", Color(0.55, 0.95, 1.0, 0.0), 0.18)
+	tween.finished.connect(ghost.queue_free)
+
+func _play_death_feedback() -> void:
+	var tween := create_tween()
+	tween.tween_property(body, "scale", body_base_scale * 0.55, 0.18)
+	tween.parallel().tween_property(body, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.18)
+
+func _update_visuals(delta: float) -> void:
+	visual_time += delta
 	body.flip_h = facing.x < 0
+	if velocity.length() > 1.0:
+		var bob := sin(visual_time * 14.0) * 2.0
+		body.position = body_base_position + Vector2(0.0, bob)
+		body.scale = body_base_scale * (1.0 + sin(visual_time * 14.0) * 0.025)
+	else:
+		body.position = body.position.lerp(body_base_position, minf(delta * 12.0, 1.0))
+		body.scale = body.scale.lerp(body_base_scale, minf(delta * 12.0, 1.0))

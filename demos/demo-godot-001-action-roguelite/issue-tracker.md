@@ -45,7 +45,11 @@
 | VISUAL-001 | Fixed | Medium | 第一批美术资源已接入，棋盘格/相机/角色尺寸/攻击方向等首轮问题已修正，完整复测通过 | M3/M4 |
 | VISUAL-002 | Fixed | Medium | 大地图相机、角色移动、敌人移动、攻击表现、投射物可读性和完整通关流程复测通过 | M3/M4 |
 | VISUAL-003 | Open | Low | 地图边界基本正常，但角色在左上边界附近可能半露/贴边过近 | M3/M4 |
-| ANIM-001 | Open | High | 缺少移动、冲刺、攻击、受击、死亡等动画表现 | M4 |
+| ANIM-001 | In Progress | High | 伪动画已实现；Dash、敌人、投射物反馈可接受，但主角移动仍缺真实动作，攻击/受击反馈不明显，死亡需要倒下动画 | M4 |
+| FEEL-009 | Open | High | Animation Feedback 0.1 后近战敌人受击/命中玩家后再次出现吸附问题，需要恢复或加强命中后弹开 | M3/M4 |
+| ANIM-002 | Open | Medium | 攻击木尺缩放与淡出不明显，需要强化攻击表现 | M4 |
+| ANIM-003 | Open | Medium | 主角受击抖动不明显，需要强化受击表现 | M4 |
+| ART-ANIM-001 | Open | Medium | 主角只有单张图片，后续需要规划移动、攻击、受击、倒下等动作资源 | M4 |
 | UI-POLISH-001 | Open | High | UI 界面过于粗糙，需要符合童话治愈 × 玩具修理屋主题的视觉升级 | M4 |
 | MAP-001 | Open | High | 地图目前只有背景图，缺少地形、障碍、机关和房间布局变化 | M4 |
 | THEME-001 | In Progress | Medium | 已开始将通用动作 Roguelite 包装为玩具修理屋主题 | M3/M4 |

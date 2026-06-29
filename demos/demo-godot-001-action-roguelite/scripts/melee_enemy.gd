@@ -21,12 +21,17 @@ var recoil_time := 0.0
 var recoil_direction := Vector2.ZERO
 var knockback_time := 0.0
 var knockback_direction := Vector2.ZERO
+var visual_time := 0.0
+var body_base_position := Vector2.ZERO
+var body_base_scale := Vector2.ONE
 var dead := false
 
 @onready var body := $Body
 @onready var contact_area := $ContactArea
 
 func _ready() -> void:
+	body_base_position = body.position
+	body_base_scale = body.scale
 	hp = max_hp
 	if elite:
 		hp = 90
@@ -51,6 +56,7 @@ func _physics_process(delta: float) -> void:
 		velocity = direction * move_speed
 		move_and_slide()
 		body.flip_h = direction.x < 0
+		_update_visuals(delta)
 		_process_burn(delta)
 
 func take_damage(amount: int, source: Node = null, damage_type := "direct") -> void:
@@ -64,6 +70,9 @@ func take_damage(amount: int, source: Node = null, damage_type := "direct") -> v
 		body.modulate = Color(1.0, 0.45, 0.05)
 	else:
 		body.modulate = Color(1.0, 0.45, 0.45)
+	var hit_tween := create_tween()
+	hit_tween.tween_property(body, "scale", body_base_scale * 1.15, 0.035)
+	hit_tween.tween_property(body, "scale", body_base_scale, 0.055)
 	await get_tree().create_timer(0.06).timeout
 	if is_instance_valid(body):
 		_refresh_body_color()
@@ -100,9 +109,17 @@ func _refresh_body_color() -> void:
 	else:
 		body.modulate = Color(1.12, 0.85, 0.85) if elite else Color(1.0, 1.0, 1.0)
 
+func _update_visuals(delta: float) -> void:
+	visual_time += delta
+	var bob := sin(visual_time * 10.0) * 1.5
+	body.position = body_base_position + Vector2(0.0, bob)
+
 func _die(source: Node = null) -> void:
 	dead = true
 	if source != null and source.has_method("notify_enemy_killed"):
 		source.notify_enemy_killed()
 	died.emit(self)
-	queue_free()
+	var tween := create_tween()
+	tween.tween_property(body, "scale", body_base_scale * 0.45, 0.16)
+	tween.parallel().tween_property(body, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.16)
+	tween.finished.connect(queue_free)

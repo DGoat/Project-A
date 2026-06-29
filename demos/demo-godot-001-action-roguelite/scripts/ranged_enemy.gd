@@ -18,12 +18,17 @@ var burn_owner: Node
 var burn_timer := 0.0
 var knockback_time := 0.0
 var knockback_direction := Vector2.ZERO
+var visual_time := 0.0
+var body_base_position := Vector2.ZERO
+var body_base_scale := Vector2.ONE
 var dead := false
 var projectile_scene := preload("res://scenes/Projectile.tscn")
 
 @onready var body := $Body
 
 func _ready() -> void:
+	body_base_position = body.position
+	body_base_scale = body.scale
 	hp = max_hp
 	shoot_time = shoot_cooldown * 0.7
 	_refresh_body_color()
@@ -44,6 +49,7 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 	move_and_slide()
 	body.flip_h = to_player.x < 0
+	_update_visuals(delta)
 
 	shoot_time -= delta
 	if shoot_time <= 0.0:
@@ -62,6 +68,9 @@ func take_damage(amount: int, source: Node = null, damage_type := "direct") -> v
 		body.modulate = Color(1.0, 0.45, 0.05)
 	else:
 		body.modulate = Color(1.0, 0.55, 0.55)
+	var hit_tween := create_tween()
+	hit_tween.tween_property(body, "scale", body_base_scale * 1.12, 0.035)
+	hit_tween.tween_property(body, "scale", body_base_scale, 0.055)
 	await get_tree().create_timer(0.06).timeout
 	if is_instance_valid(body):
 		_refresh_body_color()
@@ -87,6 +96,11 @@ func _process_burn(delta: float) -> void:
 			_refresh_body_color()
 
 func _shoot(direction: Vector2) -> void:
+	body.modulate = Color(1.35, 1.2, 0.75)
+	var shoot_tween := create_tween()
+	shoot_tween.tween_property(body, "scale", body_base_scale * 1.14, 0.06)
+	shoot_tween.tween_property(body, "scale", body_base_scale, 0.08)
+	shoot_tween.finished.connect(_refresh_body_color)
 	var projectile := projectile_scene.instantiate()
 	projectile.global_position = global_position + direction * 24.0
 	projectile.direction = direction
@@ -95,9 +109,17 @@ func _shoot(direction: Vector2) -> void:
 func _refresh_body_color() -> void:
 	body.modulate = Color(1.25, 0.75, 0.35) if burn_ticks_left > 0 else Color(1.0, 1.0, 1.0)
 
+func _update_visuals(delta: float) -> void:
+	visual_time += delta
+	var bob := sin(visual_time * 8.0) * 1.2
+	body.position = body_base_position + Vector2(0.0, bob)
+
 func _die(source: Node = null) -> void:
 	dead = true
 	if source != null and source.has_method("notify_enemy_killed"):
 		source.notify_enemy_killed()
 	died.emit(self)
-	queue_free()
+	var tween := create_tween()
+	tween.tween_property(body, "scale", body_base_scale * 0.45, 0.16)
+	tween.parallel().tween_property(body, "modulate", Color(1.0, 1.0, 1.0, 0.0), 0.16)
+	tween.finished.connect(queue_free)
