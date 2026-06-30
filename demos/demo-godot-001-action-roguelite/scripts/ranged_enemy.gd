@@ -10,8 +10,8 @@ signal died(enemy: Node)
 @export var knockback_duration := 0.12
 @export var separation_radius := 46.0
 @export var separation_strength := 120.0
-@export var obstacle_avoid_distance := 58.0
-@export var obstacle_avoid_strength := 140.0
+@export var attack_position_samples := 16
+@export var attack_position_step := 36.0
 
 var hp := 30
 var player: Node2D
@@ -46,6 +46,8 @@ func _physics_process(delta: float) -> void:
 	if knockback_time > 0.0:
 		knockback_time -= delta
 		velocity = knockback_direction * knockback_speed
+	elif not _has_clear_shot():
+		velocity = _get_navigation_velocity(_find_attack_position())
 	elif distance < preferred_distance * 0.75:
 		velocity = _get_navigation_velocity(global_position - to_player * preferred_distance)
 	elif distance > preferred_distance:
@@ -58,7 +60,7 @@ func _physics_process(delta: float) -> void:
 	_update_visuals(delta)
 
 	shoot_time -= delta
-	if shoot_time <= 0.0:
+	if shoot_time <= 0.0 and _has_clear_shot():
 		shoot_time = shoot_cooldown
 		_shoot(to_player)
 	_process_burn(delta)
@@ -115,6 +117,53 @@ func _shoot(direction: Vector2) -> void:
 func _refresh_body_color() -> void:
 	body.modulate = Color(1.25, 0.75, 0.35) if burn_ticks_left > 0 else Color(1.0, 1.0, 1.0)
 
+func _has_clear_shot() -> bool:
+	if player == null or get_world_2d() == null:
+		return false
+	var query := PhysicsRayQueryParameters2D.create(global_position, player.global_position, 9, [self])
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	var hit := get_world_2d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return false
+	return hit.get("collider") == player
+
+func _find_attack_position() -> Vector2:
+	var best_position := player.global_position
+	var best_score := INF
+	for index in attack_position_samples:
+		var angle := TAU * float(index) / float(attack_position_samples)
+		for distance_offset in [-attack_position_step, 0.0, attack_position_step]:
+			var distance: float = preferred_distance + float(distance_offset)
+			var candidate: Vector2 = player.global_position + Vector2.RIGHT.rotated(angle) * distance
+			if not _is_reachable_position(candidate):
+				continue
+			if not _has_clear_shot_from(candidate):
+				continue
+			var score := global_position.distance_to(candidate) + absf(player.global_position.distance_to(candidate) - preferred_distance) * 0.4
+			if score < best_score:
+				best_score = score
+				best_position = candidate
+	return best_position
+
+func _is_reachable_position(position: Vector2) -> bool:
+	var map := get_world_2d().navigation_map
+	if NavigationServer2D.map_get_iteration_id(map) == 0:
+		return true
+	var closest := NavigationServer2D.map_get_closest_point(map, position)
+	return closest.distance_to(position) < 24.0
+
+func _has_clear_shot_from(from_position: Vector2) -> bool:
+	if player == null or get_world_2d() == null:
+		return false
+	var query := PhysicsRayQueryParameters2D.create(from_position, player.global_position, 9, [self])
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	var hit := get_world_2d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return false
+	return hit.get("collider") == player
+
 func _get_navigation_velocity(target_position: Vector2) -> Vector2:
 	navigation_agent.target_position = target_position
 	var next_position: Vector2 = navigation_agent.get_next_path_position()
@@ -133,30 +182,6 @@ func _get_separation_velocity() -> Vector2:
 		if distance > 0.0 and distance < separation_radius:
 			separation += offset.normalized() * ((separation_radius - distance) / separation_radius)
 	return separation * separation_strength
-
-func _get_obstacle_avoidance_velocity(direction: Vector2) -> Vector2:
-	var avoidance := Vector2.ZERO
-	var side := direction.orthogonal().normalized()
-	for node in get_tree().get_nodes_in_group("obstacles"):
-		var obstacle := node as StaticBody2D
-		if obstacle == null:
-			continue
-		var shape_node := obstacle.get_node_or_null("CollisionShape2D") as CollisionShape2D
-		if shape_node == null or not shape_node.shape is RectangleShape2D:
-			continue
-		var rect := shape_node.shape as RectangleShape2D
-		var local := global_position - obstacle.global_position
-		var half := rect.size * 0.5
-		var closest := Vector2(clampf(local.x, -half.x, half.x), clampf(local.y, -half.y, half.y))
-		var offset := local - closest
-		var distance := offset.length()
-		var ahead := (obstacle.global_position - global_position).dot(direction)
-		if ahead > -12.0 and ahead < obstacle_avoid_distance and distance < obstacle_avoid_distance:
-			var side_sign := signf((obstacle.global_position - global_position).dot(side))
-			if side_sign == 0.0:
-				side_sign = 1.0
-			avoidance -= side * side_sign * ((obstacle_avoid_distance - distance) / obstacle_avoid_distance)
-	return avoidance * obstacle_avoid_strength
 
 func _update_visuals(delta: float) -> void:
 	visual_time += delta

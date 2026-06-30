@@ -164,6 +164,8 @@ func _test_terrain_collision_masks() -> void:
 	_expect(melee.has_node("NavigationAgent2D"), "melee enemy should have NavigationAgent2D")
 	_expect((ranged.collision_mask & 8) != 0, "ranged enemy should collide with terrain layer")
 	_expect(ranged.has_node("NavigationAgent2D"), "ranged enemy should have NavigationAgent2D")
+	_expect(ranged.has_method("_has_clear_shot"), "ranged enemy should check line of sight before shooting")
+	_expect(ranged.has_method("_find_attack_position"), "ranged enemy should find attack position when shot is blocked")
 	player.queue_free()
 	melee.queue_free()
 	ranged.queue_free()
