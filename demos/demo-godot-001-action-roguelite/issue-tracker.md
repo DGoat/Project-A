@@ -58,7 +58,7 @@
 | UI-POLISH-001 | In Progress | High | UI Polish 0.1 已实现但标题层级、三选一布局、HUD 仍需重设；已新增 UI Redesign 0.2 Spec | M4 |
 | UI-POLISH-002 | Open | High | 三选一修理灵感需要改为横向三卡并列，类似海克斯选择 | M4 |
 | UI-POLISH-003 | Open | High | HUD 需要从裸文字改为结构化木牌/布片底板与信息分层 | M4 |
-| UI-ASSET-001 | Open | Medium | 可选生成标题装饰、卡牌边框、HUD 木牌、木牌按钮等 UI 资源用于 UI 0.3 | M4 |
+| UI-ASSET-001 | Fixed | Medium | 已先完成 UI 0.3 无资源打磨：标题装饰、卡牌边框、HUD 木牌、按钮木牌均用代码样式强化，后续仍可替换为图片资源 | M4 |
 | MAP-001 | Fixed | High | 已新增 MapRoot、三房间不同障碍布局和胶水坑减速区域，地图不再只有背景图 | M4 |
 | MAP-002 | Fixed | High | 硬障碍只能阻挡投射物，不能阻挡玩家和敌人；已修正玩家、敌人与障碍碰撞掩码 | M4 |
 | MAP-003 | Fixed | High | 硬障碍阻挡后敌人直线追击会卡住，已增加轻量障碍规避 steering | M4 |

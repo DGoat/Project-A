@@ -302,8 +302,7 @@ func _on_room_cleared() -> void:
 	offered_blessings = _roll_blessings(3)
 	for i in offered_blessings.size():
 		var blessing: Dictionary = offered_blessings[i]
-		var tags_text := _format_tags(blessing)
-		blessing_buttons[i].text = "[%s]\n\n%s\n\n%s\n\n按 %d 选择" % [tags_text, blessing["name"], blessing["description"], i + 1]
+		blessing_buttons[i].text = _format_blessing_card(blessing, i)
 		_style_button(blessing_buttons[i], true)
 	blessing_panel.visible = true
 	ui_message.text = "选择一个修理灵感"
@@ -376,8 +375,8 @@ func _format_result_blessings() -> String:
 	return "\n".join(lines)
 
 func _setup_ui_style() -> void:
-	var panel_style := _make_panel_style(Color(0.12, 0.07, 0.04, 0.74), Color(0.78, 0.55, 0.28, 0.95), 10, 3)
-	var hud_style := _make_panel_style(Color(0.055, 0.045, 0.038, 0.42), Color(0.78, 0.68, 0.55, 0.56), 999, 1)
+	var panel_style := _make_panel_style(Color(0.105, 0.058, 0.033, 0.82), Color(0.84, 0.58, 0.30, 0.95), 14, 3)
+	var hud_style := _make_panel_style(Color(0.045, 0.035, 0.030, 0.55), Color(0.88, 0.72, 0.48, 0.62), 999, 1)
 	var side_style := _make_panel_style(Color(0.08, 0.05, 0.035, 0.72), Color(0.42, 0.64, 0.74, 0.8), 8, 2)
 	var debug_style := _make_panel_style(Color(0.05, 0.05, 0.06, 0.78), Color(0.55, 0.55, 0.6, 0.7), 6, 2)
 	for panel in [start_panel, blessing_panel, result_panel]:
@@ -386,9 +385,9 @@ func _setup_ui_style() -> void:
 	for panel in [acquired_blessings_panel]:
 		panel.add_theme_stylebox_override("panel", side_style)
 	debug_panel.add_theme_stylebox_override("panel", debug_style)
-	_style_label(ui_status, 21, Color(0.96, 0.12, 0.10))
-	_style_label(ui_message, 14, Color(0.92, 0.84, 0.68))
-	_style_label($CanvasLayer/UI/ControlsHint, 14, Color(0.92, 0.82, 0.68, 0.6))
+	_style_label(ui_status, 22, Color(1.0, 0.16, 0.13))
+	_style_label(ui_message, 14, Color(0.95, 0.84, 0.66))
+	_style_label($CanvasLayer/UI/ControlsHint, 14, Color(0.92, 0.82, 0.68, 0.52))
 	_style_button(start_button, false)
 	_style_button(restart_button, false)
 	for button in blessing_buttons:
@@ -400,11 +399,19 @@ func _setup_ui_style() -> void:
 	_style_panel_labels(result_panel)
 	_style_panel_labels(acquired_blessings_panel)
 	_style_panel_labels(debug_panel)
-	_style_label($CanvasLayer/UI/StartPanel/StartList/Title, 50, Color(1.0, 0.92, 0.70))
-	_style_label($CanvasLayer/UI/StartPanel/StartList/Subtitle, 21, Color(0.94, 0.82, 0.66))
+	_style_label($CanvasLayer/UI/StartPanel/StartList/Title, 52, Color(1.0, 0.92, 0.68))
+	_style_label($CanvasLayer/UI/StartPanel/StartList/Subtitle, 21, Color(0.96, 0.82, 0.62))
 	_style_label($CanvasLayer/UI/StartPanel/StartList/Controls, 16, Color(0.84, 0.74, 0.62))
 	_style_label($CanvasLayer/UI/BlessingPanel/BlessingRoot/Title, 34, Color(1.0, 0.9, 0.66))
-	_style_label($CanvasLayer/UI/ResultPanel/ResultList/Title, 36, Color(1.0, 0.9, 0.66))
+	_style_label($CanvasLayer/UI/ResultPanel/ResultList/Title, 38, Color(1.0, 0.9, 0.66))
+	start_panel.custom_minimum_size = Vector2(640, 390)
+	blessing_panel.custom_minimum_size = Vector2(980, 440)
+	result_panel.custom_minimum_size = Vector2(500, 300)
+	$CanvasLayer/UI/StartPanel/StartList.add_theme_constant_override("separation", 18)
+	$CanvasLayer/UI/BlessingPanel/BlessingRoot.add_theme_constant_override("separation", 18)
+	$CanvasLayer/UI/ResultPanel/ResultList.add_theme_constant_override("separation", 16)
+	$CanvasLayer/UI/BlessingPanel/BlessingRoot/Title.text = "修理灵感 · 选择今晚的工具"
+	$CanvasLayer/UI/StartPanel/StartList/Subtitle.text = "◇ 让破损玩具重新发光 ◇"
 
 func _make_panel_style(fill: Color, border: Color, radius: int, border_width: int) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
@@ -412,12 +419,12 @@ func _make_panel_style(fill: Color, border: Color, radius: int, border_width: in
 	style.border_color = border
 	style.set_border_width_all(border_width)
 	style.set_corner_radius_all(radius)
-	style.content_margin_left = 14
-	style.content_margin_right = 14
-	style.content_margin_top = 8
-	style.content_margin_bottom = 8
-	style.shadow_color = Color(0.0, 0.0, 0.0, 0.35)
-	style.shadow_size = 10
+	style.content_margin_left = 18
+	style.content_margin_right = 18
+	style.content_margin_top = 12
+	style.content_margin_bottom = 12
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.46)
+	style.shadow_size = 14
 	return style
 
 func _make_button_style(fill: Color, border: Color) -> StyleBoxFlat:
@@ -425,29 +432,31 @@ func _make_button_style(fill: Color, border: Color) -> StyleBoxFlat:
 	style.bg_color = fill
 	style.border_color = border
 	style.set_border_width_all(2)
-	style.set_corner_radius_all(8)
-	style.content_margin_left = 12
-	style.content_margin_right = 12
-	style.content_margin_top = 8
-	style.content_margin_bottom = 8
+	style.set_corner_radius_all(10)
+	style.content_margin_left = 14
+	style.content_margin_right = 14
+	style.content_margin_top = 10
+	style.content_margin_bottom = 10
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.35)
+	style.shadow_size = 8
 	return style
 
 func _style_button(button: Button, card := false) -> void:
-	var normal := _make_button_style(Color(0.34, 0.18, 0.09, 0.92), Color(0.86, 0.62, 0.32, 0.95))
-	var hover := _make_button_style(Color(0.48, 0.28, 0.13, 0.96), Color(0.98, 0.78, 0.42, 1.0))
-	var pressed := _make_button_style(Color(0.22, 0.12, 0.07, 0.98), Color(0.98, 0.82, 0.48, 1.0))
+	var normal := _make_button_style(Color(0.38, 0.20, 0.10, 0.94), Color(0.90, 0.64, 0.34, 0.95))
+	var hover := _make_button_style(Color(0.55, 0.32, 0.15, 0.98), Color(1.0, 0.84, 0.48, 1.0))
+	var pressed := _make_button_style(Color(0.24, 0.13, 0.07, 1.0), Color(1.0, 0.86, 0.52, 1.0))
 	if card:
-		normal = _make_button_style(Color(0.14, 0.085, 0.055, 0.96), Color(0.82, 0.58, 0.30, 0.95))
-		hover = _make_button_style(Color(0.24, 0.15, 0.09, 0.98), Color(1.0, 0.82, 0.44, 1.0))
-		pressed = _make_button_style(Color(0.12, 0.08, 0.055, 1.0), Color(1.0, 0.88, 0.55, 1.0))
+		normal = _make_button_style(Color(0.125, 0.075, 0.048, 0.97), Color(0.86, 0.58, 0.30, 0.95))
+		hover = _make_button_style(Color(0.24, 0.145, 0.085, 0.99), Color(1.0, 0.82, 0.44, 1.0))
+		pressed = _make_button_style(Color(0.10, 0.065, 0.045, 1.0), Color(1.0, 0.90, 0.58, 1.0))
 	button.add_theme_stylebox_override("normal", normal)
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("pressed", pressed)
 	button.add_theme_color_override("font_color", Color(0.98, 0.9, 0.72))
-	button.add_theme_color_override("font_hover_color", Color(1.0, 0.94, 0.78))
-	button.add_theme_font_size_override("font_size", 18 if card else 16)
+	button.add_theme_color_override("font_hover_color", Color(1.0, 0.96, 0.80))
+	button.add_theme_font_size_override("font_size", 17 if card else 17)
 	button.add_theme_constant_override("outline_size", 2 if card else 1)
-	button.add_theme_color_override("font_outline_color", Color(0.05, 0.025, 0.015, 0.85))
+	button.add_theme_color_override("font_outline_color", Color(0.05, 0.025, 0.015, 0.88))
 
 func _style_label(label: Label, size: int, color: Color) -> void:
 	label.add_theme_color_override("font_color", color)
@@ -464,6 +473,10 @@ func _style_panel_labels(root_node: Node) -> void:
 func _format_tags(blessing: Dictionary) -> String:
 	var tags: Array = blessing.get("tags", [])
 	return " / ".join(tags) if not tags.is_empty() else "通用"
+
+func _format_blessing_card(blessing: Dictionary, index: int) -> String:
+	var tags_text := _format_tags(blessing)
+	return "NO.%02d\n[%s]\n%s\n\n%s\n\n按 %d 选择" % [index + 1, tags_text, blessing["name"], blessing["description"], index + 1]
 
 func _on_player_died() -> void:
 	_show_result(false)

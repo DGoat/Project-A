@@ -134,8 +134,8 @@ visible = false
 layout_mode = 0
 offset_left = 82.0
 offset_top = 104.0
-offset_right = 1070.0
-offset_bottom = 586.0
+offset_right = 1048.0
+offset_bottom = 552.0
 
 [node name="BlessingRoot" type="VBoxContainer" parent="CanvasLayer/UI/BlessingPanel" unique_id=445422710]
 layout_mode = 2
@@ -150,19 +150,19 @@ layout_mode = 2
 theme_override_constants/separation = 20
 
 [node name="Blessing1" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingRoot/CardRow" unique_id=2092036338]
-custom_minimum_size = Vector2(292, 330)
+custom_minimum_size = Vector2(278, 278)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "1"
 
 [node name="Blessing2" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingRoot/CardRow" unique_id=1542750067]
-custom_minimum_size = Vector2(292, 330)
+custom_minimum_size = Vector2(278, 278)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "2"
 
 [node name="Blessing3" type="Button" parent="CanvasLayer/UI/BlessingPanel/BlessingRoot/CardRow" unique_id=156437126]
-custom_minimum_size = Vector2(292, 330)
+custom_minimum_size = Vector2(278, 278)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "3"
