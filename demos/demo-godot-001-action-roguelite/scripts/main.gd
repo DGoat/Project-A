@@ -3,7 +3,7 @@ extends Node2D
 var player_scene := preload("res://scenes/Player.tscn")
 var melee_scene := preload("res://scenes/MeleeEnemy.tscn")
 var ranged_scene := preload("res://scenes/RangedEnemy.tscn")
-var terrain_tilesheet := preload("res://assets/art/toy_repair_prototype/terrain_tiles/terrain_tilesheet_1024.png")
+var terrain_tilesheet := preload("res://assets/art/toy_repair_prototype/terrain_tiles/terrain_tileset_grid_64_v2.png")
 var BreakableTerrainBodyScript := preload("res://scripts/breakable_terrain_body.gd")
 var room_backgrounds := [
 	preload("res://assets/art/toy_repair_prototype/bg_repair_table.png"),
@@ -46,8 +46,11 @@ var terrain_tile_properties := {
 	Vector2i(0, 2): {"type": "slow", "footprint": Vector2i(1, 1)},
 	Vector2i(1, 2): {"type": "slow", "footprint": Vector2i(2, 1)},
 	Vector2i(3, 2): {"type": "slow", "footprint": Vector2i(2, 2)},
-	Vector2i(5, 2): {"type": "breakable", "footprint": Vector2i(1, 1)},
-	Vector2i(6, 3): {"type": "decor", "footprint": Vector2i(1, 1)},
+		Vector2i(5, 2): {"type": "breakable", "footprint": Vector2i(1, 1)},
+		Vector2i(0, 4): {"type": "hard", "footprint": Vector2i(2, 1)},
+		Vector2i(2, 4): {"type": "hard", "footprint": Vector2i(2, 1)},
+		Vector2i(4, 4): {"type": "hard", "footprint": Vector2i(2, 1)},
+		Vector2i(6, 3): {"type": "decor", "footprint": Vector2i(1, 1)},
 	Vector2i(7, 3): {"type": "decor", "footprint": Vector2i(1, 1)}
 }
 

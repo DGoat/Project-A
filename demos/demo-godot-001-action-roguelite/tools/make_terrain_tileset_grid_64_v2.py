@@ -2,33 +2,49 @@ from PIL import Image
 from pathlib import Path
 
 root = Path(r"D:\FORK\specskill\Project-A\demos\demo-godot-001-action-roguelite\assets\art\toy_repair_prototype\terrain_tiles")
-source = Image.open(root / "terrain_tilesheet_1024_4_clean.png").convert("RGBA")
-out = Image.new("RGBA", (512, 256), (0, 0, 0, 0))
+raw_root = root / "raw"
+out = Image.new("RGBA", (640, 320), (0, 0, 0, 0))
 
 items = [
-    ((0, 0), (1, 1), (2, 5, 130, 133)),
-    ((1, 0), (1, 1), (365, 15, 550, 139)),
-    ((2, 0), (1, 1), (591, 15, 793, 137)),
-    ((3, 0), (1, 1), (827, 2, 1017, 136)),
-    ((0, 1), (3, 1), (1, 185, 489, 340)),
-    ((3, 1), (3, 1), (505, 178, 839, 292)),
-    ((6, 0), (1, 3), (840, 174, 994, 626)),
-    ((0, 2), (1, 1), (6, 405, 160, 558)),
-    ((1, 2), (2, 1), (175, 454, 491, 545)),
-    ((3, 2), (2, 2), (510, 345, 803, 613)),
-    ((5, 2), (1, 1), (4, 663, 169, 725)),
-    ((6, 3), (1, 1), (222, 667, 282, 740)),
-    ((7, 3), (1, 1), (355, 675, 449, 729)),
+    ((0, 4), (2, 1), Image.open(raw_root / "terrain_plank_left_raw.png").convert("RGBA"), "fit"),
+    ((2, 4), (2, 1), Image.open(raw_root / "terrain_plank_mid_raw.png").convert("RGBA"), "stretch"),
+    ((4, 4), (2, 1), Image.open(raw_root / "terrain_plank_right_raw.png").convert("RGBA"), "fit"),
 ]
 
-for atlas_pos, footprint, box in items:
+def trim_alpha(image: Image.Image) -> Image.Image:
+    alpha_bbox = image.getchannel("A").getbbox()
+    if alpha_bbox is None:
+        return image
+    alpha_pixels = image.load()
+    mask_bbox = None
+    for y in range(alpha_bbox[1], alpha_bbox[3]):
+        for x in range(alpha_bbox[0], alpha_bbox[2]):
+            r, g, b, a = alpha_pixels[x, y]
+            if a > 40 and not (r > 235 and g > 235 and b > 235) and not (b > r * 1.15 and b > g * 1.05):
+                if mask_bbox is None:
+                    mask_bbox = [x, y, x + 1, y + 1]
+                else:
+                    mask_bbox[0] = min(mask_bbox[0], x)
+                    mask_bbox[1] = min(mask_bbox[1], y)
+                    mask_bbox[2] = max(mask_bbox[2], x + 1)
+                    mask_bbox[3] = max(mask_bbox[3], y + 1)
+    if mask_bbox is None:
+        return image.crop(alpha_bbox)
+    return image.crop(tuple(mask_bbox))
+
+for atlas_pos, footprint, image, mode in items:
     x, y = atlas_pos
     fw, fh = footprint
-    crop = source.crop(box)
+    crop = trim_alpha(image)
     target_w = fw * 64
     target_h = fh * 64
-    crop = crop.resize((target_w, target_h), Image.Resampling.LANCZOS)
-    out.alpha_composite(crop, (x * 64, y * 64))
+    if mode == "stretch":
+        crop = crop.resize((target_w, target_h), Image.Resampling.LANCZOS)
+    else:
+        crop.thumbnail((target_w, target_h), Image.Resampling.LANCZOS)
+    tile = Image.new("RGBA", (target_w, target_h), (0, 0, 0, 0))
+    tile.alpha_composite(crop, ((target_w - crop.width) // 2, (target_h - crop.height) // 2))
+    out.alpha_composite(tile, (x * 64, y * 64))
 
 out.save(root / "terrain_tileset_grid_64_v2.png")
 print(root / "terrain_tileset_grid_64_v2.png")

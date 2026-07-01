@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://becdeic6f28p1"
-path="res://.godot/imported/terrain_tilesheet_1024_3.png-ca6e5b8270079d04f70b489b31615354.ctex"
+uid="uid://1naf6p2c7ray"
+path="res://.godot/imported/terrain_plank_right_raw.png-30a51a62535ea807a2c9d686e21df1a1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/toy_repair_prototype/terrain_tiles/terrain_tilesheet_1024_3.png"
-dest_files=["res://.godot/imported/terrain_tilesheet_1024_3.png-ca6e5b8270079d04f70b489b31615354.ctex"]
+source_file="res://assets/art/toy_repair_prototype/terrain_tiles/raw/terrain_plank_right_raw.png"
+dest_files=["res://.godot/imported/terrain_plank_right_raw.png-30a51a62535ea807a2c9d686e21df1a1.ctex"]
 
 [params]
 
