@@ -38,6 +38,10 @@ func _test_main_scene_start_flow() -> void:
 	root.add_child(main)
 	await process_frame
 	_expect(main.has_node("RepairTableBg"), "missing RepairTableBg")
+	_expect(main.has_node("RoomBackgrounds"), "missing RoomBackgrounds")
+	_expect(main.room_backgrounds.size() >= 3, "main should define per-room background slots")
+	_expect(main.get_node("RepairTableBg").z_index < main.map_root.z_index, "room background should render below terrain")
+	_expect(main.room_root.z_index > main.map_root.z_index, "enemies should render above ground terrain")
 	_expect(main.has_node("RoomRoot"), "missing RoomRoot")
 	_expect(main.has_node("CanvasLayer/UI/StartPanel"), "missing StartPanel")
 	_expect(main.player_scene != null, "missing player scene preload")
@@ -46,6 +50,20 @@ func _test_main_scene_start_flow() -> void:
 	_expect(main.player != null, "player not spawned after _start_run")
 	_expect(main.enemies_alive > 0, "room enemies not spawned after _start_run")
 	_expect(main.current_room == 0, "run should start at room 0")
+	_expect(main.get_node("RoomBackgrounds").get_child_count() == 3, "editor should show three separated room backgrounds")
+	_expect(main.map_root.get_node("ManualTerrainRoom2").position.x > main.room_size.x, "room 2 terrain should be horizontally separated")
+	for room_index in range(main.rooms.size()):
+		main._spawn_room(room_index)
+		await process_frame
+		_expect(main.player.global_position == main._get_room_local_position(room_index, Vector2(1584, 1030)), "player should move to room %d spawn" % [room_index + 1])
+		var camera := main.player.get_node("Camera2D") as Camera2D
+		_expect(camera.limit_left == int(main._get_room_offset(room_index).x), "camera left limit should match room %d" % [room_index + 1])
+		_expect(camera.limit_right == int(main._get_room_offset(room_index).x + main.room_size.x), "camera right limit should match room %d" % [room_index + 1])
+		var nav_region := main.map_root.get_node("NavigationRegion2D") as NavigationRegion2D
+		var nav_outline := nav_region.navigation_polygon.get_outline(0)
+		_expect(nav_outline[0].x == main._get_room_offset(room_index).x + 120.0, "navigation region should match room %d" % [room_index + 1])
+		for enemy in main.room_root.get_children():
+			_expect(enemy.global_position.x >= main._get_room_offset(room_index).x, "enemy should spawn in room %d area" % [room_index + 1])
 	main.queue_free()
 
 func _test_player_core_values() -> void:
@@ -189,6 +207,9 @@ func _test_terrain_tilesheet() -> void:
 	_expect(main.has_method("_update_manual_terrain_layers"), "main should support room-specific manual terrain layers")
 	_expect(main.has_method("_show_all_manual_terrain_layers_in_editor"), "main should keep room terrain layers editable in editor")
 	_expect(main.has_method("_spawn_tilemap_terrain"), "main should generate terrain logic from TileMapLayer")
+	_expect(main.has_method("_update_player_camera_limits"), "main should update camera limits per room")
+	_expect(main.has_method("_update_room_background"), "main should support per-room backgrounds")
+	_expect(main.has_method("_apply_render_layers"), "main should define render layer ordering")
 	_expect(main.has_method("_get_terrain_footprint_cells"), "main should support multi-cell terrain footprint")
 	_expect(main.terrain_tile_properties[Vector2i(0, 0)].has("footprint"), "terrain tile properties should define footprint")
 	main._spawn_room_map(0)

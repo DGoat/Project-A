@@ -4,6 +4,11 @@ var player_scene := preload("res://scenes/Player.tscn")
 var melee_scene := preload("res://scenes/MeleeEnemy.tscn")
 var ranged_scene := preload("res://scenes/RangedEnemy.tscn")
 var terrain_tilesheet := preload("res://assets/art/toy_repair_prototype/terrain_tiles/terrain_tilesheet_1024.png")
+var room_backgrounds := [
+	preload("res://assets/art/toy_repair_prototype/bg_repair_table.png"),
+	preload("res://assets/art/toy_repair_prototype/bg_repair_table.png"),
+	preload("res://assets/art/toy_repair_prototype/bg_repair_table.png")
+]
 var blessing_pool: Array = []
 var current_room := 0
 var enemies_alive := 0
@@ -15,7 +20,9 @@ var damage_flash_tween: Tween
 var debug_toggle_down := false
 var run_started := false
 var run_ended := false
-var world_size := Vector2(3168.0, 1344.0)
+var room_size := Vector2(3168.0, 1344.0)
+var room_gap := 320.0
+var world_size := Vector2(10144.0, 1344.0)
 var play_area_min := Vector2(80.0, 120.0)
 var play_area_max := Vector2(3088.0, 1264.0)
 var terrain_atlas := {
@@ -32,12 +39,19 @@ var terrain_tile_properties := {
 	Vector2i(1, 0): {"type": "hard", "footprint": Vector2i(1, 1)},
 	Vector2i(2, 0): {"type": "hard", "footprint": Vector2i(1, 1)},
 	Vector2i(3, 0): {"type": "hard", "footprint": Vector2i(1, 1)},
-	Vector2i(0, 1): {"type": "decor", "footprint": Vector2i(1, 1)},
-	Vector2i(1, 1): {"type": "decor", "footprint": Vector2i(1, 1)},
-	Vector2i(2, 1): {"type": "decor", "footprint": Vector2i(1, 1)},
-	Vector2i(3, 1): {"type": "hard", "footprint": Vector2i(1, 1)}
+	Vector2i(0, 1): {"type": "hard", "footprint": Vector2i(3, 1)},
+	Vector2i(3, 1): {"type": "hard", "footprint": Vector2i(3, 1)},
+	Vector2i(6, 0): {"type": "hard", "footprint": Vector2i(1, 3)},
+	Vector2i(0, 2): {"type": "slow", "footprint": Vector2i(1, 1)},
+	Vector2i(1, 2): {"type": "slow", "footprint": Vector2i(2, 1)},
+	Vector2i(3, 2): {"type": "slow", "footprint": Vector2i(2, 2)},
+	Vector2i(5, 2): {"type": "breakable", "footprint": Vector2i(1, 1)},
+	Vector2i(6, 3): {"type": "decor", "footprint": Vector2i(1, 1)},
+	Vector2i(7, 3): {"type": "decor", "footprint": Vector2i(1, 1)}
 }
 
+@onready var room_background := $RepairTableBg
+@onready var room_backgrounds_root := $RoomBackgrounds
 @onready var room_root := $RoomRoot
 @onready var map_root := $MapRoot
 @onready var hud_panel := $CanvasLayer/UI/HudPanel
@@ -140,6 +154,9 @@ func _ready() -> void:
 	ui_status.text = ""
 	ui_message.text = "1/3 · 等待入夜"
 	_show_all_manual_terrain_layers_in_editor()
+	_setup_room_backgrounds()
+	_apply_render_layers()
+	_update_room_background(0)
 	_update_debug_buttons()
 	_update_acquired_blessings()
 
@@ -170,10 +187,63 @@ func _load_blessings() -> void:
 func _show_all_manual_terrain_layers_in_editor() -> void:
 	if not OS.has_feature("editor"):
 		return
-	for room_index in range(3):
-		var layer := map_root.get_node_or_null("ManualTerrainRoom%d" % [room_index + 1])
-		if layer != null:
-			layer.visible = true
+	for child in map_root.get_children():
+		if _is_manual_terrain_layer(child):
+			child.visible = true
+
+func _setup_room_backgrounds() -> void:
+	room_background.visible = false
+	for room_index in range(rooms.size()):
+		var sprite := room_backgrounds_root.get_node_or_null("RoomBackground%d" % [room_index + 1]) as Sprite2D
+		if sprite == null:
+			sprite = Sprite2D.new()
+			sprite.name = "RoomBackground%d" % [room_index + 1]
+			room_backgrounds_root.add_child(sprite)
+		sprite.texture = room_backgrounds[clampi(room_index, 0, room_backgrounds.size() - 1)]
+		sprite.position = _get_room_offset(room_index) + room_size * 0.5
+		sprite.z_index = -100
+
+func _get_room_offset(index: int) -> Vector2:
+	return Vector2(float(index) * (room_size.x + room_gap), 0.0)
+
+func _get_room_play_area_min(index: int) -> Vector2:
+	return _get_room_offset(index) + play_area_min
+
+func _get_room_play_area_max(index: int) -> Vector2:
+	return _get_room_offset(index) + play_area_max
+
+func _get_room_local_position(index: int, position: Vector2) -> Vector2:
+	return _get_room_offset(index) + position
+
+func _update_player_camera_limits(index: int) -> void:
+	if player == null or not player.has_node("Camera2D"):
+		return
+	var camera := player.get_node("Camera2D") as Camera2D
+	var offset := _get_room_offset(index)
+	camera.limit_left = int(offset.x)
+	camera.limit_top = int(offset.y)
+	camera.limit_right = int(offset.x + room_size.x)
+	camera.limit_bottom = int(offset.y + room_size.y)
+	camera.reset_smoothing()
+
+func _apply_render_layers() -> void:
+	room_background.z_index = -100
+	room_backgrounds_root.z_index = -100
+	map_root.z_index = 0
+	room_root.z_index = 100
+	for layer in map_root.get_children():
+		if _is_manual_terrain_layer(layer):
+			layer.z_index = _get_terrain_layer_z(layer)
+
+func _get_terrain_layer_z(layer: Node) -> int:
+	if layer.name.begins_with("ManualTerrainUpper"):
+		return 200
+	return 0
+
+func _update_room_background(index: int) -> void:
+	for room_index in range(room_backgrounds_root.get_child_count()):
+		var background := room_backgrounds_root.get_child(room_index)
+		background.visible = OS.has_feature("editor") or room_index == index
 
 func _start_run() -> void:
 	if run_started:
@@ -183,7 +253,7 @@ func _start_run() -> void:
 	start_panel.visible = false
 	result_panel.visible = false
 	player = player_scene.instantiate()
-	player.global_position = Vector2(1584, 1030)
+	player.global_position = _get_room_local_position(0, Vector2(1584, 1030))
 	add_child(player)
 	player.died.connect(_on_player_died)
 	player.damaged.connect(_on_player_damaged)
@@ -197,6 +267,12 @@ func _spawn_room(index: int) -> void:
 	for child in room_root.get_children():
 		child.queue_free()
 	_spawn_room_map(index)
+	_update_room_background(index)
+	if player != null:
+		player.play_area_min = _get_room_play_area_min(index)
+		player.play_area_max = _get_room_play_area_max(index)
+		player.global_position = _get_room_local_position(index, Vector2(1584, 1030))
+		_update_player_camera_limits(index)
 	enemies_alive = 0
 	var room = rooms[index]
 	for enemy_data in room:
@@ -209,7 +285,7 @@ func _spawn_room(index: int) -> void:
 				enemy.elite = true
 			"ranged":
 				enemy = ranged_scene.instantiate()
-		enemy.global_position = enemy_data["pos"]
+		enemy.global_position = _get_room_local_position(index, enemy_data["pos"])
 		enemy.player = player
 		enemy.died.connect(_on_enemy_died)
 		room_root.add_child(enemy)
@@ -222,32 +298,37 @@ func _spawn_room_map(index: int) -> void:
 		if not _is_manual_terrain_layer(child):
 			child.queue_free()
 	_update_manual_terrain_layers(index)
-	_create_boundary_hint()
+	_create_boundary_hint(index)
 	var terrain_rects := _spawn_tilemap_terrain(index)
-	_create_navigation_region(terrain_rects)
+	_create_navigation_region(terrain_rects, index)
 
 func _is_manual_terrain_layer(node: Node) -> bool:
-	return node.name.begins_with("ManualTerrainRoom")
+	return node.name.begins_with("ManualTerrainRoom") or node.name.begins_with("ManualTerrainUpper")
+
+func _is_room_terrain_layer(node: Node, index: int) -> bool:
+	return node.name == "ManualTerrainRoom%d" % [index + 1] or node.name == "ManualTerrainUpperRoom%d" % [index + 1]
 
 func _update_manual_terrain_layers(index: int) -> void:
-	for room_index in range(3):
-		var layer := map_root.get_node_or_null("ManualTerrainRoom%d" % [room_index + 1])
-		if layer != null:
-			layer.visible = room_index == index
+	for child in map_root.get_children():
+		if _is_manual_terrain_layer(child):
+			child.visible = _is_room_terrain_layer(child, index)
 
-func _create_boundary_hint() -> void:
+func _create_boundary_hint(index: int) -> void:
 	var root := Node2D.new()
 	root.name = "BoundaryHint"
+	var offset := _get_room_offset(index)
+	var min_area := _get_room_play_area_min(index)
+	var max_area := _get_room_play_area_max(index)
 	var shade := Color(0.05, 0.025, 0.01, 0.24)
 	var line := Color(0.8, 0.55, 0.28, 0.36)
-	_add_boundary_rect(root, Vector2.ZERO, Vector2(world_size.x, play_area_min.y), shade)
-	_add_boundary_rect(root, Vector2(0.0, play_area_max.y), Vector2(world_size.x, world_size.y - play_area_max.y), shade)
-	_add_boundary_rect(root, Vector2.ZERO, Vector2(play_area_min.x, world_size.y), shade)
-	_add_boundary_rect(root, Vector2(play_area_max.x, 0.0), Vector2(world_size.x - play_area_max.x, world_size.y), shade)
-	_add_boundary_rect(root, Vector2(play_area_min.x, play_area_min.y), Vector2(play_area_max.x - play_area_min.x, 3.0), line)
-	_add_boundary_rect(root, Vector2(play_area_min.x, play_area_max.y - 3.0), Vector2(play_area_max.x - play_area_min.x, 3.0), line)
-	_add_boundary_rect(root, Vector2(play_area_min.x, play_area_min.y), Vector2(3.0, play_area_max.y - play_area_min.y), line)
-	_add_boundary_rect(root, Vector2(play_area_max.x - 3.0, play_area_min.y), Vector2(3.0, play_area_max.y - play_area_min.y), line)
+	_add_boundary_rect(root, offset, Vector2(room_size.x, play_area_min.y), shade)
+	_add_boundary_rect(root, offset + Vector2(0.0, play_area_max.y), Vector2(room_size.x, room_size.y - play_area_max.y), shade)
+	_add_boundary_rect(root, offset, Vector2(play_area_min.x, room_size.y), shade)
+	_add_boundary_rect(root, offset + Vector2(play_area_max.x, 0.0), Vector2(room_size.x - play_area_max.x, room_size.y), shade)
+	_add_boundary_rect(root, min_area, Vector2(max_area.x - min_area.x, 3.0), line)
+	_add_boundary_rect(root, Vector2(min_area.x, max_area.y - 3.0), Vector2(max_area.x - min_area.x, 3.0), line)
+	_add_boundary_rect(root, min_area, Vector2(3.0, max_area.y - min_area.y), line)
+	_add_boundary_rect(root, Vector2(max_area.x - 3.0, min_area.y), Vector2(3.0, max_area.y - min_area.y), line)
 	map_root.add_child(root)
 
 func _add_boundary_rect(root: Node, position: Vector2, size: Vector2, color: Color) -> void:
@@ -257,15 +338,16 @@ func _add_boundary_rect(root: Node, position: Vector2, size: Vector2, color: Col
 	rect.color = color
 	root.add_child(rect)
 
-func _create_navigation_region(blocking_rects: Array) -> void:
+func _create_navigation_region(blocking_rects: Array, index: int) -> void:
 	var region := NavigationRegion2D.new()
 	region.name = "NavigationRegion2D"
+	var offset := _get_room_offset(index)
 	var polygon := NavigationPolygon.new()
 	polygon.add_outline(PackedVector2Array([
-		Vector2(120, 220),
-		Vector2(3048, 220),
-		Vector2(3048, 1230),
-		Vector2(120, 1230)
+		offset + Vector2(120, 220),
+		offset + Vector2(3048, 220),
+		offset + Vector2(3048, 1230),
+		offset + Vector2(120, 1230)
 	]))
 	for rect_data in blocking_rects:
 		var position: Vector2 = rect_data["pos"]
