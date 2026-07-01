@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgsuky1i46lnm" path="res://scripts/main.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://dmlhi7y4gvvux" path="res://assets/art/toy_repair_prototype/bg_repair_table.png" id="2"]
-[ext_resource type="TileSet" path="res://assets/art/toy_repair_prototype/terrain_tiles/terrain_tileset_grid_64_v2.tres" id="3_terrain_tileset"]
+[ext_resource type="TileSet" uid="uid://b3lau04wil1xq" path="res://assets/art/toy_repair_prototype/terrain_tiles/terrain_tileset_grid_64_v2.tres" id="3_terrain_tileset"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0bbpv"]
 content_margin_left = 18.0
@@ -674,29 +674,29 @@ shadow_size = 8
 script = ExtResource("1")
 
 [node name="Arena" type="ColorRect" parent="." unique_id=458421924]
+visible = false
 offset_right = 3168.0
 offset_bottom = 1344.0
 color = Color(0.08, 0.08, 0.1, 1)
-visible = false
 
 [node name="RepairTableBg" type="Sprite2D" parent="." unique_id=486476463]
-position = Vector2(1584, 672)
-z_index = -100
 visible = false
-texture = ExtResource("2")
-
-[node name="RoomBackgrounds" type="Node2D" parent="."]
 z_index = -100
-
-[node name="RoomBackground1" type="Sprite2D" parent="RoomBackgrounds"]
 position = Vector2(1584, 672)
 texture = ExtResource("2")
 
-[node name="RoomBackground2" type="Sprite2D" parent="RoomBackgrounds"]
+[node name="RoomBackgrounds" type="Node2D" parent="." unique_id=651764243]
+z_index = -100
+
+[node name="RoomBackground1" type="Sprite2D" parent="RoomBackgrounds" unique_id=2111199470]
+position = Vector2(1584, 672)
+texture = ExtResource("2")
+
+[node name="RoomBackground2" type="Sprite2D" parent="RoomBackgrounds" unique_id=2075988646]
 position = Vector2(5072, 672)
 texture = ExtResource("2")
 
-[node name="RoomBackground3" type="Sprite2D" parent="RoomBackgrounds"]
+[node name="RoomBackground3" type="Sprite2D" parent="RoomBackgrounds" unique_id=1372292567]
 position = Vector2(8560, 672)
 texture = ExtResource("2")
 
@@ -704,21 +704,17 @@ texture = ExtResource("2")
 z_index = 100
 
 [node name="MapRoot" type="Node2D" parent="." unique_id=489315260]
-z_index = 0
 
 [node name="ManualTerrainRoom1" type="TileMapLayer" parent="MapRoot" unique_id=1613837539]
-z_index = 0
-tile_map_data = PackedByteArray("AAAVAAkAAAACAAAAAAAWAAkAAAACAAAAAAAjAAYAAAABAAAAAAAkAAYAAAABAAAAAAAlAAYAAAABAAAAAAAmAAYAAAABAAAAAAAnAAYAAAABAAAAAAAjAAcAAAABAAAAAAAkAAcAAAABAAAAAAAlAAcAAAABAAAAAAAmAAcAAAABAAAAAAAnAAcAAAABAAAAAAAjAAgAAAABAAAAAAAkAAgAAAABAAAAAAAlAAgAAAABAAAAAAAmAAgAAAABAAAAAAAnAAgAAAABAAAAAAALAAsAAAAAAAEAAAAMAAsAAAABAAEAAAANAAsAAAACAAEAAAAZAAgAAAAGAAAAAAAZAAkAAAAGAAEAAAAZAAUAAAAGAAAAAAAZAAYAAAAGAAEAAAAZAAcAAAAGAAIAAAASAAwAAAABAAIAAAATAAwAAAACAAIAAAARAA0AAAABAAIAAAASAA0AAAACAAIAAAAfAAgAAAABAAIAAAAgAAgAAAACAAIAAAA=")
+tile_map_data = PackedByteArray("AAAVAAkAAAACAAAAAAAWAAkAAAACAAAAAAAjAAYAAAABAAAAAAAkAAYAAAABAAAAAAAlAAYAAAABAAAAAAAmAAYAAAABAAAAAAAnAAYAAAABAAAAAAAjAAcAAAABAAAAAAAkAAcAAAABAAAAAAAlAAcAAAABAAAAAAAmAAcAAAABAAAAAAAnAAcAAAABAAAAAAAjAAgAAAABAAAAAAAkAAgAAAABAAAAAAAlAAgAAAABAAAAAAAmAAgAAAABAAAAAAAnAAgAAAABAAAAAAALAAsAAAAAAAEAAAAMAAsAAAABAAEAAAANAAsAAAACAAEAAAAZAAgAAAAGAAAAAAAZAAkAAAAGAAEAAAAZAAUAAAAGAAAAAAAZAAYAAAAGAAEAAAAZAAcAAAAGAAIAAAASAAwAAAABAAIAAAATAAwAAAACAAIAAAARAA0AAAABAAIAAAASAA0AAAACAAIAAAAfAAgAAAABAAIAAAAgAAgAAAACAAIAAAAZAAwAAAAEAAEAAAAaAAwAAAAEAAEAAAAbAAwAAAAEAAEAAAAYAA0AAAAFAAIAAAAYAA4AAAAFAAIAAAA=")
 tile_set = ExtResource("3_terrain_tileset")
 
 [node name="ManualTerrainRoom2" type="TileMapLayer" parent="MapRoot" unique_id=845090875]
-z_index = 0
 position = Vector2(3488, 0)
 tile_map_data = PackedByteArray("AAAUAAkAAAAAAAAAAAAVAAkAAAAAAAAAAAAWAAkAAAAAAAAAAAAUAAoAAAAAAAAAAAAVAAoAAAAAAAAAAAAWAAoAAAAAAAAAAAAbAAoAAAACAAAAAAAcAAoAAAACAAAAAAAdAAoAAAACAAAAAAAbAAsAAAACAAAAAAAcAAsAAAACAAAAAAAdAAsAAAACAAAAAAAhAA0AAAADAAAAAAAiAA0AAAADAAAAAAAjAA0AAAADAAAAAAAkAA0AAAADAAAAAAAlAA0AAAADAAAAAAAmAA0AAAADAAAAAAAhAA4AAAADAAAAAAAiAA4AAAADAAAAAAAjAA4AAAADAAAAAAAkAA4AAAADAAAAAAAlAA4AAAADAAAAAAAmAA4AAAADAAAAAAA=")
 tile_set = ExtResource("3_terrain_tileset")
 
 [node name="ManualTerrainRoom3" type="TileMapLayer" parent="MapRoot" unique_id=670610981]
-z_index = 0
 position = Vector2(6976, 0)
 tile_map_data = PackedByteArray("AAATAAoAAAACAAAAAAAUAAoAAAACAAAAAAAVAAoAAAACAAAAAAATAAsAAAACAAAAAAAUAAsAAAACAAAAAAAVAAsAAAACAAAAAAAbAAgAAAAAAAAAAAAcAAgAAAAAAAAAAAAdAAgAAAAAAAAAAAAbAAkAAAAAAAAAAAAcAAkAAAAAAAAAAAAdAAkAAAAAAAAAAAAXAA0AAAACAAAAAAAYAA0AAAACAAAAAAAZAA0AAAACAAAAAAAaAA0AAAACAAAAAAAXAA4AAAACAAAAAAAYAA4AAAACAAAAAAAZAA4AAAACAAAAAAAaAA4AAAACAAAAAAAjAAoAAAABAAAAAAAkAAoAAAABAAAAAAAlAAoAAAABAAAAAAAmAAoAAAABAAAAAAAnAAoAAAABAAAAAAAjAAsAAAABAAAAAAAkAAsAAAABAAAAAAAlAAsAAAABAAAAAAAmAAsAAAABAAAAAAAnAAsAAAABAAAAAAALAAcAAAADAAAAAAAMAAcAAAADAAAAAAANAAcAAAADAAAAAAAOAAcAAAADAAAAAAAPAAcAAAADAAAAAAAQAAcAAAADAAAAAAALAAgAAAADAAAAAAAMAAgAAAADAAAAAAANAAgAAAADAAAAAAAOAAgAAAADAAAAAAAPAAgAAAADAAAAAAAQAAgAAAADAAAAAAA=")
 tile_set = ExtResource("3_terrain_tileset")

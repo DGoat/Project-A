@@ -4,6 +4,7 @@ var player_scene := preload("res://scenes/Player.tscn")
 var melee_scene := preload("res://scenes/MeleeEnemy.tscn")
 var ranged_scene := preload("res://scenes/RangedEnemy.tscn")
 var terrain_tilesheet := preload("res://assets/art/toy_repair_prototype/terrain_tiles/terrain_tilesheet_1024.png")
+var BreakableTerrainBodyScript := preload("res://scripts/breakable_terrain_body.gd")
 var room_backgrounds := [
 	preload("res://assets/art/toy_repair_prototype/bg_repair_table.png"),
 	preload("res://assets/art/toy_repair_prototype/bg_repair_table.png"),
@@ -377,6 +378,10 @@ func _spawn_tilemap_terrain(index: int) -> Array:
 				_create_tile_terrain_body(layer, cell, footprint)
 				for footprint_cell in _get_terrain_footprint_cells(cell, footprint):
 					hard_cells.append(footprint_cell)
+			"breakable":
+				_create_tile_breakable_body(layer, cell, footprint)
+				for footprint_cell in _get_terrain_footprint_cells(cell, footprint):
+					hard_cells.append(footprint_cell)
 			"slow":
 				_create_tile_slow_area(layer, cell, footprint)
 	return _make_tile_blocking_rects(layer, hard_cells)
@@ -430,6 +435,27 @@ func _create_tile_terrain_body(layer: TileMapLayer, cell: Vector2i, footprint: V
 	var size := Vector2(maxi(footprint.x, 1), maxi(footprint.y, 1)) * 64.0
 	body.global_position = layer.to_global(layer.map_to_local(cell)) + (size - Vector2(64.0, 64.0)) * 0.5
 	body.add_to_group("obstacles")
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = size
+	shape.shape = rect
+	body.add_child(shape)
+	map_root.add_child(body)
+	return {"pos": body.global_position, "size": rect.size}
+
+func _create_tile_breakable_body(layer: TileMapLayer, cell: Vector2i, footprint: Vector2i) -> Dictionary:
+	var body := StaticBody2D.new()
+	body.name = "BreakableTerrainBody"
+	body.collision_layer = 8
+	body.collision_mask = 3
+	body.set_meta("hp", 20)
+	var size := Vector2(maxi(footprint.x, 1), maxi(footprint.y, 1)) * 64.0
+	body.global_position = layer.to_global(layer.map_to_local(cell)) + (size - Vector2(64.0, 64.0)) * 0.5
+	body.add_to_group("obstacles")
+	body.set_meta("tile_layer_path", layer.get_path())
+	body.set_meta("tile_origin_cell", cell)
+	body.set_meta("tile_footprint", footprint)
+	body.set_script(BreakableTerrainBodyScript)
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()
 	rect.size = size

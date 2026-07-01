@@ -184,6 +184,7 @@ func _test_terrain_collision_masks() -> void:
 	var melee = load("res://scenes/MeleeEnemy.tscn").instantiate()
 	var ranged = load("res://scenes/RangedEnemy.tscn").instantiate()
 	_expect(player.collision_layer == 1, "player should stay on collision layer 1")
+	_expect((player.get_node("AttackArea").collision_mask & 8) != 0, "player attack should hit breakable terrain layer")
 	_expect((player.collision_mask & 8) != 0, "player should collide with terrain layer")
 	_expect((melee.collision_mask & 8) != 0, "melee enemy should collide with terrain layer")
 	_expect(melee.has_node("NavigationAgent2D"), "melee enemy should have NavigationAgent2D")
@@ -211,11 +212,13 @@ func _test_terrain_tilesheet() -> void:
 	_expect(main.has_method("_update_room_background"), "main should support per-room backgrounds")
 	_expect(main.has_method("_apply_render_layers"), "main should define render layer ordering")
 	_expect(main.has_method("_get_terrain_footprint_cells"), "main should support multi-cell terrain footprint")
+	_expect(main.has_method("_create_tile_breakable_body"), "main should support breakable terrain body")
 	_expect(main.terrain_tile_properties[Vector2i(0, 0)].has("footprint"), "terrain tile properties should define footprint")
 	main._spawn_room_map(0)
 	await process_frame
 	var found_sprite := false
 	var found_tile_body := false
+	var found_breakable_body := false
 	for node in main.map_root.get_children():
 		if node.name == "Obstacle":
 			for child in node.get_children():
@@ -223,8 +226,18 @@ func _test_terrain_tilesheet() -> void:
 					found_sprite = true
 		if node.name == "TileTerrainBody":
 			found_tile_body = true
+		if node.name == "BreakableTerrainBody":
+			found_breakable_body = true
 	_expect(not found_sprite, "legacy obstacle Sprite2D visuals should be disabled for TileMap terrain")
 	_expect(found_tile_body, "TileMap hard terrain should generate TileTerrainBody")
+	_expect(found_breakable_body, "TileMap breakable terrain should generate BreakableTerrainBody")
+	for node in main.map_root.get_children():
+		if node.name == "BreakableTerrainBody":
+			var layer := node.tile_layer as TileMapLayer
+			var cell: Vector2i = node.tile_origin_cell
+			node.take_damage(999)
+			_expect(layer.get_cell_source_id(cell) == -1, "destroyed breakable terrain should clear TileMap cell")
+			break
 	main.queue_free()
 
 func _report() -> void:

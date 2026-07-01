@@ -57,7 +57,7 @@ scale = Vector2(0.07, -0.07)
 texture = ExtResource("3")
 
 [node name="AttackArea" type="Area2D" parent="." unique_id=1624478017]
-collision_mask = 2
+collision_mask = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea" unique_id=25418908]
 shape = SubResource("RectangleShape2D_attack")
