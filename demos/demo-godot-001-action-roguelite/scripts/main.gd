@@ -3,6 +3,7 @@ extends Node2D
 var player_scene := preload("res://scenes/Player.tscn")
 var melee_scene := preload("res://scenes/MeleeEnemy.tscn")
 var ranged_scene := preload("res://scenes/RangedEnemy.tscn")
+var terrain_tilesheet := preload("res://assets/art/toy_repair_prototype/terrain_tiles/terrain_tilesheet_1024.png")
 var blessing_pool: Array = []
 var current_room := 0
 var enemies_alive := 0
@@ -17,6 +18,25 @@ var run_ended := false
 var world_size := Vector2(3168.0, 1344.0)
 var play_area_min := Vector2(80.0, 120.0)
 var play_area_max := Vector2(3088.0, 1264.0)
+var terrain_atlas := {
+	"block_center": Rect2(150, 138, 137, 127),
+	"toolbox_center": Rect2(7, 432, 191, 173),
+	"woodpile_center": Rect2(211, 435, 186, 161),
+	"toybox_panel_gold": Rect2(628, 422, 184, 189),
+	"rim_highlight": Rect2(614, 643, 207, 37),
+	"toolbox_latch": Rect2(63, 665, 76, 100),
+	"toolbox_handle": Rect2(235, 687, 141, 63)
+}
+var terrain_tile_properties := {
+	Vector2i(0, 0): {"type": "hard", "footprint": Vector2i(1, 1)},
+	Vector2i(1, 0): {"type": "hard", "footprint": Vector2i(1, 1)},
+	Vector2i(2, 0): {"type": "hard", "footprint": Vector2i(1, 1)},
+	Vector2i(3, 0): {"type": "hard", "footprint": Vector2i(1, 1)},
+	Vector2i(0, 1): {"type": "decor", "footprint": Vector2i(1, 1)},
+	Vector2i(1, 1): {"type": "decor", "footprint": Vector2i(1, 1)},
+	Vector2i(2, 1): {"type": "decor", "footprint": Vector2i(1, 1)},
+	Vector2i(3, 1): {"type": "hard", "footprint": Vector2i(1, 1)}
+}
 
 @onready var room_root := $RoomRoot
 @onready var map_root := $MapRoot
@@ -68,7 +88,8 @@ var rooms := [
 var room_maps := [
 	{
 		"obstacles": [
-			{"pos": Vector2(1450, 640), "size": Vector2(140, 62), "color": Color(0.52, 0.28, 0.12, 0.92)}
+			{"pos": Vector2(1450, 640), "size": Vector2(140, 62), "color": Color(0.52, 0.28, 0.12, 0.92), "kind": "woodpile"},
+			{"pos": Vector2(2380, 480), "size": Vector2(260, 72), "color": Color(0.50, 0.18, 0.12, 0.92), "kind": "toolbox"}
 		],
 		"glue": [
 			{"pos": Vector2(1860, 620), "size": Vector2(150, 88)}
@@ -76,8 +97,9 @@ var room_maps := [
 	},
 	{
 		"obstacles": [
-			{"pos": Vector2(1380, 610), "size": Vector2(132, 62), "color": Color(0.42, 0.26, 0.62, 0.9)},
-			{"pos": Vector2(1820, 720), "size": Vector2(150, 58), "color": Color(0.52, 0.32, 0.16, 0.92)}
+			{"pos": Vector2(1380, 610), "size": Vector2(132, 62), "color": Color(0.42, 0.26, 0.62, 0.9), "kind": "block"},
+			{"pos": Vector2(1820, 720), "size": Vector2(150, 58), "color": Color(0.52, 0.32, 0.16, 0.92), "kind": "woodpile"},
+			{"pos": Vector2(2280, 920), "size": Vector2(320, 64), "color": Color(0.36, 0.23, 0.14, 0.94), "kind": "toybox_edge"}
 		],
 		"glue": [
 			{"pos": Vector2(1580, 860), "size": Vector2(170, 92)}
@@ -85,9 +107,11 @@ var room_maps := [
 	},
 	{
 		"obstacles": [
-			{"pos": Vector2(1330, 680), "size": Vector2(138, 58), "color": Color(0.46, 0.28, 0.16, 0.92)},
-			{"pos": Vector2(1820, 600), "size": Vector2(138, 58), "color": Color(0.32, 0.42, 0.58, 0.9)},
-			{"pos": Vector2(1580, 880), "size": Vector2(170, 54), "color": Color(0.55, 0.36, 0.16, 0.9)}
+			{"pos": Vector2(1330, 680), "size": Vector2(138, 58), "color": Color(0.46, 0.28, 0.16, 0.92), "kind": "woodpile"},
+			{"pos": Vector2(1820, 600), "size": Vector2(138, 58), "color": Color(0.32, 0.42, 0.58, 0.9), "kind": "block"},
+			{"pos": Vector2(1580, 880), "size": Vector2(170, 54), "color": Color(0.55, 0.36, 0.16, 0.9), "kind": "woodpile"},
+			{"pos": Vector2(2380, 720), "size": Vector2(280, 78), "color": Color(0.46, 0.16, 0.12, 0.94), "kind": "toolbox"},
+			{"pos": Vector2(900, 520), "size": Vector2(300, 64), "color": Color(0.36, 0.23, 0.14, 0.94), "kind": "toybox_edge"}
 		],
 		"glue": [
 			{"pos": Vector2(1180, 840), "size": Vector2(150, 88)},
@@ -115,6 +139,7 @@ func _ready() -> void:
 	start_panel.visible = true
 	ui_status.text = ""
 	ui_message.text = "1/3 · 等待入夜"
+	_show_all_manual_terrain_layers_in_editor()
 	_update_debug_buttons()
 	_update_acquired_blessings()
 
@@ -141,6 +166,14 @@ func _load_blessings() -> void:
 	var parsed = JSON.parse_string(file.get_as_text())
 	if typeof(parsed) == TYPE_ARRAY:
 		blessing_pool = parsed
+
+func _show_all_manual_terrain_layers_in_editor() -> void:
+	if not OS.has_feature("editor"):
+		return
+	for room_index in range(3):
+		var layer := map_root.get_node_or_null("ManualTerrainRoom%d" % [room_index + 1])
+		if layer != null:
+			layer.visible = true
 
 func _start_run() -> void:
 	if run_started:
@@ -186,14 +219,21 @@ func _spawn_room(index: int) -> void:
 
 func _spawn_room_map(index: int) -> void:
 	for child in map_root.get_children():
-		child.queue_free()
+		if not _is_manual_terrain_layer(child):
+			child.queue_free()
+	_update_manual_terrain_layers(index)
 	_create_boundary_hint()
-	var map_data: Dictionary = room_maps[index]
-	_create_navigation_region(map_data)
-	for obstacle_data in map_data.get("obstacles", []):
-		_create_obstacle(obstacle_data)
-	for glue_data in map_data.get("glue", []):
-		_create_glue_puddle(glue_data)
+	var terrain_rects := _spawn_tilemap_terrain(index)
+	_create_navigation_region(terrain_rects)
+
+func _is_manual_terrain_layer(node: Node) -> bool:
+	return node.name.begins_with("ManualTerrainRoom")
+
+func _update_manual_terrain_layers(index: int) -> void:
+	for room_index in range(3):
+		var layer := map_root.get_node_or_null("ManualTerrainRoom%d" % [room_index + 1])
+		if layer != null:
+			layer.visible = room_index == index
 
 func _create_boundary_hint() -> void:
 	var root := Node2D.new()
@@ -217,7 +257,7 @@ func _add_boundary_rect(root: Node, position: Vector2, size: Vector2, color: Col
 	rect.color = color
 	root.add_child(rect)
 
-func _create_navigation_region(map_data: Dictionary) -> void:
+func _create_navigation_region(blocking_rects: Array) -> void:
 	var region := NavigationRegion2D.new()
 	region.name = "NavigationRegion2D"
 	var polygon := NavigationPolygon.new()
@@ -227,9 +267,9 @@ func _create_navigation_region(map_data: Dictionary) -> void:
 		Vector2(3048, 1230),
 		Vector2(120, 1230)
 	]))
-	for obstacle_data in map_data.get("obstacles", []):
-		var position: Vector2 = obstacle_data["pos"]
-		var size: Vector2 = obstacle_data["size"] + Vector2(96, 96)
+	for rect_data in blocking_rects:
+		var position: Vector2 = rect_data["pos"]
+		var size: Vector2 = rect_data["size"] + Vector2(96, 96)
 		var half := size * 0.5
 		polygon.add_outline(PackedVector2Array([
 			position + Vector2(-half.x, -half.y),
@@ -241,7 +281,90 @@ func _create_navigation_region(map_data: Dictionary) -> void:
 	region.navigation_polygon = polygon
 	map_root.add_child(region)
 
+func _spawn_tilemap_terrain(index: int) -> Array:
+	var hard_cells: Array[Vector2i] = []
+	var layer := map_root.get_node_or_null("ManualTerrainRoom%d" % [index + 1]) as TileMapLayer
+	if layer == null:
+		return []
+	for cell in layer.get_used_cells():
+		var atlas_coords := layer.get_cell_atlas_coords(cell)
+		var properties: Dictionary = terrain_tile_properties.get(atlas_coords, {"type": "decor", "footprint": Vector2i(1, 1)})
+		var footprint: Vector2i = properties.get("footprint", Vector2i(1, 1))
+		match String(properties.get("type", "decor")):
+			"hard":
+				_create_tile_terrain_body(layer, cell, footprint)
+				for footprint_cell in _get_terrain_footprint_cells(cell, footprint):
+					hard_cells.append(footprint_cell)
+			"slow":
+				_create_tile_slow_area(layer, cell, footprint)
+	return _make_tile_blocking_rects(layer, hard_cells)
+
+func _get_terrain_footprint_cells(origin_cell: Vector2i, footprint: Vector2i) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	for y in range(maxi(footprint.y, 1)):
+		for x in range(maxi(footprint.x, 1)):
+			cells.append(origin_cell + Vector2i(x, y))
+	return cells
+
+func _make_tile_blocking_rects(layer: TileMapLayer, hard_cells: Array[Vector2i]) -> Array:
+	var blocking_rects := []
+	var remaining := {}
+	for cell in hard_cells:
+		remaining[cell] = true
+	while not remaining.is_empty():
+		var start: Vector2i = remaining.keys()[0]
+		remaining.erase(start)
+		var queue: Array[Vector2i] = [start]
+		var component: Array[Vector2i] = []
+		while not queue.is_empty():
+			var cell: Vector2i = queue.pop_back()
+			component.append(cell)
+			var offsets: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
+			for offset in offsets:
+				var next: Vector2i = cell + offset
+				if remaining.has(next):
+					remaining.erase(next)
+					queue.append(next)
+		blocking_rects.append(_make_component_blocking_rect(layer, component))
+	return blocking_rects
+
+func _make_component_blocking_rect(layer: TileMapLayer, cells: Array[Vector2i]) -> Dictionary:
+	var min_cell := cells[0]
+	var max_cell := cells[0]
+	for cell in cells:
+		min_cell.x = mini(min_cell.x, cell.x)
+		min_cell.y = mini(min_cell.y, cell.y)
+		max_cell.x = maxi(max_cell.x, cell.x)
+		max_cell.y = maxi(max_cell.y, cell.y)
+	var min_pos := layer.to_global(layer.map_to_local(min_cell)) - Vector2(32.0, 32.0)
+	var max_pos := layer.to_global(layer.map_to_local(max_cell)) + Vector2(32.0, 32.0)
+	return {"pos": (min_pos + max_pos) * 0.5, "size": max_pos - min_pos}
+
+func _create_tile_terrain_body(layer: TileMapLayer, cell: Vector2i, footprint: Vector2i) -> Dictionary:
+	var body := StaticBody2D.new()
+	body.name = "TileTerrainBody"
+	body.collision_layer = 8
+	body.collision_mask = 3
+	var size := Vector2(maxi(footprint.x, 1), maxi(footprint.y, 1)) * 64.0
+	body.global_position = layer.to_global(layer.map_to_local(cell)) + (size - Vector2(64.0, 64.0)) * 0.5
+	body.add_to_group("obstacles")
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = size
+	shape.shape = rect
+	body.add_child(shape)
+	map_root.add_child(body)
+	return {"pos": body.global_position, "size": rect.size}
+
+func _create_tile_slow_area(layer: TileMapLayer, cell: Vector2i, footprint: Vector2i) -> void:
+	var size := Vector2(maxi(footprint.x, 1), maxi(footprint.y, 1)) * 64.0
+	var center := layer.to_global(layer.map_to_local(cell)) + (size - Vector2(64.0, 64.0)) * 0.5
+	_create_glue_puddle({"pos": center, "size": size})
+
 func _create_obstacle(data: Dictionary) -> void:
+	if not data.get("blocks", true):
+		_create_manual_terrain(data)
+		return
 	var body := StaticBody2D.new()
 	body.name = "Obstacle"
 	body.collision_layer = 8
@@ -253,12 +376,55 @@ func _create_obstacle(data: Dictionary) -> void:
 	rect.size = data["size"]
 	shape.shape = rect
 	body.add_child(shape)
-	var visual := ColorRect.new()
-	visual.color = data.get("color", Color(0.52, 0.32, 0.16, 0.9))
-	visual.size = data["size"]
-	visual.position = -data["size"] * 0.5
-	body.add_child(visual)
+	_add_obstacle_sprite(body, data)
 	map_root.add_child(body)
+
+func _create_manual_terrain(data: Dictionary) -> void:
+	var root := Node2D.new()
+	root.name = "ManualTerrain"
+	root.global_position = data["pos"]
+	_add_obstacle_sprite(root, data)
+	map_root.add_child(root)
+
+func _add_obstacle_sprite(body: Node2D, data: Dictionary) -> void:
+	var atlas_key := _get_obstacle_atlas_key(data)
+	var size: Vector2 = data["size"]
+	var sprite := _make_atlas_sprite(atlas_key, size)
+	body.add_child(sprite)
+	var kind := String(data.get("kind", "block"))
+	match kind:
+		"toolbox":
+			var latch := _make_atlas_sprite("toolbox_latch", Vector2(36.0, 44.0))
+			latch.position = Vector2(-size.x * 0.22, 0.0)
+			body.add_child(latch)
+			var handle := _make_atlas_sprite("toolbox_handle", Vector2(62.0, 28.0))
+			handle.position = Vector2(size.x * 0.14, -size.y * 0.03)
+			body.add_child(handle)
+		"toybox_edge":
+			var rim := _make_atlas_sprite("rim_highlight", Vector2(size.x * 0.82, 16.0))
+			rim.position = Vector2(0.0, -size.y * 0.18)
+			body.add_child(rim)
+
+func _get_obstacle_atlas_key(data: Dictionary) -> String:
+	if data.has("atlas"):
+		return String(data["atlas"])
+	match String(data.get("kind", "block")):
+		"toolbox":
+			return "toolbox_center"
+		"woodpile":
+			return "woodpile_center"
+		"toybox_edge":
+			return "toybox_panel_gold"
+	return "block_center"
+
+func _make_atlas_sprite(atlas_key: String, target_size: Vector2) -> Sprite2D:
+	var rect: Rect2 = terrain_atlas[atlas_key]
+	var sprite := Sprite2D.new()
+	sprite.texture = terrain_tilesheet
+	sprite.region_enabled = true
+	sprite.region_rect = rect
+	sprite.scale = Vector2(target_size.x / rect.size.x, target_size.y / rect.size.y)
+	return sprite
 
 func _create_glue_puddle(data: Dictionary) -> void:
 	var area := Area2D.new()

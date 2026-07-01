@@ -17,6 +17,7 @@ func _run() -> void:
 	_test_ranged_enemy_motion()
 	_test_enemy_separation_group()
 	_test_terrain_collision_masks()
+	_test_terrain_tilesheet()
 	_report()
 	quit(1 if failures.size() > 0 else 0)
 
@@ -149,9 +150,15 @@ func _test_enemy_separation_group() -> void:
 	await process_frame
 	for enemy in main.room_root.get_children():
 		_expect(enemy.is_in_group("enemies"), "spawned enemy should be in enemies group")
-	_expect(main.map_root.get_child_count() > 0, "room map should spawn obstacles or hazards")
-	_expect(main.map_root.has_node("NavigationRegion2D"), "room map should spawn NavigationRegion2D")
-	_expect(main.map_root.has_node("BoundaryHint"), "room map should spawn BoundaryHint")
+		_expect(main.map_root.get_child_count() > 0, "room map should spawn obstacles or hazards")
+		_expect(main.map_root.has_node("NavigationRegion2D"), "room map should spawn NavigationRegion2D")
+		_expect(not main.map_root.has_node("Obstacle"), "legacy generated obstacles should not spawn with TileMap terrain")
+		_expect(main.map_root.has_node("BoundaryHint"), "room map should spawn BoundaryHint")
+	_expect(main.map_root.has_node("ManualTerrainRoom1"), "MapRoot should include ManualTerrainRoom1")
+	_expect(main.map_root.has_node("ManualTerrainRoom2"), "MapRoot should include ManualTerrainRoom2")
+	_expect(main.map_root.has_node("ManualTerrainRoom3"), "MapRoot should include ManualTerrainRoom3")
+	_expect(main.map_root.get_node("ManualTerrainRoom1").visible, "room 1 manual terrain layer should be visible in room 1")
+	_expect(not main.map_root.get_node("ManualTerrainRoom2").visible, "room 2 manual terrain layer should be hidden in room 1")
 	main.queue_free()
 
 func _test_terrain_collision_masks() -> void:
@@ -169,6 +176,35 @@ func _test_terrain_collision_masks() -> void:
 	player.queue_free()
 	melee.queue_free()
 	ranged.queue_free()
+
+func _test_terrain_tilesheet() -> void:
+	var main_scene := load("res://scenes/Main.tscn")
+	var main = main_scene.instantiate()
+	root.add_child(main)
+	await process_frame
+	_expect(main.terrain_tilesheet != null, "main should preload terrain tilesheet")
+	_expect(main.terrain_atlas.has("toolbox_center"), "terrain atlas should include toolbox_center")
+	_expect(main.has_method("_create_manual_terrain"), "main should support manual terrain placement")
+	_expect(main.has_method("_get_obstacle_atlas_key"), "main should support obstacle atlas override")
+	_expect(main.has_method("_update_manual_terrain_layers"), "main should support room-specific manual terrain layers")
+	_expect(main.has_method("_show_all_manual_terrain_layers_in_editor"), "main should keep room terrain layers editable in editor")
+	_expect(main.has_method("_spawn_tilemap_terrain"), "main should generate terrain logic from TileMapLayer")
+	_expect(main.has_method("_get_terrain_footprint_cells"), "main should support multi-cell terrain footprint")
+	_expect(main.terrain_tile_properties[Vector2i(0, 0)].has("footprint"), "terrain tile properties should define footprint")
+	main._spawn_room_map(0)
+	await process_frame
+	var found_sprite := false
+	var found_tile_body := false
+	for node in main.map_root.get_children():
+		if node.name == "Obstacle":
+			for child in node.get_children():
+				if child is Sprite2D:
+					found_sprite = true
+		if node.name == "TileTerrainBody":
+			found_tile_body = true
+	_expect(not found_sprite, "legacy obstacle Sprite2D visuals should be disabled for TileMap terrain")
+	_expect(found_tile_body, "TileMap hard terrain should generate TileTerrainBody")
+	main.queue_free()
 
 func _report() -> void:
 	if failures.is_empty():

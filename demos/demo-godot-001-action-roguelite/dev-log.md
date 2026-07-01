@@ -1,3 +1,35 @@
+## 2026-07-01：TileMap 驱动地形系统 0.1
+
+### 本次目标
+
+移除运行时旧 `room_maps` 地形生成，让编辑器摆放的 TileMap 成为地形逻辑唯一来源。
+
+### 做了什么
+
+- 新增 `specs/spec-032-tilemap-driven-terrain-system-01.md`。
+- `main.gd`
+  - 新增 `terrain_tile_properties`，按 tile atlas 坐标定义属性。
+  - `terrain_tile_properties` 支持 `footprint`，可定义单张 tile 图片占用多少 TileMap 格。
+  - `_spawn_room_map()` 不再生成旧 `Obstacle` / `GluePuddle`。
+  - 从 `ManualTerrainRoom1/2/3` 读取 used cells。
+  - `hard` tile 生成 `TileTerrainBody`，使用 terrain collision layer `8`。
+  - `slow` tile 预留并复用胶水减速 Area2D 创建逻辑。
+  - 导航挖洞改为 TileMap 硬地形连通块，避免逐格轮廓重叠。
+- `tests/smoke_test.gd`
+  - 检查旧 `Obstacle` 不再生成。
+  - 检查 TileMap 硬地形会生成 `TileTerrainBody`。
+
+### 验证结果
+
+```text
+AI_TEST_PASS
+```
+
+### 已知事项
+
+`NavigationPolygon.make_polygons_from_outlines()` 仍有 Godot 废弃警告，功能可运行；后续可迁移到 `NavigationServer2D.parse_source_geometry_data()` / `bake_from_source_geometry_data()`。
+
+
 ## 2026-06-30：UI 0.3 无资源打磨
 
 ### 本次目标

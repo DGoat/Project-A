@@ -67,6 +67,8 @@
 | MAP-006 | Fixed | Medium | 已增加边缘暗边和细框线提示不可通行区域，后续可替换为玩具箱边缘/桌面边框美术 | M4 |
 | MAP-007 | Fixed | High | 远程敌人已增加 NavigationAgent2D，靠近/拉开距离时沿导航路径移动 | M4 |
 | MAP-008 | Fixed | High | 远程敌人与主角之间被硬障碍挡住时仍会射击，已改为先寻路到无遮挡攻击站位再开火 | M4 |
+| MAP-009 | Fixed | Medium | 已增加工具盒、木块堆、玩具箱边缘三类硬阻挡区，无资源绘制并参与碰撞/导航 | M4 |
+| MAP-010 | Fixed | Medium | 地形 tilesheet 已按实际图像 atlas 坐标接入硬阻挡视觉，碰撞和导航保持矩形逻辑 | M4 |
 | THEME-001 | In Progress | Medium | 已开始将通用动作 Roguelite 包装为玩具修理屋主题 | M3/M4 |
 | UI-FLOW-001 | Fixed | Medium | 开始 / 胜利 / 失败流程界面已通过测试 | M3/M4 |
 | UI-FLOW-002 | Fixed | Medium | 赐福选择界面构筑标签已通过测试 | M3/M4 |
